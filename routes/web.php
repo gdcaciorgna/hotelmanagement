@@ -14,5 +14,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'Home page';
 });
+
+Route::get('/users', function () {
+    return view('users.index');
+});
+
+Route::get('/users/{id}', function ($id) {
+    return "User details {$id}";
+});
+
+Route::get('/users/create', function () {
+    return view('users.create');
+});
+
+Route::get('/users/{id}/edit', function ($id) {
+    return  "Edit user {$id}";
+});
+
