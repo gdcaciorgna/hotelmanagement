@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>Hotel Management</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -46,7 +46,7 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+                    <h3 class="text-primary"><i class="fa fa-hotel me-2"></i>Hotel</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -60,39 +60,48 @@
                 </div>
                 <div class="navbar-nav w-100">
                     
-                    <!-- Admin view -->
+                    <!-- Recepcionist view -->
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar habitación</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver reservas</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar habitación</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver reservas</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item"><i class="fas fa-plus me-2"></i>Solicitar limpieza</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver limpiezas</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Solicitar limpieza</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver limpiezas</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-th me-2"></i>Administración</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-th me-2"></i>Configuraciones</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item"><i class="fas fa-users me-2"></i>Usuarios</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-dollar-sign me-2"></i>Tarifas</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
-                            <a href="element.html" class="dropdown-item"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
-                            <a href="typography.html" class="dropdown-item"><i class="fas fa-concierge-bell me-2"></i>Políticas del hotel</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-users me-2"></i>Usuarios</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-dollar-sign me-2"></i>Tarifas</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-concierge-bell me-2"></i>Políticas del hotel</a>
 
                         </div>
                     </div>
+
+                    <!-- Cleaner view -->
+                    <!--<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>-->
+
+                    <!-- Guest view -->
+                    <!--
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Solicitar limpieza</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Ver comodidades</a>
+                    -->
                 </div>
             </nav>
         </div>
@@ -115,47 +124,8 @@
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="{{asset('/img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="{{asset('/img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="{{asset('/img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all message</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notificaciones</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
