@@ -81,14 +81,17 @@
             </div>
         </div>
              
-        <div class="row mb-3 justify-content-end">
-            <div class="col-auto">
+     
+        <div class="row mb-3">
+            <div class="col-sm-3">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                     Modificar contraseña
                 </button>
             </div>
+            <div class="col-sm-9 text-end">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>
   

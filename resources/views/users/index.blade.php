@@ -2,7 +2,7 @@
 @section('title', 'Usuarios')
 @section('content')
 <div class="bg-light rounded h-100 p-4">
-    <h6 class="mb-4">Users</h6>
+    <h6 class="mb-4">Usuarios</h6>
     <div class="table-responsive">
         <table class="table">
             <thead>
