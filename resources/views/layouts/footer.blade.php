@@ -30,7 +30,7 @@
     <script src="{{asset('lib/easing/easing.min.js')}}"></script>
 
     <!-- Template Javascript -->
-    <script src="/js/main.js"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 </body>
 
 </html>

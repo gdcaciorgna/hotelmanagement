@@ -115,9 +115,7 @@
                             <span class="d-none d-lg-inline-flex">John Doe</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="#" class="dropdown-item">Cerrar sesión</a>
                         </div>
                     </div>
                 </div>
@@ -127,7 +125,9 @@
             <!-- Table Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                    @yield('content')
+                    <div class="col-12">
+                        @yield('content')
+                    </div>
                 </div>
             </div>
 @include('layouts.footer')

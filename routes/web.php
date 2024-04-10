@@ -30,6 +30,6 @@ Route::get('/users/create', function () {
 })->name('users.create');
 
 Route::get('/users/{id}/edit', function ($id) {
-    return  "Edit user {$id}";
+    return  view('users.edit', ['userId' => $id, 'action' => 'edit']);
 })->name('users.edit');
 
