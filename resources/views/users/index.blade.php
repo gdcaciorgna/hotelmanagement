@@ -4,45 +4,41 @@
 <div class="bg-light rounded h-100 p-4">
     <h6 class="mb-4">Usuarios</h6>
     <div class="table-responsive">
-        <table class="table">
+        <table class="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Country</th>
-                    <th scope="col">ZIP</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Nombre y apellido</th>
+                    <th scope="col">Tipo Usuario</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Opciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>jhon@email.com</td>
-                    <td>USA</td>
-                    <td>123</td>
-                    <td>Member</td>
+                    <td>12.345.678</td>
+                    <td>Juan Pérez</td>
+                    <td>Recepcionista</td>
+                    <td><span class="btn btn-sm btn-sm-square btn-outline-success m-2"><i class="fa fa-check"></i></span></td>
+                    <td><a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a> <a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2"><i class="fa fa-trash-alt"></i></a></td>
                 </tr>
                 <tr>
-                    <th scope="row">2</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>mark@email.com</td>
-                    <td>UK</td>
-                    <td>456</td>
-                    <td>Member</td>
+                    <th scope="row">1</th>
+                    <td>12.345.678</td>
+                    <td>Juan Pérez</td>
+                    <td>Recepcionista</td>
+                    <td><span class="btn btn-sm btn-sm-square btn-outline-danger m-2"><i class="fa fa-times"></i></span></td>
+                    <td><a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a> <a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2"><i class="fa fa-trash-alt"></i></a></td>
                 </tr>
                 <tr>
-                    <th scope="row">3</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>jacob@email.com</td>
-                    <td>AU</td>
-                    <td>789</td>
-                    <td>Member</td>
+                    <th scope="row">1</th>
+                    <td>12.345.678</td>
+                    <td>Juan Pérez</td>
+                    <td>Recepcionista</td>
+                    <td><span class="btn btn-sm btn-sm-square btn-outline-success m-2"><i class="fa fa-check"></i></span></td>
+                    <td><a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a> <a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2"><i class="fa fa-trash-alt"></i></a></td>
                 </tr>
             </tbody>
         </table>

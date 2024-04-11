@@ -25,7 +25,7 @@
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Correo electrónico</label>
             <div class="col-sm-9">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Juan Carlos Pérez" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="juanperez@gmail.com" required>
             </div>
         </div>
         <div class="row mb-3">
