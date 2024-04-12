@@ -71,8 +71,8 @@
                     </label>
                 </div>
                 <div class="mt-3" id="dateInput" style="display: none;">
-                    <label for="disabledStartDate" class="form-label">Fecha de Inhabilitación:</label>
-                    <input type="date" class="form-control" id="disabledStartDate" name="disabledStartDate">
+                    <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
+                    <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate">
                 </div>
                 <div class="mt-3" id="disabledReason" style="display: none;">
                     <label for="disabledReasonTextarea" class="form-label">Motivo de Inhabilitación:</label>
@@ -136,45 +136,23 @@
             
             dniInput.value = formattedValue;
         });
-    });
 
-    const checkbox = document.getElementById('disabledCheckbox');
-    const dateInput = document.getElementById('dateInput');
-    const disabledReason = document.getElementById('disabledReason');
+        const checkbox = document.getElementById('disabledCheckbox');
+        const dateInput = document.getElementById('dateInput');
+        const disabledReason = document.getElementById('disabledReason');
+        const disabledStartDateInput = document.getElementById('disabledStartDateInput');
 
-    checkbox.addEventListener('change', function() {
-        if (this.checked) {
-            dateInput.style.display = 'block';
-            disabledReason.style.display = 'block';
-
-        } else {
-            dateInput.style.display = 'none';
-            disabledReason.style.display = 'none';
-        }
-    });
-
-
-    //Date format validation (dd/mm/yyyy)
-    const bornDateDayInput = document.getElementById('bornDateDay');
-    const bornDateMonthInput = document.getElementById('bornDateMonth');
-    const bornDateYearInput = document.getElementById('bornDateYear');
-
-    bornDateDayInput.addEventListener('input', function() {
-        if (this.value.length > 2) {
-            this.value = this.value.slice(0, 2);
-        }
-    });
-
-    bornDateMonthInput.addEventListener('input', function() {
-        if (this.value.length > 2) {
-            this.value = this.value.slice(0, 2);
-        }
-    });
-
-    bornDateYearInput.addEventListener('input', function() {
-        if (this.value.length > 4) {
-            this.value = this.value.slice(0, 4);
-        }
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                dateInput.style.display = 'block';
+                disabledReason.style.display = 'block';
+                disabledStartDateInput.required = true;
+            } else {
+                dateInput.style.display = 'none';
+                disabledReason.style.display = 'none';
+                disabledStartDateInput.required = false;
+            }
+        });
     });
 
 </script>
