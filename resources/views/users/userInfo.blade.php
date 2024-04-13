@@ -4,8 +4,9 @@
 <div class="bg-light rounded h-100 p-4">
     <h6 class="mb-4">
         @if($action == 'edit')
-            Editar Usuario: #{{$userId}}
+            Editar Usuario: #{{$user->id}}
         @elseif($action == 'create')
+          
             Agregar nuevo usuario
         @endif
     </h6>
@@ -13,25 +14,31 @@
         <div class="row mb-3">
             <label for="dni" class="col-sm-3 col-form-label">DNI</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="dni" name="dni" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" required>
+                <input type="text" class="form-control" id="dni" name="dni" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('dni', $user->dni ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Juan Carlos Pérez" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Correo electrónico</label>
             <div class="col-sm-9">
-                <input type="email" class="form-control" id="email" name="email" placeholder="juanperez@gmail.com" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="juanperez@gmail.com" value="{{ old('email', $user->email ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">
             <label for="fechaNacimiento" class="col-sm-3 col-form-label">Fecha de Nacimiento:</label>
             <div class="col-sm-9">
-                <input type="date" class="form-control" id="disabledStartDate" name="disabledStartDate">
+                <input type="date" class="form-control" id="disabledStartDate" name="disabledStartDate"
+                @if(old('disabledStartDate')) 
+                   value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
+                @elseif(isset($user) && $user->disabledStartDate) 
+                   value="{{ \Carbon\Carbon::parse($user->disabledStartDate)->format('Y-m-d') }}" 
+                @endif
+               >
             </div>
         </div>
                            
@@ -40,32 +47,49 @@
             <div class="col-sm-9">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="radioUserType"
-                        id="gridReceptionist" value="Receptionist">
+                        @if(old('radioUserType') == 'Receptionist' || (isset($user) && $user->userType == 'Receptionist')) 
+                            checked 
+                        @endif
+                        id="gridReceptionist">
                     <label class="form-check-label" for="gridReceptionist">
                         Recepcionista / Admin
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="radioUserType"
-                        id="gridCleaner" value="Cleaner">
+                    <input class="form-check-input" type="radio" name="radioUserType" 
+                        @if(old('radioUserType') == 'Cleaner' || (isset($user) && $user->userType == 'Cleaner')) 
+                            checked 
+                        @endif
+                        id="gridCleaner">
                     <label class="form-check-label" for="gridCleaner">
                         Empleado de limpieza
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="radioUserType"
-                        id="gridGuest" value="Guest" checked>
+                        id="gridGuest" value="Guest"
+                        @if(old('radioUserType', 'Guest') == 'Guest' && !isset($user)) 
+                            checked 
+                        @elseif(old('radioUserType') == 'Guest' || (isset($user) && $user->userType == 'Guest')) 
+                            checked 
+                        @endif
+                        >
                     <label class="form-check-label" for="gridGuest">
                         Huésped
                     </label>
                 </div>
             </div>
-        </fieldset>
+        </fieldset>        
         <div class="row mb-3">
             <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
             <div class="col-sm-9">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="disabled" id="disabledCheckbox">
+                    <input class="form-check-input" type="checkbox" name="status" id="disabledCheckbox" 
+                    @if (isset($user) && $user->status == 0 || old('status'))
+                        checked 
+                    @endif
+                    >
+                    
                     <label class="form-check-label" for="disabledCheckbox">
                         Inhabilitar Usuario
                     </label>
@@ -95,47 +119,51 @@
     </form>
 </div>
   
-  <!-- Change password modal -->
-  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Nueva contraseña</label>
-                <div class="col-sm-8">
-                    <input type="password" class="form-control" id="inputPassword3">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Repetir contraseña</label>
-                <div class="col-sm-8">
-                    <input type="password" class="form-control" id="inputPassword3">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar cambios</button>
-        </div>
-      </div>
+<!-- Change password modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-  </div>
+    <div class="modal-body">
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-4 col-form-label">Nueva contraseña</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" id="inputPassword3">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-4 col-form-label">Repetir contraseña</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" id="inputPassword3">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+    </div>
+    </div>
+</div>
+</div>
   
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const dniInput = document.getElementById('dni');
-        
+    
+        function formatDniValue(value) {
+            return value.replace(/\D/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        }
+
+        dniInput.value = formatDniValue(dniInput.value);
+
         dniInput.addEventListener('input', function(event) {
-            let value = event.target.value.replace(/\D/g, ''); 
-            const formattedValue = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-            
-            dniInput.value = formattedValue;
+            event.target.value = formatDniValue(event.target.value);
         });
+
 
         const checkbox = document.getElementById('disabledCheckbox');
         const dateInput = document.getElementById('dateInput');

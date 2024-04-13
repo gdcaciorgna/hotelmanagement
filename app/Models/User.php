@@ -18,10 +18,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'fullName',
         'email',
         'password',
+        'dni',
+        'userType',
+        'status',
+        'disabledStartDate',
+        'disabledReason',
     ];
+
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -33,6 +40,21 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function getUserTypeFormatted()
+    {
+        
+        switch ($this->userType) {
+            case 'Receptionist':
+                return 'Recepcionista';
+            case 'Cleaner':
+                return 'Limpieza';
+            case 'Guest':
+                return 'Huésped';
+            default:
+                return $this->userType;
+        }
+    }
+
     /**
      * The attributes that should be cast.
      *
@@ -42,4 +64,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
 }

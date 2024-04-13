@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,18 +20,20 @@ Route::get('/', function () {
 })->name('login.index');
 
 Route::get('/users', function () {
-    return view('users.index');
+    $users = User::all();
+
+    return view('users.index')->with('users', $users);
 })->name('users.index');
 
 Route::get('/users/{id}', function ($id) {
     return "User details {$id}";
 })->name('users.details');
 
-Route::get('/users/create', function () {
-    return view('users.create');
-})->name('users.create');
-
 Route::get('/users/{id}/edit', function ($id) {
-    return  view('users.edit', ['userId' => $id, 'action' => 'edit']);
+    $user = User::findOrFail($id);
+    return  view('users.userInfo', ['user' => $user, 'action' => 'edit']);
 })->name('users.edit');
 
+Route::get('/users/create', function () {
+    return  view('users.userInfo', ['action' => 'create']);
+})->name('users.create');
