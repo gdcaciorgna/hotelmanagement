@@ -17,16 +17,25 @@ class UserSeeder extends Seeder
 
         for ($i = 0; $i < 30; $i++) {
             $fullName = $this->generateFullName();
-            $email = strtolower(str_replace(' ', '.', $fullName)) . '@gmail.com';
+            
+            $basicString = strtolower(str_replace(' ', '.', $fullName));
+            $basicString = iconv('UTF-8', 'ASCII//TRANSLIT', $basicString);
+            $basicString = preg_replace('/[^a-zA-Z0-9.]/', '', $basicString);            
+            $email = $basicString . '@gmail.com';
+            
+                        
             $dni = mt_rand(10000000, 99999999);
             $userType = $userTypes[array_rand($userTypes)];
             $status = rand(0, 5) === 5 ? false : true;
             $disabledStartDate = $status ? null : now();
             $disabledReason = $status ? null : 'Motivo de inhabilitacion en testeo';
+            $bornDateTimestamp = mt_rand(strtotime('1950-01-01'), strtotime('2005-12-31'));
+            $bornDate = date('Y-m-d', $bornDateTimestamp);    
 
             DB::table('users')->insert([
                 'dni' => $dni,
                 'fullName' => $fullName,
+                'bornDate' => $bornDate,
                 'userType' => $userType,
                 'status' => $status,
                 'disabledStartDate' => $disabledStartDate,

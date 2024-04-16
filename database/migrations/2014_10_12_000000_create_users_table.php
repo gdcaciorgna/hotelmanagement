@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('dni')->unique();
             $table->string('fullName');
+            $table->date('bornDate')->nullable();
             $table->enum('userType', ['Receptionist', 'Cleaner', 'Guest']);
             $table->boolean('status')->default(true);
             $table->timestamp('disabledStartDate')->nullable();

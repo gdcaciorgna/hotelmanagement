@@ -37,3 +37,7 @@ Route::get('/users/{id}/edit', function ($id) {
 Route::get('/users/create', function () {
     return  view('users.userInfo', ['action' => 'create']);
 })->name('users.create');
+
+Route::post('/users', function () {
+    return  view('users.userInfo', ['action' => 'create']);
+})->name('users.store');

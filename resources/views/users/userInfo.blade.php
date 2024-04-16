@@ -1,16 +1,24 @@
 @extends('layouts.app')
 @section('title', 'Usuarios')
 @section('content')
+
+@php
+    if($action == 'edit'){
+        $headerText = "Editar Usuario: #{$user->id}";
+        $formAction = route('users.edit', $user->id);
+    }
+    else{
+        $headerText = "Agregar nuevo usuario";
+        $formAction = route('users.store');
+    }
+@endphp
+
 <div class="bg-light rounded h-100 p-4">
     <h6 class="mb-4">
-        @if($action == 'edit')
-            Editar Usuario: #{{$user->id}}
-        @elseif($action == 'create')
-          
-            Agregar nuevo usuario
-        @endif
+        {{ $headerText}}
     </h6>
-    <form>
+    <form action="{{$formAction}}" method="POST">
+        @csrf
         <div class="row mb-3">
             <label for="dni" class="col-sm-3 col-form-label">DNI</label>
             <div class="col-sm-9">
@@ -20,7 +28,7 @@
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}" required>
+                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}">
             </div>
         </div>
         <div class="row mb-3">
@@ -32,11 +40,11 @@
         <div class="row mb-3">
             <label for="fechaNacimiento" class="col-sm-3 col-form-label">Fecha de Nacimiento:</label>
             <div class="col-sm-9">
-                <input type="date" class="form-control" id="disabledStartDate" name="disabledStartDate"
-                @if(old('disabledStartDate')) 
-                   value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
-                @elseif(isset($user) && $user->disabledStartDate) 
-                   value="{{ \Carbon\Carbon::parse($user->disabledStartDate)->format('Y-m-d') }}" 
+                <input type="date" class="form-control" id="bornDate" name="bornDate"
+                @if(old('bornDate')) 
+                   value="{{ \Carbon\Carbon::parse(old('bornDate'))->format('Y-m-d') }}" 
+                @elseif(isset($user) && $user->bornDate) 
+                   value="{{ \Carbon\Carbon::parse($user->bornDate)->format('Y-m-d') }}" 
                 @endif
                >
             </div>
@@ -46,8 +54,8 @@
             <legend class="col-form-label col-sm-3 pt-0">Tipo Usuario</legend>
             <div class="col-sm-9">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="radioUserType"
-                        @if(old('radioUserType') == 'Receptionist' || (isset($user) && $user->userType == 'Receptionist')) 
+                    <input class="form-check-input" type="radio" name="userType"
+                        @if(old('userType') == 'Receptionist' || (isset($user) && $user->userType == 'Receptionist')) 
                             checked 
                         @endif
                         id="gridReceptionist">
@@ -56,8 +64,8 @@
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="radioUserType" 
-                        @if(old('radioUserType') == 'Cleaner' || (isset($user) && $user->userType == 'Cleaner')) 
+                    <input class="form-check-input" type="radio" name="userType" 
+                        @if(old('userType') == 'Cleaner' || (isset($user) && $user->userType == 'Cleaner')) 
                             checked 
                         @endif
                         id="gridCleaner">
@@ -66,15 +74,15 @@
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="radioUserType"
+                    <input class="form-check-input" type="radio" name="userType"
                         id="gridGuest" value="Guest"
-                        @if(old('radioUserType', 'Guest') == 'Guest' && !isset($user)) 
+                        @if(old('userType', 'Guest') == 'Guest' && !isset($user)) 
                             checked 
-                        @elseif(old('radioUserType') == 'Guest' || (isset($user) && $user->userType == 'Guest')) 
+                        @elseif(old('userType') == 'Guest' || (isset($user) && $user->userType == 'Guest')) 
                             checked 
                         @endif
                         >
-                    <label class="form-check-label" for="gridGuest">
+                    <label class="form-check-label" for="gridGuest" name="userType">
                         Huésped
                     </label>
                 </div>
@@ -94,17 +102,33 @@
                         Inhabilitar Usuario
                     </label>
                 </div>
-                <div class="mt-3" id="dateInput" style="display: none;">
-                    <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
-                    <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate">
+                <div class="mt-3" id="dateInput"
+                @if (isset($user) && $user->status == 0 || old('status'))
+                    style="display:block"
+                @else
+                    style="display:none"
+                @endif
+                >
+                <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
+                <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate" value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
+
+                    @if (isset($user) && $user->status == 0 || old('status'))
+                        style="display:block"
+                    @endif
+                >
                 </div>
-                <div class="mt-3" id="disabledReason" style="display: none;">
+                <div class="mt-3" id="disabledReason" value="{{ old('disabledReason', $user->disabledReason ?? '')  }}"
+                @if (isset($user) && $user->status == 0 || old('status'))
+                    style="display:block"
+                @else
+                    style="display:none"
+                @endif
+                >
                     <label for="disabledReasonTextarea" class="form-label">Motivo de Inhabilitación:</label>
-                    <textarea class="form-control" id="disabledReasonTextarea" name="disabledReason"></textarea>
+                    <textarea class="form-control" id="disabledReasonTextarea"name="disabledReason">{{ old('disabledReason', $user->disabledReason ?? '') }}</textarea>
                 </div>
             </div>
-        </div>
-             
+        </div>    
      
         <div class="row mb-3">
             <div class="col-sm-3">
@@ -121,34 +145,33 @@
   
 <!-- Change password modal -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-    <div class="modal-header">
-        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-        <div class="row mb-3">
-            <label for="inputPassword3" class="col-sm-4 col-form-label">Nueva contraseña</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" id="inputPassword3">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-4 col-form-label">Nueva contraseña</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="inputPassword3">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-4 col-form-label">Repetir contraseña</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="inputPassword3">
+                </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <label for="inputPassword3" class="col-sm-4 col-form-label">Repetir contraseña</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" id="inputPassword3">
-            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Guardar cambios</button>
+        </div>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar cambios</button>
-    </div>
-    </div>
 </div>
-</div>
-  
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -163,7 +186,6 @@
         dniInput.addEventListener('input', function(event) {
             event.target.value = formatDniValue(event.target.value);
         });
-
 
         const checkbox = document.getElementById('disabledCheckbox');
         const dateInput = document.getElementById('dateInput');
@@ -181,6 +203,7 @@
                 disabledStartDateInput.required = false;
             }
         });
+
     });
 
 </script>

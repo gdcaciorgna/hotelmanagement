@@ -2,7 +2,14 @@
 @section('title', 'Usuarios')
 @section('content')
 <div class="bg-light rounded h-100 p-4">
-    <h6 class="mb-4">Usuarios</h6>
+    <div class="row mb-3">
+        <div class="col-sm-3">
+            <h6 class="mb-4">Usuarios</h6>
+        </div>
+        <div class="col-sm-9 text-end">
+            <a href="{{route('users.create')}}" class="btn btn-dark">Agregar nuevo usuario</a>
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
@@ -41,7 +48,7 @@
                         </td>
                         <td>
                             <a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a>
-                            <button type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2 deleteButton" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-full-name="{{$user->fullName}}"><i class="fa fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2 deleteButton" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-full-name="{{$user->fullName}}" data-user-id="{{$user->id}}"><i class="fa fa-trash-alt"></i></button>
                         </td>
                         
                     </tr>
@@ -73,7 +80,6 @@
     </div>
 </div>
 
-
 {{-- Delete Confirmation Modal --}}
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -84,6 +90,7 @@
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro de querer eliminar el usuario <strong id="userFullName"></strong></p>
+                <p id="userId">Eliminar usuario {{$user->id}}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -97,7 +104,6 @@
    document.addEventListener('DOMContentLoaded', function() {
     var modalTriggerButtons = document.querySelectorAll('.btn[data-bs-toggle="modal"]');
     var deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
-    var deleteButton = document.querySelector('.deleteButton');
 
     modalTriggerButtons.forEach(function(button) {
         button.addEventListener('click', function(event) {
@@ -110,16 +116,20 @@
             modal.querySelector('#disabledReasonParagraph').textContent = disabledReason;
         });
     });  
+    var deleteButton = document.querySelectorAll('.deleteButton');
+    deleteButton.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            var button = event.currentTarget;
+            var fullName = button.getAttribute('data-full-name');
+            var userId = button.getAttribute('data-user-id');
+            deleteConfirmationModal.querySelector('#userFullName').textContent = fullName;
+            deleteConfirmationModal.querySelector('#userId').textContent = userId;
 
-    deleteButton.addEventListener('click', function(event) {
-        var fullName = event.currentTarget.getAttribute('data-full-name');
-        var modal = document.getElementById('deleteConfirmationModal');
-        modal.querySelector('#userFullName').textContent = fullName;
-    });
+        });
+    });  
+
 });
 
 </script>
-
-
 
 @endsection
