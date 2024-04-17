@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->timestamp('disabledStartDate')->nullable();
             $table->string('disabledReason')->nullable();
             $table->string('email');
-            $table->string('password');
+            $table->string('password')->default(Hash::make('123456'));
             $table->rememberToken();
             $table->timestamps();
         });

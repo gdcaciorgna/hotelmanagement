@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Hash;
+
+
 use App\Models\User;
 
 /*
@@ -21,7 +25,6 @@ Route::get('/', function () {
 
 Route::get('/users', function () {
     $users = User::all();
-
     return view('users.index')->with('users', $users);
 })->name('users.index');
 
@@ -31,13 +34,15 @@ Route::get('/users/{id}', function ($id) {
 
 Route::get('/users/{id}/edit', function ($id) {
     $user = User::findOrFail($id);
-    return  view('users.userInfo', ['user' => $user, 'action' => 'edit']);
+    return view('users.userInfo', ['user' => $user, 'action' => 'edit']);
 })->name('users.edit');
 
 Route::get('/users/create', function () {
-    return  view('users.userInfo', ['action' => 'create']);
+    return view('users.userInfo', ['action' => 'create']);
 })->name('users.create');
 
 Route::post('/users', function () {
-    return  view('users.userInfo', ['action' => 'create']);
+    $userData = Request::all();
+    User::create($userData);
+    return view('users.index');
 })->name('users.store');

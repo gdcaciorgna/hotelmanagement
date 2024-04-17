@@ -108,15 +108,20 @@
                 @else
                     style="display:none"
                 @endif
-                >
+            >
                 <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
-                <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate" value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
-
-                    @if (isset($user) && $user->status == 0 || old('status'))
-                        style="display:block"
-                    @endif
+                <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate" 
+                       
+                       @if(old('disabledStartDate')) 
+                        value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
+                        @elseif(isset($user) && $user->disabledStartDate) 
+                        value="{{ \Carbon\Carbon::parse($user->disabledStartDate)->format('Y-m-d') }}" 
+                        @endif
+                       @if (isset($user) && $user->status == 0 || old('status'))
+                           style="display:block"
+                       @endif
                 >
-                </div>
+                </div>            
                 <div class="mt-3" id="disabledReason" value="{{ old('disabledReason', $user->disabledReason ?? '')  }}"
                 @if (isset($user) && $user->status == 0 || old('status'))
                     style="display:block"
@@ -125,7 +130,7 @@
                 @endif
                 >
                     <label for="disabledReasonTextarea" class="form-label">Motivo de Inhabilitación:</label>
-                    <textarea class="form-control" id="disabledReasonTextarea"name="disabledReason">{{ old('disabledReason', $user->disabledReason ?? '') }}</textarea>
+                    <textarea class="form-control" id="disabledReasonTextarea" name="disabledReason"> {{ old('disabledReason', $user->disabledReason ?? '')  }} </textarea>
                 </div>
             </div>
         </div>    
