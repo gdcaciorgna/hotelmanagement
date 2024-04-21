@@ -75,5 +75,11 @@ class UserController extends Controller
         $user->delete();
         return to_route('users.index');
     }
+
+    public function setNewPassword(Request $request){
+        $user = User::findOrFail($request->user_id);
+        $user->update(['password' => $request->newPassword]);
+        return to_route('users.edit', ['id' => $user->id]);
+    }
     
 }

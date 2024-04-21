@@ -154,35 +154,40 @@
 </div>
   
 <!-- Change password modal -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Nueva contraseña</label>
-                <div class="col-sm-8">
-                    <input type="password" class="form-control" id="inputPassword3">
+<form action="{{ route('users.setNewPassword') }}" method="POST" id="changePasswordForm">
+    @method('PUT')
+    @csrf
+    <input type="hidden" name="user_id" value="{{ $user->id }}">
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="changePasswordModalLabel">Modificar contraseña</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <label for="inputPassword" class="col-sm-4 col-form-label">Nueva contraseña</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="inputPassword" name="newPassword">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputConfirmPassword" class="col-sm-4 col-form-label">Repetir contraseña</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword">
+                        </div>
+                    </div>
+                    <div id="passwordError" class="text-danger" style="display: none;">Las contraseñas no coinciden</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </div>
             </div>
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Repetir contraseña</label>
-                <div class="col-sm-8">
-                    <input type="password" class="form-control" id="inputPassword3">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary">Guardar cambios</button>
-        </div>
         </div>
     </div>
-</div>
-
+</form>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const dniInput = document.getElementById('dni');
@@ -214,6 +219,32 @@
             }
         });
 
+
+        document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
+            // Validar las contraseñas antes de enviar el formulario
+            if (!validatePasswords()) {
+                // Detener el envío del formulario si las contraseñas no coinciden
+                event.preventDefault();
+            }
+        });
+
+        // Función para validar las contraseñas
+        function validatePasswords() {
+            var password = document.getElementById("inputPassword").value;
+            var confirmPassword = document.getElementById("inputConfirmPassword").value;
+            var passwordError = document.getElementById("passwordError");
+
+            // Verificar si las contraseñas coinciden
+            if (password !== confirmPassword) {
+                // Mostrar el mensaje de error
+                passwordError.style.display = "block";
+                return false; // Indicar que las contraseñas no coinciden
+            } else {
+                // Ocultar el mensaje de error si las contraseñas coinciden
+                passwordError.style.display = "none";
+                return true; // Indicar que las contraseñas coinciden
+            }
+        }
     });
 
 </script>
