@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('password')->default(Hash::make('123456'));
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

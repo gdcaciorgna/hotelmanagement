@@ -5,11 +5,13 @@
 @php
     if($action == 'edit'){
         $headerText = "Editar Usuario: #{$user->id}";
-        $formAction = route('users.edit', $user->id);
+        $formAction = route('users.update', ['id' => $user->id]);
+        $method = 'PUT';
     }
     else{
         $headerText = "Agregar nuevo usuario";
         $formAction = route('users.store');
+        $method = 'POST';
     }
 @endphp
 
@@ -19,16 +21,29 @@
     </h6>
     <form action="{{$formAction}}" method="POST">
         @csrf
+        @if(isset($method))
+            @method($method)
+        @endif
         <div class="row mb-3">
             <label for="dni" class="col-sm-3 col-form-label">DNI</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="dni" name="dni" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('dni', $user->dni ?? '')  }}" required>
+                <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('dni', $user->dni ?? '')  }}">
+                @error('dni')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
             </div>
         </div>
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}">
+                <input type="text" class="form-control @error('fullName') is-invalid @enderror" id="fullName" name="fullName" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}">
+                @error('fullName')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
             </div>
         </div>
         <div class="row mb-3">
@@ -54,40 +69,30 @@
             <legend class="col-form-label col-sm-3 pt-0">Tipo Usuario</legend>
             <div class="col-sm-9">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType"
-                        @if(old('userType') == 'Receptionist' || (isset($user) && $user->userType == 'Receptionist')) 
-                            checked 
-                        @endif
-                        id="gridReceptionist">
+                    <input class="form-check-input" type="radio" name="userType" value="Receptionist"
+                        @if(old('userType', isset($user) ? $user->userType : '') == 'Receptionist') checked @endif id="gridReceptionist">
                     <label class="form-check-label" for="gridReceptionist">
                         Recepcionista / Admin
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType" 
-                        @if(old('userType') == 'Cleaner' || (isset($user) && $user->userType == 'Cleaner')) 
-                            checked 
-                        @endif
-                        id="gridCleaner">
+                    <input class="form-check-input" type="radio" name="userType" value="Cleaner"
+                        @if(old('userType', isset($user) ? $user->userType : '') == 'Cleaner') checked @endif id="gridCleaner">
                     <label class="form-check-label" for="gridCleaner">
                         Empleado de limpieza
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType"
-                        id="gridGuest" value="Guest"
-                        @if(old('userType', 'Guest') == 'Guest' && !isset($user)) 
-                            checked 
-                        @elseif(old('userType') == 'Guest' || (isset($user) && $user->userType == 'Guest')) 
-                            checked 
-                        @endif
-                        >
-                    <label class="form-check-label" for="gridGuest" name="userType">
+                    <input class="form-check-input" type="radio" name="userType" value="Guest"
+                        @if(old('userType', isset($user) ? $user->userType : '') == 'Guest' || ($action != 'edit'))  checked @endif 
+                        id="gridGuest">
+                    <label class="form-check-label" for="gridGuest">
                         Huésped
                     </label>
                 </div>
             </div>
-        </fieldset>        
+        </fieldset>
+                
         <div class="row mb-3">
             <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
             <div class="col-sm-9">

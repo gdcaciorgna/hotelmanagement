@@ -47,10 +47,9 @@
                         @endif
                         </td>
                         <td>
-                            <a href="#" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a>
-                            <button type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2 deleteButton" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-full-name="{{$user->fullName}}" data-user-id="{{$user->id}}"><i class="fa fa-trash-alt"></i></button>
+                            <a href="{{route('users.edit', $user->id)}}" type="button" class="btn btn-sm btn-sm-square btn-outline-primary m-2"><i class="fa fa-edit"></i></a>
+                            <button type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2 deleteButton" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-user-id="{{$user->id}}" data-full-name="{{$user->fullName}}"><i class="fa fa-trash-alt"></i></button>
                         </td>
-                        
                     </tr>
                     @php
                         $counter++;
@@ -59,6 +58,9 @@
                 
             </tbody>
         </table>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        {{ $users->links() }}
     </div>
 </div>
 
@@ -90,11 +92,15 @@
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro de querer eliminar el usuario <strong id="userFullName"></strong></p>
-                <p id="userId">Eliminar usuario {{$user->id}}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-danger">Guardar cambios</button>
+                <form method="POST" action="{{route('users.destroy', $user->id)}}">
+                    @method('DELETE')
+                    @csrf
+                    <input type="hidden" name="user_id" id="userId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-danger">Guardar cambios</button>
+                </form>
             </div>            
         </div>
     </div>
@@ -117,13 +123,19 @@
         });
     });  
     var deleteButton = document.querySelectorAll('.deleteButton');
+    var userIdInput = document.getElementById('userId');
     deleteButton.forEach(function(button) {
         button.addEventListener('click', function(event) {
             var button = event.currentTarget;
             var fullName = button.getAttribute('data-full-name');
             var userId = button.getAttribute('data-user-id');
-            deleteConfirmationModal.querySelector('#userFullName').textContent = fullName;
-            deleteConfirmationModal.querySelector('#userId').textContent = userId;
+            userIdInput.value = userId;
+
+            var userFullName = document.getElementById('userFullName');
+            userFullName.textContent = fullName;
+            
+            var formAction = deleteUserForm.action.replace(':userId', userId);
+            deleteUserForm.action = formAction;
 
         });
     });  

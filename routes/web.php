@@ -1,12 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Hash;
-
-
-use App\Models\User;
+use \App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,26 +18,10 @@ Route::get('/', function () {
     return view('login.index');
 })->name('login.index');
 
-Route::get('/users', function () {
-    $users = User::all();
-    return view('users.index')->with('users', $users);
-})->name('users.index');
-
-Route::get('/users/{id}', function ($id) {
-    return "User details {$id}";
-})->name('users.details');
-
-Route::get('/users/{id}/edit', function ($id) {
-    $user = User::findOrFail($id);
-    return view('users.userInfo', ['user' => $user, 'action' => 'edit']);
-})->name('users.edit');
-
-Route::get('/users/create', function () {
-    return view('users.userInfo', ['action' => 'create']);
-})->name('users.create');
-
-Route::post('/users', function () {
-    $userData = Request::all();
-    User::create($userData);
-    return view('users.index');
-})->name('users.store');
+//USERS
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+Route::get('/users/create',  [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
