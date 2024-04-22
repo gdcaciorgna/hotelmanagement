@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -77,9 +78,20 @@ class UserController extends Controller
     }
 
     public function setNewPassword(Request $request){
+
+        //Password Validations
+        $validator = Validator::make($request->all(), [
+            'newPassword' => 'required|min:8|confirmed',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['success' => 'false', 'message' => $validator->errors()->first()]);
+        }
+    
         $user = User::findOrFail($request->user_id);
         $user->update(['password' => $request->newPassword]);
-        return to_route('users.edit', ['id' => $user->id]);
+        return response()->json(['success' => 'true', 'message' => 'Contraseña actualizada correctamente']);
+      
     }
     
 }

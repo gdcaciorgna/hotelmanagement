@@ -155,9 +155,7 @@
   
 <!-- Change password modal -->
 <form action="{{ route('users.setNewPassword') }}" method="POST" id="changePasswordForm">
-    @method('PUT')
-    @csrf
-    <input type="hidden" name="user_id" value="{{ $user->id }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -167,18 +165,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
-                        <label for="inputPassword" class="col-sm-4 col-form-label">Nueva contraseña</label>
+                        <label for="newPassword" class="col-sm-4 col-form-label">Nueva contraseña</label>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" id="inputPassword" name="newPassword">
+                            <input type="password" class="form-control" id="newPassword" name="newPassword">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="inputConfirmPassword" class="col-sm-4 col-form-label">Repetir contraseña</label>
+                        <label for="newPassword_confirmation" class="col-sm-4 col-form-label">Repetir contraseña</label>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword">
+                            <input type="password" class="form-control" id="newPassword_confirmation" name="newPassword_confirmation">
                         </div>
                     </div>
-                    <div id="passwordError" class="text-danger" style="display: none;">Las contraseñas no coinciden</div>
+                    <div id="passwordError" class="text-danger" style="display: none;"></div>
+                    <div id="passwordSuccess" class="text-success" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -221,30 +220,40 @@
 
 
         document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
-            // Validar las contraseñas antes de enviar el formulario
-            if (!validatePasswords()) {
-                // Detener el envío del formulario si las contraseñas no coinciden
-                event.preventDefault();
-            }
+            event.preventDefault();
+            var newPassword = document.getElementById("newPassword").value;
+            var confirmPassword = document.getElementById("newPassword_confirmation").value;
+            var userId = "{{ $user->id }}";
+            
+            var formData = new FormData(this);
+            formData.append('newPassword', newPassword);
+            formData.append('newPassword_confirmation', confirmPassword);
+            formData.append('user_id', userId);
+            
+            $.ajax({
+                url: "{{ route('users.setNewPassword') }}",
+                method: "POST",
+                data: formData,
+                processData: false, // Evitar que jQuery procese los datos automáticamente
+                contentType: false, // Evitar que jQuery establezca automáticamente el tipo de contenido                
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success == 'true') {
+                        $('#passwordSuccess').text('Contraseña actualizada correctamente').show();
+                        $('#passwordError').hide();
+                    } else {
+                        $('#passwordError').text(response.message).show();
+                        $('#passwordSuccess').hide();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
         });
-
-        // Función para validar las contraseñas
-        function validatePasswords() {
-            var password = document.getElementById("inputPassword").value;
-            var confirmPassword = document.getElementById("inputConfirmPassword").value;
-            var passwordError = document.getElementById("passwordError");
-
-            // Verificar si las contraseñas coinciden
-            if (password !== confirmPassword) {
-                // Mostrar el mensaje de error
-                passwordError.style.display = "block";
-                return false; // Indicar que las contraseñas no coinciden
-            } else {
-                // Ocultar el mensaje de error si las contraseñas coinciden
-                passwordError.style.display = "none";
-                return true; // Indicar que las contraseñas coinciden
-            }
-        }
     });
 
 </script>
