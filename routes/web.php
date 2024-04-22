@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +16,6 @@ use \App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return view('login.index');
-})->name('login.index');
 
 //USERS
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -26,3 +25,7 @@ Route::get('/users/create',  [UserController::class, 'create'])->name('users.cre
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::post('/users/setNewPassword', [UserController::class, 'setNewPassword'])->name('users.setNewPassword');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
