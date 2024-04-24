@@ -20,9 +20,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'fullName',
+        'firstName',
+        'lastName',
         'bornDate',
         'email',
+        'phone',
+        'address',
         'dni',
         'userType',
         'status',
@@ -30,8 +33,6 @@ class User extends Authenticatable
         'disabledReason',
         'password'
     ];
-
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,6 +43,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
 
     public function getUserTypeFormatted()
     {
@@ -56,6 +62,22 @@ class User extends Authenticatable
             default:
                 return $this->userType;
         }
+    }
+
+    public function getFormattedPhoneAttribute()
+    {
+        // Obtenemos el número de teléfono
+        $phone = $this->attributes['phone'];
+
+        // Si el número de teléfono no tiene 13 caracteres, no se puede formatear correctamente
+        if (strlen($phone) !== 13) {
+            return $phone;
+        }
+
+        // Formateamos el número de teléfono
+        $formattedPhone = '+' . substr($phone, 0, 2) . ' ' . substr($phone, 2, 1) . ' ' . substr($phone, 3, 4) . ' ' . substr($phone, 7);
+
+        return $formattedPhone;
     }
 
     /**

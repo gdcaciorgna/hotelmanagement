@@ -11,7 +11,8 @@ class UserController extends Controller
 {
     public function index(){
         $users = User::query()
-            ->orderBy('fullName')
+            ->orderBy('lastName')
+            ->orderBy('firstName')
             ->simplePaginate(50);
         
         return view('users.index')->with('users', $users);

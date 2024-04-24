@@ -36,10 +36,21 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
+            <label for="name" class="col-sm-3 col-form-label">Nombre</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control @error('fullName') is-invalid @enderror" id="fullName" name="fullName" placeholder="Juan Carlos Pérez" value="{{ old('fullName', $user->fullName ?? '')  }}">
-                @error('fullName')
+                <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" placeholder="Juan Carlos Pérez" value="{{ old('firstName', $user->firstName ?? '')  }}">
+                @error('firstName')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="name" class="col-sm-3 col-form-label">Apellido</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" placeholder="Juan Carlos Pérez" value="{{ old('lastName', $user->lastName ?? '')  }}">
+                @error('lastName')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
@@ -50,6 +61,18 @@
             <label for="name" class="col-sm-3 col-form-label">Correo electrónico</label>
             <div class="col-sm-9">
                 <input type="email" class="form-control" id="email" name="email" placeholder="juanperez@gmail.com" value="{{ old('email', $user->email ?? '')  }}" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="name" class="col-sm-3 col-form-label">Teléfono</label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" id="phone" name="phone" placeholder="juanperez@gmail.com" value="{{ old('phone', $user->phone ?? '')  }}" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="name" class="col-sm-3 col-form-label">Dirección</label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" id="address" name="address" placeholder="juanperez@gmail.com" value="{{ old('address', $user->address ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">
@@ -234,8 +257,8 @@
                 url: "{{ route('users.setNewPassword') }}",
                 method: "POST",
                 data: formData,
-                processData: false, // Evitar que jQuery procese los datos automáticamente
-                contentType: false, // Evitar que jQuery establezca automáticamente el tipo de contenido                
+                processData: false, 
+                contentType: false,                 
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

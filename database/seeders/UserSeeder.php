@@ -16,13 +16,22 @@ class UserSeeder extends Seeder
         $userTypes = ['Receptionist', 'Cleaner', 'Guest'];
 
         for ($i = 0; $i < 30; $i++) {
-            $fullName = $this->generateFullName();
+
+            $phone = '549' . mt_rand(2000000000, 9999999999);
+            $streets = ['Calle A', 'Calle B', 'Calle C'];
+            $cities = ['Buenos Aires', 'Córdoba', 'Rosario'];
+            $provinces = ['Buenos Aires', 'Córdoba', 'Santa Fe'];
+            $address = mt_rand(1, 500) . ' ' . $streets[array_rand($streets)] . ', ' . $cities[array_rand($cities)] . ', ' . $provinces[array_rand($provinces)];
             
-            $basicString = strtolower(str_replace(' ', '.', $fullName));
+            $firstNames = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía'];
+            $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz'];    
+            $firstName = $firstNames[array_rand($firstNames)];
+            $lastName = $lastNames[array_rand($lastNames)];
+            
+            $basicString = strtolower(str_replace(' ', '.', $firstName. ' ' . $lastName));
             $basicString = iconv('UTF-8', 'ASCII//TRANSLIT', $basicString);
             $basicString = preg_replace('/[^a-zA-Z0-9.]/', '', $basicString);            
             $email = $basicString . '@gmail.com';
-            
                         
             $dni = mt_rand(10000000, 99999999);
             $userType = $userTypes[array_rand($userTypes)];
@@ -31,30 +40,24 @@ class UserSeeder extends Seeder
             $disabledReason = $status ? null : 'Motivo de inhabilitacion en testeo';
             $bornDateTimestamp = mt_rand(strtotime('1950-01-01'), strtotime('2005-12-31'));
             $bornDate = date('Y-m-d', $bornDateTimestamp);    
-
+    
             DB::table('users')->insert([
                 'dni' => $dni,
-                'fullName' => $fullName,
+                'firstName' => $firstName,
+                'lastName' => $lastName,
                 'bornDate' => $bornDate,
                 'userType' => $userType,
                 'status' => $status,
                 'disabledStartDate' => $disabledStartDate,
                 'disabledReason' => $disabledReason,
                 'email' => $email,
+                'phone' => $phone,
+                'address' => $address,
                 'password' => bcrypt('123456'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
-    }
-    private function generateFullName()
-    {
-        $names = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía'];
-        $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz'];
-
-        $fullName = $names[array_rand($names)] . ' ' . $lastNames[array_rand($lastNames)];
-
-        return $fullName;
     }
 }

@@ -29,6 +29,6 @@
     <!-- Template Stylesheet -->
     <link href="{{asset('/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('/css/app.css')}}" rel="stylesheet">
-
+    @inject('carbon', 'Illuminate\Support\Carbon')
 </head>
 <body>

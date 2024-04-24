@@ -15,13 +15,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('dni')->unique();
-            $table->string('fullName');
+            $table->string('firstName');
+            $table->string('lastName');
             $table->date('bornDate')->nullable();
             $table->enum('userType', ['Receptionist', 'Cleaner', 'Guest']);
             $table->boolean('status')->default(true);
             $table->timestamp('disabledStartDate')->nullable();
             $table->string('disabledReason')->nullable();
             $table->string('email');
+            $table->string('phone');
+            $table->string('address');
             $table->string('password')->default(Hash::make('123456'));
             $table->rememberToken();
             $table->timestamps();
