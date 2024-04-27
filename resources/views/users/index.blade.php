@@ -15,7 +15,8 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">DNI</th>
+                    <th scope="col">Tipo Doc</th>
+                    <th scope="col">Nro Doc</th>
                     <th scope="col">Nombre y apellido</th>
                     <th scope="col">Tipo Usuario</th>
                     <th scope="col">Estado</th>
@@ -33,7 +34,8 @@
                     @endphp
                     <tr>
                         <th scope="row">{{$counter}}</th>
-                        <td>{{number_format($user->dni, 0, ',', '.')}}</td>
+                        <td>{{$user->docType}}</td>
+                        <td>{{number_format($user->numDoc, 0, ',', '.')}}</td>
                         <td>{{$user->fullName}}</td>
                         <td>{{$user->getUserTypeFormatted()}}</td>
                         <td>

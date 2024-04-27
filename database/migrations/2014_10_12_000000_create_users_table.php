@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('dni')->unique();
+            $table->enum('docType', ['DNI', 'PAS']);
+            $table->string('numDoc');
             $table->string('firstName');
             $table->string('lastName');
             $table->date('bornDate')->nullable();
@@ -25,6 +26,9 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('address');
+            $table->time('weekdayStartWorkHours')->nullable();
+            $table->time('weekdayEndWorkHours')->nullable();
+            $table->timestamp('startEmploymentDate')->nullable();
             $table->string('password')->default(Hash::make('123456'));
             $table->rememberToken();
             $table->timestamps();

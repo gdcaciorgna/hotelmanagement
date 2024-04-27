@@ -26,11 +26,15 @@ class User extends Authenticatable
         'email',
         'phone',
         'address',
-        'dni',
+        'docType',
+        'numDoc',
         'userType',
         'status',
         'disabledStartDate',
         'disabledReason',
+        'weekdayStartWorkHours',
+        'weekdayEndWorkHours',
+        'startEmploymentDate',
         'password'
     ];
 
@@ -51,7 +55,6 @@ class User extends Authenticatable
 
     public function getUserTypeFormatted()
     {
-        
         switch ($this->userType) {
             case 'Receptionist':
                 return 'Recepcionista';

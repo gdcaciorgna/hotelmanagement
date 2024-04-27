@@ -16,19 +16,44 @@
 @endphp
 
 <div class="bg-light rounded h-100 p-4">
-    <h6 class="mb-4">
-        {{ $headerText}}
-    </h6>
+    <div class="row mb-3">
+        <div class="col-sm-3">
+            <h6 class="mb-4"> {{ $headerText}} </h6>
+        </div>
+        <div class="col-sm-9 text-end">
+            <a href="{{route('users.index')}}" class="btn btn-dark">Ver usuarios</a>
+        </div>
+    </div>
+   
     <form action="{{$formAction}}" method="POST">
         @csrf
         @if(isset($method))
             @method($method)
         @endif
-        <div class="row mb-3">
-            <label for="dni" class="col-sm-3 col-form-label">DNI</label>
+        <fieldset class="row mb-3">
+            <legend class="col-form-label col-sm-3 pt-0">Tipo Doc</legend>
             <div class="col-sm-9">
-                <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('dni', $user->dni ?? '')  }}">
-                @error('dni')
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="docType" value="DNI"
+                        @if($action == 'create' || old('docType', isset($user) ? $user->docType : '') == 'DNI') checked @endif id="gridDNI">
+                    <label class="form-check-label" for="gridDNI">
+                        DNI
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="docType" value="PAS"
+                        @if(old('docType', isset($user) ? $user->docType : '') == 'PAS') checked @endif id="gridPAS">
+                    <label class="form-check-label" for="gridPAS">
+                        Pasaporte
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <div class="row mb-3">
+            <label for="numDoc" class="col-sm-3 col-form-label">Nro Doc</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control @error('numDoc') is-invalid @enderror" id="numDoc" name="numDoc" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('numDoc', $user->numDoc ?? '')  }}">
+                @error('numDoc')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
@@ -36,20 +61,17 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">Nombre</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" placeholder="Juan Carlos Pérez" value="{{ old('firstName', $user->firstName ?? '')  }}">
+            <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" placeholder="Nombre" value="{{ old('firstName', $user->firstName ?? '')  }}">
                 @error('firstName')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror    
             </div>
-        </div>
-        <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">Apellido</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" placeholder="Juan Carlos Pérez" value="{{ old('lastName', $user->lastName ?? '')  }}">
+            <div class="col-sm-5">
+                <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" placeholder="Apellido" value="{{ old('lastName', $user->lastName ?? '')  }}">
                 @error('lastName')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -64,57 +86,90 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">Teléfono</label>
+            <label for="phone" class="col-sm-3 col-form-label">Teléfono</label>
             <div class="col-sm-9">
-                <input type="email" class="form-control" id="phone" name="phone" placeholder="juanperez@gmail.com" value="{{ old('phone', $user->phone ?? '')  }}" required>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="54 9 3462 634739" value="{{ old('phone', $user->phone ?? '')  }}" required data-intl-tel-input="true">
             </div>
-        </div>
+        </div>        
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Dirección</label>
             <div class="col-sm-9">
-                <input type="email" class="form-control" id="address" name="address" placeholder="juanperez@gmail.com" value="{{ old('address', $user->address ?? '')  }}" required>
+                <input type="text" class="form-control" id="address" name="address" placeholder="219 Calle A, Rosario, Santa Fe" value="{{ old('address', $user->address ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">
             <label for="fechaNacimiento" class="col-sm-3 col-form-label">Fecha de Nacimiento:</label>
             <div class="col-sm-9">
-                <input type="date" class="form-control" id="bornDate" name="bornDate"
+                <input type="date" class="form-control @error('bornDate') is-invalid @enderror" id="bornDate" name="bornDate"
                 @if(old('bornDate')) 
                    value="{{ \Carbon\Carbon::parse(old('bornDate'))->format('Y-m-d') }}" 
                 @elseif(isset($user) && $user->bornDate) 
                    value="{{ \Carbon\Carbon::parse($user->bornDate)->format('Y-m-d') }}" 
                 @endif
                >
+               @error('bornDate')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror  
             </div>
+          
         </div>
-                           
-        <fieldset class="row mb-3">
-            <legend class="col-form-label col-sm-3 pt-0">Tipo Usuario</legend>
+                             
+        <div class="row mb-3">
+            <label for="userType" class="col-sm-3 col-form-label">Tipo Usuario</label>
             <div class="col-sm-9">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType" value="Receptionist"
-                        @if(old('userType', isset($user) ? $user->userType : '') == 'Receptionist') checked @endif id="gridReceptionist">
-                    <label class="form-check-label" for="gridReceptionist">
+                <select class="form-select" id="userType" name="userType">
+                    <option value="Receptionist" 
+                        {{ (old('userType', isset($user) ? $user->userType : '') == 'Receptionist') ? 'selected' : '' }}>
                         Recepcionista / Admin
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType" value="Cleaner"
-                        @if(old('userType', isset($user) ? $user->userType : '') == 'Cleaner') checked @endif id="gridCleaner">
-                    <label class="form-check-label" for="gridCleaner">
+                    </option>
+                    <option value="Cleaner" 
+                        {{ (old('userType', isset($user) ? $user->userType : '') == 'Cleaner') ? 'selected' : '' }}>
                         Empleado de limpieza
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="userType" value="Guest"
-                        @if(old('userType', isset($user) ? $user->userType : '') == 'Guest' || ($action != 'edit'))  checked @endif 
-                        id="gridGuest">
-                    <label class="form-check-label" for="gridGuest">
+                    </option>
+                    <option value="Guest" 
+                        {{ (old('userType', isset($user) ? $user->userType : '') == 'Guest' || $action != 'edit') ? 'selected' : '' }}>
                         Huésped
-                    </label>
+                    </option>
+                </select>
+            </div>
+        </div>        
+        <div class="workInformation">
+            <div class="row mb-3">
+                <label for="weekdayStartWorkHours" class="col-sm-3 col-form-label">Horario Laboral</label>
+                <div class="col-sm-4">
+                    <input type="time" class="form-control" id="weekdayStartWorkHours" name="weekdayStartWorkHours"
+                    @if(old('weekdayStartWorkHours')) 
+                    value="{{ \Carbon\Carbon::parse(old('weekdayStartWorkHours'))->format('H:i') }}" 
+                    @elseif(isset($user) && $user->weekdayStartWorkHours) 
+                    value="{{ \Carbon\Carbon::parse($user->weekdayStartWorkHours)->format('H:i') }}" 
+                    @endif
+                >
+                </div>
+                <div class="col-sm-5">
+                    <input type="time" class="form-control" id="weekdayEndWorkHours" name="weekdayEndWorkHours"
+                    @if(old('weekdayEndWorkHours')) 
+                    value="{{ \Carbon\Carbon::parse(old('weekdayEndWorkHours'))->format('H:i') }}" 
+                    @elseif(isset($user) && $user->weekdayEndWorkHours) 
+                    value="{{ \Carbon\Carbon::parse($user->weekdayEndWorkHours)->format('H:i') }}" 
+                    @endif
+                >
                 </div>
             </div>
-        </fieldset>
+            <div class="row mb-3">
+                <label for="fechaNacimiento" class="col-sm-3 col-form-label">Inicio de actividad laboral</label>
+                <div class="col-sm-9">
+                    <input type="date" class="form-control" id="startEmploymentDate" name="startEmploymentDate"
+                    @if(old('startEmploymentDate')) 
+                    value="{{ \Carbon\Carbon::parse(old('startEmploymentDate'))->format('Y-m-d') }}" 
+                    @elseif(isset($user) && $user->startEmploymentDate) 
+                    value="{{ \Carbon\Carbon::parse($user->startEmploymentDate)->format('Y-m-d') }}" 
+                    @endif
+                >
+                </div>
+            </div>      
+        </div>
                 
         <div class="row mb-3">
             <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
@@ -164,13 +219,18 @@
         </div>    
      
         <div class="row mb-3">
-            <div class="col-sm-3">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                    Modificar contraseña
-                </button>
-            </div>
+            @if($action == 'edit')
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        Modificar contraseña
+                    </button>
+                </div>
+            @else
+                <div class="col-sm-3"></div>
+            @endif
+
             <div class="col-sm-9 text-end">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </form>
@@ -212,16 +272,16 @@
 </form>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const dniInput = document.getElementById('dni');
+        const numDocInput = document.getElementById('numDoc');
     
-        function formatDniValue(value) {
+        function formatNumDocValue(value) {
             return value.replace(/\D/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         }
 
-        dniInput.value = formatDniValue(dniInput.value);
+        numDocInput.value = formatNumDocValue(numDocInput.value);
 
-        dniInput.addEventListener('input', function(event) {
-            event.target.value = formatDniValue(event.target.value);
+        numDocInput.addEventListener('input', function(event) {
+            event.target.value = formatNumDocValue(event.target.value);
         });
 
         const checkbox = document.getElementById('disabledCheckbox');
@@ -241,44 +301,65 @@
             }
         });
 
-
-        document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var newPassword = document.getElementById("newPassword").value;
-            var confirmPassword = document.getElementById("newPassword_confirmation").value;
-            var userId = "{{ $user->id }}";
-            
-            var formData = new FormData(this);
-            formData.append('newPassword', newPassword);
-            formData.append('newPassword_confirmation', confirmPassword);
-            formData.append('user_id', userId);
-            
-            $.ajax({
-                url: "{{ route('users.setNewPassword') }}",
-                method: "POST",
-                data: formData,
-                processData: false, 
-                contentType: false,                 
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.success == 'true') {
-                        $('#passwordSuccess').text('Contraseña actualizada correctamente').show();
-                        $('#passwordError').hide();
-                    } else {
-                        $('#passwordError').text(response.message).show();
-                        $('#passwordSuccess').hide();
+        action = "{{$action}}";
+        if(action == 'edit'){
+            document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                var newPassword = document.getElementById("newPassword").value;
+                var confirmPassword = document.getElementById("newPassword_confirmation").value;
+                var userId = "{{ isset($user) ? $user->id : '' }}";
+                
+                var formData = new FormData(this);
+                formData.append('newPassword', newPassword);
+                formData.append('newPassword_confirmation', confirmPassword);
+                formData.append('user_id', userId);
+                
+                $.ajax({
+                    url: "{{ route('users.setNewPassword') }}",
+                    method: "POST",
+                    data: formData,
+                    processData: false, 
+                    contentType: false,                 
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success == 'true') {
+                            $('#passwordSuccess').text('Contraseña actualizada correctamente').show();
+                            $('#passwordError').hide();
+                        } else {
+                            $('#passwordError').text(response.message).show();
+                            $('#passwordSuccess').hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+                });
             });
-
-        });
+        }
     });
+
+    const userTypeDropdown = document.getElementById('userType');
+        const workInformation = document.querySelector('.workInformation');
+
+        function toggleWorkInformationDisplay() {
+            const userTypeValue = userTypeDropdown.value;
+            if (userTypeValue === 'Guest') {
+                workInformation.style.display = 'none';
+            } else {
+                workInformation.style.display = 'block';
+            }
+        }
+
+        toggleWorkInformationDisplay();
+
+        userTypeDropdown.addEventListener('change', function() {
+            toggleWorkInformationDisplay();
+        });
+
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/inputmask.min.js"></script>
+
 @endsection

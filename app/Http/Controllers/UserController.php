@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -30,12 +31,26 @@ class UserController extends Controller
 
         //Convert "38.884.376" into "38884376"
         $request->merge([
-            'dni' => preg_replace('/[^0-9]/', '', $request->dni)
+            'numDoc' => preg_replace('/[^0-9]/', '', $request->numDoc)
         ]); 
 
         $rules = [
-            'fullName' => 'required',
-            'dni' => 'required|unique:users,dni',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'bornDate' => 'required|date|before_or_equal:today',
+            'numDoc' => [
+                'required',
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    return $query->where('docType', $request->input('docType'));
+                }),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    return $query->where('docType', $request->input('docType'));
+                }),
+            ],
         ];
 
         $request->validate($rules);
@@ -48,12 +63,26 @@ class UserController extends Controller
 
         //Convert "38.884.376" into "38884376"
         $request->merge([
-            'dni' => preg_replace('/[^0-9]/', '', $request->dni)
+            'numDoc' => preg_replace('/[^0-9]/', '', $request->numDoc)
         ]); 
-        
+
         $request->validate([
-            'fullName' => 'required',
-            'dni' => ['required', Rule::unique('users')->ignore($id)] //unsuccessfull process
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'bornDate' => 'required|date|before_or_equal:today',
+            'numDoc' => [
+                'required',
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    return $query->where('docType', $request->input('docType'));
+                }),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    return $query->where('docType', $request->input('docType'));
+                }),
+            ],
         ]);
 
         $user = User::findOrFail($id);
@@ -67,6 +96,7 @@ class UserController extends Controller
                 'disabledReason' => null
             ];
         }
+
         $user->update(array_merge($request->all(), ['status' => $status], $arrayDisabled));
 
         return redirect()->route('users.index');
@@ -87,7 +117,7 @@ class UserController extends Controller
         
         if ($validator->fails()) {
             return response()->json(['success' => 'false', 'message' => $validator->errors()->first()]);
-        }
+        }  
     
         $user = User::findOrFail($request->user_id);
         $user->update(['password' => $request->newPassword]);

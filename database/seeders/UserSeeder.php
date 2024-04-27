@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $userTypes = ['Receptionist', 'Cleaner', 'Guest'];
+        $docTypes = ['DNI', 'PAS'];
 
         for ($i = 0; $i < 30; $i++) {
 
@@ -33,16 +34,28 @@ class UserSeeder extends Seeder
             $basicString = preg_replace('/[^a-zA-Z0-9.]/', '', $basicString);            
             $email = $basicString . '@gmail.com';
                         
-            $dni = mt_rand(10000000, 99999999);
+            $numDoc = mt_rand(10000000, 99999999);
+            $docType = $docTypes[array_rand($docTypes)];;
             $userType = $userTypes[array_rand($userTypes)];
             $status = rand(0, 5) === 5 ? false : true;
             $disabledStartDate = $status ? null : now();
             $disabledReason = $status ? null : 'Motivo de inhabilitacion en testeo';
             $bornDateTimestamp = mt_rand(strtotime('1950-01-01'), strtotime('2005-12-31'));
             $bornDate = date('Y-m-d', $bornDateTimestamp);    
-    
+            
+            $startEmploymentTimestamp = mt_rand(strtotime('1990-01-01'), strtotime(now()));
+            $startEmploymentDate = date('Y-m-d', $startEmploymentTimestamp);   
+
+            $weekdayStartWorkHours = null;
+            $weekdayEndWorkHours = null;
+            if($userType != 'Guest'){
+                $weekdayStartWorkHours = '08:00';
+                $weekdayEndWorkHours = '16:00';
+            }
+
             DB::table('users')->insert([
-                'dni' => $dni,
+                'docType' => $docType,
+                'numDoc' => $numDoc,
                 'firstName' => $firstName,
                 'lastName' => $lastName,
                 'bornDate' => $bornDate,
@@ -53,6 +66,9 @@ class UserSeeder extends Seeder
                 'email' => $email,
                 'phone' => $phone,
                 'address' => $address,
+                'weekdayStartWorkHours' => $weekdayStartWorkHours,
+                'weekdayEndWorkHours' => $weekdayEndWorkHours,
+                'startEmploymentDate' => $startEmploymentDate,
                 'password' => bcrypt('123456'),
                 'created_at' => now(),
                 'updated_at' => now(),
