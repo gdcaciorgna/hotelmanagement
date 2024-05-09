@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UserController;
+use \App\Http\Controllers\PoliciesController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -16,16 +17,22 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['auth', 'receptionist'])->group(function (){
+    //USERS
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('/users/create',  [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/setNewPassword', [UserController::class, 'setNewPassword'])->name('users.setNewPassword');   
+    
+    //HOTEL POLICIES
+    Route::get('/policies', [PoliciesController::class, 'index'])->name('policies.index');
+    Route::put('/policies/{id}', [UserController::class, 'update'])->name('policies.update');
+    
+});
 
-//USERS
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-Route::get('/users/create',  [UserController::class, 'create'])->name('users.create');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-Route::post('/users/setNewPassword', [UserController::class, 'setNewPassword'])->name('users.setNewPassword');
 
 Auth::routes();
-
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

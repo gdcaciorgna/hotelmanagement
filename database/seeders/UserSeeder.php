@@ -23,20 +23,29 @@ class UserSeeder extends Seeder
             $cities = ['Buenos Aires', 'Córdoba', 'Rosario'];
             $provinces = ['Buenos Aires', 'Córdoba', 'Santa Fe'];
             $address = mt_rand(1, 500) . ' ' . $streets[array_rand($streets)] . ', ' . $cities[array_rand($cities)] . ', ' . $provinces[array_rand($provinces)];
-            
+            $userType = $userTypes[array_rand($userTypes)];
+
             $firstNames = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía'];
             $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz'];    
             $firstName = $firstNames[array_rand($firstNames)];
             $lastName = $lastNames[array_rand($lastNames)];
-            
+
             $basicString = strtolower(str_replace(' ', '.', $firstName. ' ' . $lastName));
             $basicString = iconv('UTF-8', 'ASCII//TRANSLIT', $basicString);
             $basicString = preg_replace('/[^a-zA-Z0-9.]/', '', $basicString);            
             $email = $basicString . '@gmail.com';
+
+            //ADMIN USER
+            if($i == 0){
+                $firstName = 'Gerardo';
+                $lastName = 'Caciorgna';
+                $userType = 'Receptionist';
+                $email = 'gdecaciorgna@gmail.com';
+
+            }
                         
             $numDoc = mt_rand(10000000, 99999999);
             $docType = $docTypes[array_rand($docTypes)];;
-            $userType = $userTypes[array_rand($userTypes)];
             $status = rand(0, 5) === 5 ? false : true;
             $disabledStartDate = $status ? null : now();
             $disabledReason = $status ? null : 'Motivo de inhabilitacion en testeo';

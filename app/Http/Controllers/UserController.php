@@ -72,14 +72,14 @@ class UserController extends Controller
             'bornDate' => 'required|date|before_or_equal:today',
             'numDoc' => [
                 'required',
-                Rule::unique('users')->where(function ($query) use ($request) {
+                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
                     return $query->where('docType', $request->input('docType'));
                 }),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->where(function ($query) use ($request) {
+                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
                     return $query->where('docType', $request->input('docType'));
                 }),
             ],
