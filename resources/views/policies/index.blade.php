@@ -14,11 +14,12 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Depósito por daños</h6>
-                <form action="" method="POST">
+                <form action="{{route('policies.update')}}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="row">
                         <div class="col-8">
-                            <input type="number" class="form-control" id="depositoPorDanios" name="depositoPorDanios" value="{{ $damageDeposit }}">
+                            <input type="number" class="form-control MilesNumberFormatted" id="damageDeposit" name="damageDeposit" value="{{ $damageDeposit }}" max="1000000000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -31,11 +32,12 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Precio base por persona por día</h6>
-                <form action="" method="POST">
+                <form action="{{route('policies.update')}}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="row">
                         <div class="col-8">
-                            <input type="number" class="form-control" id="basePricePerPersonPerDay" name="basePricePerPersonPerDay" value="{{$basePricePerPersonPerDay}}">
+                            <input type="number" class="form-control MilesNumberFormatted" id="basePricePerPersonPerDay" name="basePricePerPersonPerDay" value="{{$basePricePerPersonPerDay}}" max="1000000000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -47,4 +49,5 @@
         </div>
     </div>
 </div>
+
 @endsection

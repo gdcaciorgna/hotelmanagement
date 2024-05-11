@@ -30,7 +30,7 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     
     //HOTEL POLICIES
     Route::get('/policies', [PoliciesController::class, 'index'])->name('policies.index');
-    Route::put('/policies/{id}', [UserController::class, 'update'])->name('policies.update');
+    Route::put('/policies', [PoliciesController::class, 'update'])->name('policies.update');
     
 });
 

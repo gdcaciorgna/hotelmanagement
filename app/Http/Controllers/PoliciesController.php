@@ -17,47 +17,18 @@ class PoliciesController extends Controller
         return view('policies.index')->with(['damageDeposit' => $damageDeposit, 'basePricePerPersonPerDay' => $basePricePerPersonPerDay]);
     }    
 
-    public function update($id, Request $request){
+    public function update(Request $request){
 
-        //Convert "38.884.376" into "38884376"
-        /*
-        $request->merge([
-            'numDoc' => preg_replace('/[^0-9]/', '', $request->numDoc)
-        ]); 
+        if(isset($request->damageDeposit) && !empty($request->damageDeposit)){
+            $policy = Policy::where('description', 'damageDeposit');
+            $policy->update(['value' => $request->damageDeposit]);
 
-        $request->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'bornDate' => 'required|date|before_or_equal:today',
-            'numDoc' => [
-                'required',
-                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
-                }),
-            ],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
-                }),
-            ],
-        ]);
-
-        $user = User::findOrFail($id);
-        $status = false;
-
-        $arrayDisabled = [];
-        if(!$request->has('status')){
-            $status = true;
-            $arrayDisabled = [
-                'disabledStartDate' => null,
-                'disabledReason' => null
-            ];
+        }
+        elseif(isset($request->basePricePerPersonPerDay) && !empty($request->basePricePerPersonPerDay)){
+            $policy = Policy::where('description', 'basePricePerPersonPerDay');
+            $policy->update(['value' => $request->basePricePerPersonPerDay]);
         }
 
-        $user->update(array_merge($request->all(), ['status' => $status], $arrayDisabled));
-        */
-        return redirect()->route('users.index');
+        return redirect()->route('policies.index');
     }
 }
