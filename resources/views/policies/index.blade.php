@@ -47,6 +47,36 @@
                 </form>
             </div>
         </div>
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Horario - Personal de limpieza</h6>
+                <form action="{{route('policies.update')}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="col-4">
+                            <input type="time" class="form-control" id="cleaningWorkingHoursFrom" name="cleaningWorkingHoursFrom" value="{{$cleaningWorkingHoursFrom}}" required>
+                        </div>
+                        <div class="col-4">
+                            <input type="time" class="form-control" id="cleaningWorkingHoursTo" name="cleaningWorkingHoursTo" value="{{$cleaningWorkingHoursTo}}" required>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                        </div>
+                    </div>
+                    <p class="mt-4">Es el horario que estará disponible la posibilidad de solicitar personal de limpieza por parte de un huésped o un personal administrativo.</p>
+                </form>
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            </div>
+        </div>
     </div>
 </div>
 

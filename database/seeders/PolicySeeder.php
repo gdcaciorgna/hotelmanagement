@@ -21,5 +21,13 @@ class PolicySeeder extends Seeder
             'description' => 'damageDeposit',
             'value' => '10000'
         ]);    
+        DB::table('policies')->insert([
+            'description' => 'cleaningWorkingHoursFrom',
+            'value' => '07:00'
+        ]);    
+        DB::table('policies')->insert([
+            'description' => 'cleaningWorkingHoursTo',
+            'value' => '15:00'
+        ]);    
     }
 }
