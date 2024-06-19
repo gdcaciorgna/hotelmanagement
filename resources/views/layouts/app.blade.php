@@ -67,7 +67,7 @@
                                 <div class="dropdown-menu bg-transparent border-0">
                                     <a href="{{route('users.index')}}" class="dropdown-item"><i class="fas fa-users me-2"></i>Usuarios</a>
                                     <a href="#" class="dropdown-item"><i class="fas fa-dollar-sign me-2"></i>Tarifas</a>
-                                    <a href="#" class="dropdown-item"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
+                                    <a href="{{route('rooms.index')}}" class="dropdown-item"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
                                     <a href="#" class="dropdown-item"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
                                     <a href="{{route('policies.index')}}" class="dropdown-item"><i class="fas fa-concierge-bell me-2"></i>Políticas del hotel</a>
             

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\PoliciesController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -32,7 +33,13 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/policies', [PoliciesController::class, 'index'])->name('policies.index');
     Route::put('/policies', [PoliciesController::class, 'update'])->name('policies.update');
     
-});
+    //ROOMS
+    Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/{id}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::get('/rooms/create',  [RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 
+});
 
 Auth::routes();

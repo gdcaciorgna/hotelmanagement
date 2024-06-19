@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Usuarios')
+@section('title', 'Agregar o editar usuario')
 @section('content')
 
 @php
