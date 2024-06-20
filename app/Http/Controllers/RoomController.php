@@ -22,14 +22,17 @@ class RoomController extends Controller
         $rules = [
             'code' => 'required|integer|min:1',
             'maxOfGuests' => 'required|integer|min:1',
-            'description' => 'required',
-            'status' => 'required'
+            'description' => 'required'
         ];
 
         $request->validate($rules);
-        dd($request);
         Room::create($request->all());
         return redirect()->route('rooms.index');
+    }
+
+    public function edit($id) {
+        $room = Room::findOrFail($id);
+        return view('rooms.roomInfo', ['room' => $room, 'action' => 'edit']);
     }
 
 }

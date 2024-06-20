@@ -10,15 +10,22 @@ class Room extends Model
     use HasFactory;
     private $statusColor;
 
+    protected $fillable = [
+        'code',
+        'maxOfGuests',
+        'description',
+        'status',
+    ];
+
     public function getStatusColor()
     {
         switch ($this->status) {
             case 'Available':
                 return 'bg-success';
             case 'Cleaning':
-                return 'bg-danger';
-            case 'Unavailable':
                 return 'bg-primary';
+            case 'Unavailable':
+                return 'bg-danger';
             default:
                 return 'bg-secondary';
         }

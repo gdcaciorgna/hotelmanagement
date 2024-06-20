@@ -14,18 +14,21 @@
     </div>
     <div class="row g-4">
         @foreach ($rooms as $room)
-            <div class="col-sm-12 col-xl-4">
-                <div class="bg-light rounded h-100 p-4">
+            <div class="col-sm-12 col-xl-4 justify-content-between">
+                <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-between">
                     <div class="row">
                         <div class="col-8">
                             <h6 class="mt-2">Habitación N°: {{$room->code}}</h6>
                         </div>
                         <div class="col-3">
-                            <button type="submit" class="btn btn-primary">Editar</button>
+                            <a href="{{route('rooms.edit', $room->id)}}" type="submit" class="btn btn-primary">Editar</a>
                         </div>
                     </div>
                     <p class="mt-4">{{$room->description}}</p>
-                    <div class="{{$room->getStatusColor()}} text-white text-center py-2 bottom-0 start-0 w-100">{{$room->getStatusFormatted()}}</div>
+                    <p class="mt-2">Cant. máx. huéspedes: <strong>{{$room->maxOfGuests}}</strong></p>
+                    <div class="mt-auto">
+                        <div class="{{$room->getStatusColor()}} text-white text-center py-2 bottom-0 start-0 w-100">{{$room->getStatusFormatted()}}</div>
+                    </div>
                 </div>
             </div>
         @endforeach
