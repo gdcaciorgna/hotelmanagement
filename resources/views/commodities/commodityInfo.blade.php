@@ -1,17 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar habitación')
+@section('title', 'Agregar o editar comodidad')
 @section('content')
 
 @php
     if($action == 'edit'){
-        $headerText = "Editar Habitación: #{$room->id}";
-        $formAction = route('rooms.update', ['id' => $room->id]);
+        $headerText = "Editar Comodidad: #{$commodity->id}";
+        $formAction = route('commodities.update', ['id' => $commodity->id]);
         $method = 'PUT';
         $saveButtonText = 'Actualizar';
     }
     else{
-        $headerText = "Agregar nueva habitación";
-        $formAction = route('rooms.store');
+        $headerText = "Agregar nueva comodidad";
+        $formAction = route('commodities.store');
         $method = 'POST';
         $saveButtonText = 'Publicar';
 
@@ -24,7 +24,7 @@
             <h6 class="mb-4"> {{ $headerText}} </h6>
         </div>
         <div class="col-sm-9 text-end">
-            <a href="{{route('rooms.index')}}" class="btn btn-dark">Ver habitaciones</a>
+            <a href="{{route('commodities.index')}}" class="btn btn-dark">Ver comodidades</a>
         </div>
     </div>
    
@@ -33,56 +33,28 @@
         @if(isset($method))
             @method($method)
         @endif
+
         <div class="row mb-3">
-            <label for="code" class="col-sm-3 col-form-label">Nro Habitación</label>
+            <label for="title" class="col-sm-3 col-form-label">Título</label>
             <div class="col-sm-9">
-                <input type="number" class="form-control @error('code') is-invalid @enderror" id="code" name="code" placeholder="101" value="{{ old('code', $room->code ?? '') }}">
-                @error('code')
+                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" placeholder="Pileta climatizada" value="{{ old('title', $commodity->title ?? '')  }}">
+                @error('title')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror    
             </div>
         </div>
-        <div class="row mb-3">
-            <label for="maxOfGuests" class="col-sm-3 col-form-label">Cant. máxima de huéspedes</label>
-            <div class="col-sm-9">
-                <input type="number" class="form-control @error('maxOfGuests') is-invalid @enderror" id="maxOfGuests" name="maxOfGuests" placeholder="2" value="{{ old('maxOfGuests', $room->maxOfGuests ?? '')  }}">
-                @error('maxOfGuests')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
-            </div>
-        </div>
+
         <div class="row mb-3">
             <label for="description" class="col-sm-3 col-form-label">Descripción</label>
             <div class="col-sm-9">
-                <textarea class="form-control" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $room->description ?? '')}}</textarea>
+                <textarea style="min-height: 100px;" class="form-control" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $commodity->description ?? '')}}</textarea>
                 @error('description')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror    
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="description" class="col-sm-3 col-form-label">Estado actual</label>
-            <div class="col-sm-9">
-                <select class="form-select" id="status" name="status">
-                    <option value="Available" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Available' || $action != 'edit') ? 'selected' : '' }}>
-                        Disponible
-                    </option>
-                    <option value="Unavailable" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Unavailable') ? 'selected' : '' }}>
-                        Inhabilitado
-                    </option>
-                    <option value="Cleaning" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Cleaning') ? 'selected' : '' }}>
-                        En limpieza
-                    </option>
-                </select>
             </div>
         </div>
         <div class="row mb-3">
@@ -117,14 +89,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta habitación?
+                    ¿Estás seguro de que deseas eliminar esta comodidad?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{{route('rooms.destroy', $room->id)}}" method="POST">
+                    <form action="{{route('commodities.destroy', $commodity->id)}}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar Habitación</button>
+                        <button type="submit" class="btn btn-danger">Eliminar comodidad</button>
                     </form>
                 </div>
             </div>

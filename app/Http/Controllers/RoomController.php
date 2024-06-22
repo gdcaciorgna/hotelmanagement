@@ -22,7 +22,7 @@ class RoomController extends Controller
         $rules = [
             'code' => 'required|integer|min:1',
             'maxOfGuests' => 'required|integer|min:1',
-            'description' => 'required'
+            'description' => 'required|max:1000'
         ];
 
         $request->validate($rules);
@@ -34,5 +34,27 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
         return view('rooms.roomInfo', ['room' => $room, 'action' => 'edit']);
     }
+
+    public function update($id, Request $request){
+
+        $request->validate([
+            'code' => 'required|integer|min:1',
+            'maxOfGuests' => 'required|integer|min:1',
+            'description' => 'required|max:1000'
+        ]);
+
+        $room = Room::findOrFail($id);
+
+        $room->update(array_merge($request->all()));
+
+        return redirect()->route('rooms.index');
+    }
+    
+    public function destroy(Request $request){
+        $room = Room::findOrFail($request->id);
+        $room->delete();
+        return to_route('rooms.index');
+    }
+
 
 }

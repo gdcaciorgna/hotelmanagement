@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\PoliciesController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\CommodityController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -39,6 +40,15 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');
     Route::get('/rooms/create',  [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
+    //COMMODITIES
+    Route::get('/commodities', [CommodityController::class, 'index'])->name('commodities.index');
+    Route::get('/commodities/{id}/edit', [CommodityController::class, 'edit'])->name('commodities.edit');
+    Route::put('/commodities/{id}', [CommodityController::class, 'update'])->name('commodities.update');
+    Route::get('/commodities/create',  [CommodityController::class, 'create'])->name('commodities.create');
+    Route::post('/commodities', [CommodityController::class, 'store'])->name('commodities.store');
+    Route::delete('/commodities/{id}', [CommodityController::class, 'destroy'])->name('commodities.destroy');
 
 });
 
