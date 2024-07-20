@@ -89,7 +89,7 @@
             <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary">{{ $saveButtonText }}</button>
                 @if($action == 'edit')
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
+                    <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
                 @endif
             </div>
         </div>

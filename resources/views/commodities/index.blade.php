@@ -25,7 +25,8 @@
                             <a href="{{route('commodities.edit', $commodity->id)}}" type="submit" class="btn btn-primary">Editar</a>
                         </div>
                     </div>
-                    <p class="mt-4">{{$commodity->description}}</p>
+                    <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
+                    <p class="mt-2">Precio: <strong>${{$commodity->currentPrice}}</strong></p>
                 </div>
             </div>
         @endforeach

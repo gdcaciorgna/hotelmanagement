@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PolicySeeder::class);
         $this->call(RoomSeeder::class);
         $this->call(CommoditySeeder::class);
+        $this->call(CommodityPricesSeeder::class);
 
 
     }

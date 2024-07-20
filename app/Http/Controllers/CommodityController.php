@@ -38,12 +38,14 @@ class CommodityController extends Controller
 
         $request->validate([
             'title' => 'required|max:250',
-            'description' => 'required|max:1000'
+            'description' => 'required|max:1000',
+            'currentPrice' => 'required|numeric'
+
         ]);
 
         $commodity = Commodity::findOrFail($id);
-
-        $commodity->update(array_merge($request->all()));
+        $commodity->update($request->except('currentPrice'));
+        $commodity->updateCurrentPrice($request->input('currentPrice'));
 
         return redirect()->route('commodities.index');
     }
