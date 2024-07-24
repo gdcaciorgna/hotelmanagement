@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RoomSeeder::class);
         $this->call(CommoditySeeder::class);
         $this->call(CommodityPricesSeeder::class);
+        $this->call(RateSeeder::class);
+        $this->call(RatePricesSeeder::class);
 
 
     }

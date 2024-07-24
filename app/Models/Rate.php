@@ -13,4 +13,23 @@ class Rate extends Model
         'title',
         'description',
     ];
+
+    public function priceHistory()
+    {
+        return $this->hasMany(RatePricesHistory::class)->latest();
+    }
+
+    public function getCurrentPriceAttribute()
+    {
+        $latestPrice = $this->priceHistory()->first();
+        return $latestPrice ? $latestPrice->price : null;
+    }
+
+    public function updateCurrentPrice($newPrice)
+    {
+        $this->priceHistory()->create([
+            'price' => $newPrice,
+        ]);
+    }
+
 }

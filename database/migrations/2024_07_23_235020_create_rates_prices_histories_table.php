@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rates_price_histories', function (Blueprint $table) {
+        Schema::create('rate_prices_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('rate_id');
             $table->decimal('price', 10, 2);
@@ -26,6 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rates_price_histories');
+        Schema::dropIfExists('rate_prices_histories');
     }
+    
 };

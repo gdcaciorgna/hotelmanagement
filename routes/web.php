@@ -5,6 +5,7 @@ use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\PoliciesController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CommodityController;
+use App\Http\Controllers\RateController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -50,6 +51,14 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::post('/commodities', [CommodityController::class, 'store'])->name('commodities.store');
     Route::delete('/commodities/{id}', [CommodityController::class, 'destroy'])->name('commodities.destroy');
 
+    //RATES
+    Route::get('/rates', [RateController::class, 'index'])->name('rates.index');
+    Route::get('/rates/{id}/edit', [RateController::class, 'edit'])->name('rates.edit');
+    Route::put('/rates/{id}', [RateController::class, 'update'])->name('rates.update');
+    Route::get('/rates/create',  [RateController::class, 'create'])->name('rates.create');
+    Route::post('/rates', [RateController::class, 'store'])->name('rates.store');
+    Route::delete('/rates/{id}', [RateController::class, 'destroy'])->name('rates.destroy');
+    
 });
 
 Auth::routes();
