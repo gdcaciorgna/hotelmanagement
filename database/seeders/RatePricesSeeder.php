@@ -4,23 +4,23 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Commodity;
-use App\Models\CommodityPriceHistory;
+use App\Models\Rate;
+use App\Models\RatePriceHistory;
 
 
-class CommodityPricesSeeder extends Seeder
+class RatePricesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $commodities = Commodity::all();
+        $rates = Rate::all();
 
-        foreach ($commodities as $commodity) {
+        foreach ($rates as $rate) {
             $price = rand(40,150);
-            CommodityPriceHistory::create([
-                'commodity_id' => $commodity->id,
+            RatePriceHistory::create([
+                'rate_id' => $rate->id,
                 'price' => $price,
                 'created_at' => now(),
                 'updated_at' => now(),
