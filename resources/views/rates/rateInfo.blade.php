@@ -4,14 +4,14 @@
 
 @php
     if($action == 'edit'){
-        $headerText = "Editar tarifa: #{$commodity->id}";
-        $formAction = route('commodities.update', ['id' => $commodity->id]);
+        $headerText = "Editar tarifa: #{$rate->id}";
+        $formAction = route('rates.update', ['id' => $rate->id]);
         $method = 'PUT';
         $saveButtonText = 'Actualizar';
     }
     else{
         $headerText = "Agregar nueva tarifa";
-        $formAction = route('commodities.store');
+        $formAction = route('rates.store');
         $method = 'POST';
         $saveButtonText = 'Publicar';
 
@@ -24,7 +24,7 @@
             <h6 class="mb-4"> {{ $headerText}} </h6>
         </div>
         <div class="col-sm-9 text-end">
-            <a href="{{route('commodities.index')}}" class="btn btn-dark">Ver tarifas</a>
+            <a href="{{route('rates.index')}}" class="btn btn-dark">Ver tarifas</a>
         </div>
     </div>
    
@@ -37,8 +37,23 @@
         <div class="row mb-3">
             <label for="title" class="col-sm-3 col-form-label">Título</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" placeholder="Pileta climatizada" value="{{ old('title', $commodity->title ?? '')  }}">
+                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" placeholder="Ultra premium" value="{{ old('title', $rate->title ?? '')  }}">
                 @error('title')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="currentPrice" class="col-sm-3 col-form-label">Precio</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <div class="input-group-text">$</div>
+                    <input type="number" step="0.01" class="form-control @error('currentPrice') is-invalid @enderror" id="currentPrice" name="currentPrice" placeholder="190" value="{{ old('currentPrice', $rate->currentPrice ?? '')  }}">
+                </div>
+                @error('currentPrice')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
@@ -49,7 +64,7 @@
         <div class="row mb-3">
             <label for="description" class="col-sm-3 col-form-label">Descripción</label>
             <div class="col-sm-9">
-                <textarea style="min-height: 100px;" class="form-control" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $commodity->description ?? '')}}</textarea>
+                <textarea style="min-height: 100px;" class="form-control" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $rate->description ?? '')}}</textarea>
                 @error('description')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -93,7 +108,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{{route('commodities.destroy', $commodity->id)}}" method="POST">
+                    <form action="{{route('rates.destroy', $rate->id)}}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Eliminar tarifa</button>

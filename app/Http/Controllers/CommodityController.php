@@ -25,7 +25,8 @@ class CommodityController extends Controller
         ];
 
         $request->validate($rules);
-        Commodity::create($request->all());
+        $commodity = Commodity::create($request->except('currentPrice'));
+        $commodity->updateCurrentPrice($request->input('currentPrice'));
         return redirect()->route('commodities.index');
     }
 

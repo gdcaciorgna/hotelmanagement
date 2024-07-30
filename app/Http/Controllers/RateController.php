@@ -25,7 +25,8 @@ class RateController extends Controller
         ];
 
         $request->validate($rules);
-        Rate::create($request->all());
+        $rate = Rate::create($request->except('currentPrice'));
+        $rate->updateCurrentPrice($request->input('currentPrice'));
         return redirect()->route('rates.index');
     }
 
