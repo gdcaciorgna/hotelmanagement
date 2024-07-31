@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Commodity;
 
 use Illuminate\Http\Request;
 
@@ -19,6 +20,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $commodities = Commodity::query()
+        ->simplePaginate(30);
+        return view('home')->with('commodities', $commodities);
     }
 }

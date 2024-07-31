@@ -6,18 +6,18 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Mi Perfil</div>
+                @if (auth()->user())
+                    <div class="card-header">Mi Perfil</div>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
-                    <div class="container">
-                        <div class="main-body">
-                            @if (auth()->user())
+                        <div class="container">
+                            <div class="main-body">
                                     <!-- Breadcrumb -->
                                     <nav aria-label="breadcrumb" class="main-breadcrumb">
                                     <ol class="breadcrumb">
@@ -128,10 +128,52 @@
                                         </div>    
                                     </div>
                                 </div>
-                            @endif
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="card-header">Escritorio</div>
+                    <div class="card-body">
+                        <div class="container mb-4">
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">¡Ups! No estás logueado</h5>
+                                        <p class="card-text">Para poder visualizar toda la información de la reserva, conocer tus comodidades y solicitar limpieza de habitación debes ingresar sesión con el usuario asignado por administración</p>
+                                    </div>
+                                    <a href="{{ route('login') }}" class="btn btn-primary w-50">Iniciar sesión</a>
+                                </div>
+                            </div>                                                          
+                        </div>
+                        <div class="container">
+                            <h2 class="mt-4 mb-2">Todas las comodidades</h2>
+                            <div class="main-body">                      
+                                <div class="row g-4">
+                                    @foreach ($commodities as $commodity)
+                                        <div class="col-sm-12 col-xl-4 justify-content-start">
+                                            <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <span class="text-secondary small">#{{$commodity->id}}</span>
+                                                        <h5 class="mt-1">{{$commodity->title}}</h5>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <a href="{{route('commodities.edit', $commodity->id)}}" type="submit" class="btn btn-primary">Editar</a>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
+                                                <p class="mt-2">Precio: <strong>${{$commodity->currentPrice}}</strong></p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="d-flex justify-content-center mt-4">
+                                    {{ $commodities->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
