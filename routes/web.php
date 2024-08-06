@@ -6,6 +6,7 @@ use \App\Http\Controllers\PoliciesController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\RateController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -58,6 +59,9 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/rates/create',  [RateController::class, 'create'])->name('rates.create');
     Route::post('/rates', [RateController::class, 'store'])->name('rates.store');
     Route::delete('/rates/{id}', [RateController::class, 'destroy'])->name('rates.destroy');
+
+    //BOOKINGS
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     
 });
 

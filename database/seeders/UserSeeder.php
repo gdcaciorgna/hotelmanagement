@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         $userTypes = ['Receptionist', 'Cleaner', 'Guest'];
         $docTypes = ['DNI', 'PAS'];
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 10; $i++) {
 
             $phone = '549' . mt_rand(2000000000, 9999999999);
             $streets = ['Calle A', 'Calle B', 'Calle C'];

@@ -42,10 +42,10 @@
                         <!-- Recepcionist view -->
                         @if(Auth::user()->userType == 'Receptionist')
                             <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-door-closed me-2"></i>Habitaciones</a>
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-door-closed me-2"></i>Reservas</a>
                                 <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar habitación</a>
-                                    <a href="#" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver reservas</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Crear reserva</a>
+                                    <a href="{{route('bookings.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver reservas</a>
                                 </div>
                             </div>
                             <div class="nav-item dropdown">

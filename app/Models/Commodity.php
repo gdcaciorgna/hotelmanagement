@@ -32,4 +32,9 @@ class Commodity extends Model
         ]);
     }
 
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_commodity');
+    }
+
 }
