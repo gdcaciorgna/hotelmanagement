@@ -30,6 +30,7 @@
    
     <form action="{{$formAction}}" method="POST">
         @csrf
+        <input type="hidden" name="action_type" id="action_type" value="">
         @if(isset($method))
             @method($method)
         @endif
@@ -80,19 +81,9 @@
                 @enderror  
             </div>
         </div>
+      
         <div class="row mb-3">
-            <label for="numberOfPeople" class="col-sm-3 col-form-label">Cant. de huéspedes</label>
-            <div class="col-sm-9">
-                <input type="number" class="form-control @error('numberOfPeople') is-invalid @enderror" id="numberOfPeople" name="numberOfPeople" placeholder="2" value="{{ old('numberOfPeople', $booking->numberOfPeople ?? '')  }}">
-                @error('numberOfPeople')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
-            </div>
-        </div>
-        <div class="row mb-3">
-            <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
+            <legend class="col-form-label col-sm-3 pt-0">Abona depósito</legend>
             <div class="col-sm-9">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="status" id="disabledCheckbox" 
@@ -100,9 +91,6 @@
                         checked 
                     @endif
                     >
-                    <label class="form-check-label" for="disabledCheckbox">
-                        Devolver depósito
-                    </label>
                 </div>
             </div>
         </div> 
@@ -122,15 +110,29 @@
         </div>
 
         <div class="row mb-3">
-            <label for="numberOfPeople" class="col-sm-3 col-form-label">Habitación</label>
+            <label for="numberOfPeople" class="col-sm-3 col-form-label">Cantidad de huéspedes</label>
             <div class="col-sm-9">
-                <button type="submit" class="btn btn-success ms-auto">Seleccionar habitación</button>
+                <select name="numberOfPeople" class="form-select">
+                    <option value="">Seleccione una cantidad</option>
+                    @for($i = 1; $i <= 6; $i++)
+                        <option value="{{ $i }}" {{ request('numberOfPeople') == $i ? 'selected' : '' }}>
+                            {{ $i }}
+                        </option>
+                    @endfor                
+                </select>
             </div>
         </div>
 
         <div class="row mb-3">
+            <label for="selectRoom" class="col-sm-3 col-form-label">Habitación</label>
+            <div class="col-sm-9">
+                <button type="submit" od="selectRoom" class="btn btn-success" onclick="document.getElementById('action_type').value='select_room';">Seleccionar habitación</button>
+            </div>
+        </div>        
+
+        <div class="row mb-3">
             <div class="col-12  d-flex">
-                <button type="submit" class="btn btn-primary">{{ $saveButtonText }}</button>
+                <button type="submit" class="btn btn-primary" disabled>{{ $saveButtonText }}</button>
 
                 @if($action == 'edit')
                     <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>

@@ -62,11 +62,14 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
 
     //BOOKINGS
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/select-room', [BookingController::class, 'selectRoom'])->name('bookings.selectRoom');
     Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
     Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
     Route::get('/bookings/create',  [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    
 });
 
 Auth::routes();
