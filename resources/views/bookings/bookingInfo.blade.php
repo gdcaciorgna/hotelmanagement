@@ -16,6 +16,17 @@
         $saveButtonText = 'Crear reserva';
 
     }
+
+    $roomCode = request('roomCode');
+    if($roomCode){
+        $selectRoomButtonText = 'Modificar habitación';
+        $buttonStyle = 'warning';
+    }
+    else{
+        $selectRoomButtonText = 'Seleccionar habitación';
+        $buttonStyle = 'success';
+    }
+
 @endphp
 
 <div class="bg-light rounded h-100 p-4">
@@ -50,64 +61,52 @@
         <div class="row mb-3">
             <label for="startDate" class="col-sm-3 col-form-label">Fecha inicio</label>
             <div class="col-sm-9">
-                <input type="date" class="form-control @error('bornDate') is-invalid @enderror" id="startDate" name="startDate"
-                @if(old('startDate')) 
-                   value="{{ \Carbon\Carbon::parse(old('startDate'))->format('Y-m-d') }}" 
-                @elseif(isset($booking) && $booking->bornDate) 
-                   value="{{ \Carbon\Carbon::parse($booking->startDate)->format('Y-m-d') }}" 
-                @endif
-               >
-               @error('startDate')
+                <input type="date" class="form-control @error('startDate') is-invalid @enderror" id="startDate" name="startDate"
+                value="{{ old('startDate', isset($startDate) ? $startDate : '') }}">
+                @error('startDate')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror  
             </div>
         </div>
+    
         <div class="row mb-3">
             <label for="agreedEndDate" class="col-sm-3 col-form-label">Fecha fin pactada</label>
             <div class="col-sm-9">
-                <input type="date" class="form-control @error('bornDate') is-invalid @enderror" id="agreedEndDate" name="agreedEndDate"
-                @if(old('agreedEndDate')) 
-                   value="{{ \Carbon\Carbon::parse(old('agreedEndDate'))->format('Y-m-d') }}" 
-                @elseif(isset($booking) && $booking->bornDate) 
-                   value="{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('Y-m-d') }}" 
-                @endif
-               >
-               @error('agreedEndDate')
+                <input type="date" class="form-control @error('agreedEndDate') is-invalid @enderror" id="agreedEndDate" name="agreedEndDate"
+                value="{{ old('agreedEndDate', isset($agreedEndDate) ? $agreedEndDate : '') }}">
+                @error('agreedEndDate')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror  
             </div>
         </div>
-      
+    
         <div class="row mb-3">
             <legend class="col-form-label col-sm-3 pt-0">Abona depósito</legend>
             <div class="col-sm-9">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="status" id="disabledCheckbox" 
-                    @if (isset($booking) && $booking->returnDeposit == 0 || old('returnDeposit'))
-                        checked 
-                    @endif
-                    >
+                    <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit"
+                    {{ isset($returnDeposit) && $returnDeposit ? 'checked' : '' }}>
                 </div>
             </div>
         </div> 
-
         <div class="row mb-3">
-            <label for="numberOfPeople" class="col-sm-3 col-form-label">Tarifa</label>
+            <label for="rate_id" class="col-sm-3 col-form-label">Tarifa</label>
             <div class="col-sm-9">
-                <select name="rate_title" class="form-select">
+                <select name="rate_id" class="form-select">
                     <option value="">Seleccione una tarifa</option>
                     @foreach($rates as $rate)
-                        <option value="{{ $rate->title }}" {{ request('rate_title') == $rate->title ? 'selected' : '' }}>
+                        <option value="{{ $rate->id }}" {{ request('rate_id') == $rate->id ? 'selected' : '' }}>
                             {{ $rate->title }}
                         </option>
                     @endforeach
                 </select>
             </div>
         </div>
+        
 
         <div class="row mb-3">
             <label for="numberOfPeople" class="col-sm-3 col-form-label">Cantidad de huéspedes</label>
@@ -125,10 +124,50 @@
 
         <div class="row mb-3">
             <label for="selectRoom" class="col-sm-3 col-form-label">Habitación</label>
-            <div class="col-sm-9">
-                <button type="submit" od="selectRoom" class="btn btn-success" onclick="document.getElementById('action_type').value='select_room';">Seleccionar habitación</button>
+            <div class="col-sm-9 d-flex align-items-center">
+                @if($roomCode)
+                    <span class="me-3">N°:{{ $roomCode }}</span>
+                @endif
+                <button type="submit" id="selectRoom" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
+                    {{ $selectRoomButtonText }}
+                </button>
             </div>
-        </div>        
+        </div>      
+        
+        @if(!empty($stayDays) && $stayDays > 0)
+            <div class="row mb-3">
+                <p for="selectRoom" class="col-sm-3">Días en estadía:</p>
+                <p for="selectRoom" class="col-sm-9">{{ $stayDays }}</p>
+            </div>
+        @endif
+        
+        @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+            <div class="row mb-1">
+                <p for="selectRoom" class="col-sm-3">Precio reserva:</p>
+                <p for="selectRoom" class="col-sm-9">
+                    <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
+                    <br> Desglose: 
+                    ({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} [PBPD] 
+                    + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2) }} [PTPD] 
+                    + $0.00 [PCA]) 
+                    * {{$breakdown['numberOfPeople']}} [p] 
+                    * {{$breakdown['stayDays']}} [d] 
+                    + $0 [PSA] 
+                    - {{ '$' . number_format($breakdown['returnDepositValue'], 2) }} [VDep]
+                </p>
+            </div>
+        
+            <ul class="list-group list-group-flush small mb-3">
+                <li class="list-group-item mb-1"><strong>p:</strong> cantidad de personas</li>
+                <li class="list-group-item mb-1"><strong>d:</strong> cantidad de días</li>
+                <li class="list-group-item mb-1"><strong>PBPD:</strong> Precio base por persona por día</li>
+                <li class="list-group-item mb-1"><strong>PTPD:</strong> Precio tarifa por persona por día</li>
+                <li class="list-group-item mb-1"><strong>PCA:</strong> Precio de comodidad adicional no incluída en la tarifa inicial</li>
+                <li class="list-group-item mb-1"><strong>PSA:</strong> Precio total de los servicios adicionales contratados</li>
+                <li class="list-group-item mb-1"><strong>VDep:</strong> Valor de depósito a devolver (opcional en caso de no encontrar anomalías)</li>
+            </ul>
+        @endif
+    
 
         <div class="row mb-3">
             <div class="col-12  d-flex">

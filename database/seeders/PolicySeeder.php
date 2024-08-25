@@ -15,11 +15,11 @@ class PolicySeeder extends Seeder
     {
         DB::table('policies')->insert([
             'description' => 'basePricePerPersonPerDay',
-            'value' => '70000'
+            'value' => '150'
         ]);    
         DB::table('policies')->insert([
             'description' => 'damageDeposit',
-            'value' => '10000'
+            'value' => '65'
         ]);    
         DB::table('policies')->insert([
             'description' => 'cleaningWorkingHoursFrom',
