@@ -120,10 +120,9 @@
             <label for="rate_id" class="col-sm-3 col-form-label">Tarifa</label>
             <div class="col-sm-9">
                 <select name="rate_id" class="form-select" @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
-                    >
                     <option value="">Seleccione una tarifa</option>
                     @foreach($rates as $rate)
-                        <option value="{{ $rate->id }}" {{ request('rate_id') == $rate->id ? 'selected' : '' }}>
+                        <option value="{{ $rate->id }}" {{ old('rate_id', $rate_id ?? '') == $rate->id ? 'selected' : '' }}>
                             {{ $rate->title }}
                         </option>
                     @endforeach
@@ -131,6 +130,11 @@
                 @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
                     <input type="hidden" name="rate_id" value="{{ old('rate_id', $rate_id ?? '') }}">
                 @endif
+                @error('rate_id')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
         
@@ -138,10 +142,9 @@
             <label for="user_id" class="col-sm-3 col-form-label">Huésped principal</label>
             <div class="col-sm-9">
                 <select name="user_id" class="form-select" @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
-                    >
                     <option value="">Seleccione un huésped</option>
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                        <option value="{{ $user->id }}" {{ old('user_id', $user_id ?? '') == $user->id ? 'selected' : '' }}>
                             {{ $user->fullName }}
                         </option>
                     @endforeach
@@ -149,22 +152,32 @@
                 @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
                     <input type="hidden" name="user_id" value="{{ old('user_id', $user_id ?? '') }}">
                 @endif
+                @error('user_id')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
-
+        
         <div class="row mb-3">
             <label for="numberOfPeople" class="col-sm-3 col-form-label">Cantidad de huéspedes</label>
             <div class="col-sm-9">
                 <select name="numberOfPeople" class="form-select">
                     <option value="">Seleccione una cantidad</option>
                     @for($i = 1; $i <= 6; $i++)
-                        <option value="{{ $i }}" {{ request('numberOfPeople') == $i ? 'selected' : '' }}>
+                        <option value="{{ $i }}" {{ old('numberOfPeople', $numberOfPeople ?? '') == $i ? 'selected' : '' }}>
                             {{ $i }}
                         </option>
                     @endfor                
                 </select>
+                @error('numberOfPeople')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-        </div>
+        </div>        
 
         <div class="row mb-3">
             <label for="selectRoom" class="col-sm-3 col-form-label">Habitación</label>

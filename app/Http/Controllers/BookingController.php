@@ -109,15 +109,39 @@ class BookingController extends Controller
     public function edit($id, Request $request)
     {
         $booking = Booking::findOrFail($id);
+        
+        // Load related data
         $rates = Rate::all();
+        $users = User::where('userType', 'Guest')->get();
     
-        if ($request->filled('room_id')) {
-            $booking->room_id = $request->room_id;
-            $booking->save();
-        }
+        // Extract values from the existing booking
+        $startDate = $booking->startDate;
+        $agreedEndDate = $booking->agreedEndDate;
+        $numberOfPeople = $booking->numberOfPeople;
+        $rate_id = $booking->rate_id;
+        $user_id = $booking->user_id;
+        $returnDeposit = $booking->returnDeposit;
+        $roomCode = $booking->room->code;
+        $cleanTotalBookingPrice = true; // To skip recalculation
     
-        return view('bookings.bookingInfo', ['booking' => $booking, 'rates' => $rates, 'action' => 'edit']);
-    }   
+        $startDateCarbon = Carbon::parse($startDate);
+        $agreedEndDateCarbon = Carbon::parse($agreedEndDate);
+        $stayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
+    
+        $breakdown = [
+            'basePricePerPersonPerDay' => Policy::where('description', 'basePricePerPersonPerDay')->first()->value,
+            'basePricePerRatePerDay' => $booking->rate->getCurrentPriceAttribute(),
+            'numberOfPeople' => $numberOfPeople,
+            'stayDays' => $stayDays,
+            'returnDepositValue' => $returnDeposit ? Policy::where('description', 'damageDeposit')->first()->value : 0
+        ];
+        // Calculation logic (similar to create)
+        $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
+    
+        return view('bookings.bookingInfo', compact(
+            'booking', 'startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users', 'user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'cleanTotalBookingPrice', 'breakdown'
+        ), ['action' => 'edit']);
+    }    
 
     public function selectRoom(Request $request)
     {
@@ -205,7 +229,7 @@ class BookingController extends Controller
             ]);
     
             // Redirigir a la vista de detalles de la reserva o cualquier otra página
-            return redirect()->route('bookings.show', $booking->id)
+            return redirect()->route('bookings.index', $booking->id)
                              ->with('success', 'Reserva creada exitosamente.');
         }
     }
