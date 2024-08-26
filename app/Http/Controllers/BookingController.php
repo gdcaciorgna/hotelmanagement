@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Rate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Carbon\Carbon;
@@ -61,10 +62,13 @@ class BookingController extends Controller
         $agreedEndDate = $request->input('agreedEndDate', old('agreedEndDate'));
         $numberOfPeople = $request->input('numberOfPeople', old('numberOfPeople'));
         $rate_id = $request->input('rate_id', old('rate_id'));
+        $user_id = $request->input('user_id', old('user_id'));
         $returnDeposit = $request->has('returnDeposit');
         $roomCode = $request->input('roomCode', old('roomCode'));
+        $cleanTotalBookingPrice = $request->input('cleanTotalBookingPrice', old('cleanTotalBookingPrice'));
 
         $rates = Rate::all();
+        $users = User::where('userType', 'Guest')->get();
 
         $startDateCarbon = Carbon::parse($request->input('startDate', old('startDate')));
         $agreedEndDateCarbon = Carbon::parse($request->input('agreedEndDate', old('agreedEndDate')));
@@ -72,29 +76,34 @@ class BookingController extends Controller
         $stayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
 
         //Get Total Price
-        $basePricePerPersonPerDayPolicy = Policy::where('description', 'basePricePerPersonPerDay')->first();
-        $basePricePerPersonPerDay = 0;
-        if ($basePricePerPersonPerDayPolicy) {
-            $basePricePerPersonPerDay = $basePricePerPersonPerDayPolicy->value;
+        if(isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice){
+            $totalBookingPrice = 0;
+            $breakdown = [];
         }
-        
-        $rate = Rate::find($rate_id);
-        $basePricePerRatePerDay = $rate ? $rate->getCurrentPriceAttribute() : 0;    
-        
-        $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
-        $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
-
-        $breakdown = [
-            'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
-            'basePricePerRatePerDay' => $basePricePerRatePerDay,
-            'numberOfPeople' => $numberOfPeople,
-            'stayDays' => $stayDays,
-            'returnDepositValue' => $returnDepositValue
-        ];
-
-        $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
+        else{
+            $basePricePerPersonPerDayPolicy = Policy::where('description', 'basePricePerPersonPerDay')->first();
+            $basePricePerPersonPerDay = 0;
+            if ($basePricePerPersonPerDayPolicy) {
+                $basePricePerPersonPerDay = $basePricePerPersonPerDayPolicy->value;
+            }
+            
+            $rate = Rate::find($rate_id);
+            $basePricePerRatePerDay = $rate ? $rate->getCurrentPriceAttribute() : 0;    
+            
+            $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
+            $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
     
-        return view('bookings.bookingInfo', compact('startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'breakdown'), ['action' => 'create']); 
+            $breakdown = [
+                'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
+                'basePricePerRatePerDay' => $basePricePerRatePerDay,
+                'numberOfPeople' => $numberOfPeople,
+                'stayDays' => $stayDays,
+                'returnDepositValue' => $returnDepositValue
+            ];
+    
+            $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
+        }    
+        return view('bookings.bookingInfo', compact('startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users','user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'breakdown'), ['action' => 'create']); 
     }
 
     public function edit($id, Request $request)
@@ -118,8 +127,9 @@ class BookingController extends Controller
         $numberOfPeople = $request->numberOfPeople;
         $returnDeposit = $request->returnDeposit;
         $rate_id = $request->rate_id;
+        $user_id = $request->user_id;
         if ($request->filled('numberOfPeople')) {
-            $query->where('maxOfGuests', '>=', $request->numberOfPeople);
+            $query->where('maxOfGuests', '=', $request->numberOfPeople);
         }
 
         if ($request->filled('startDate') && $request->filled('agreedEndDate')) {
@@ -132,13 +142,27 @@ class BookingController extends Controller
         }
         $rooms = $query->orderBy('id')->simplePaginate(30);
 
-        return view('bookings.selectRoom', compact('rooms', 'startDate', 'agreedEndDate', 'numberOfPeople', 'returnDeposit', 'rate_id'));
+        return view('bookings.selectRoom', compact('rooms', 'startDate', 'agreedEndDate', 'numberOfPeople', 'returnDeposit', 'rate_id', 'user_id'));
     }
     
 
     public function store(Request $request)
     {        
-        // if user click "Select room"
+        $validatedData = $request->validate([
+            'startDate' => 'required|date',
+            'agreedEndDate' => 'required|date|after_or_equal:startDate',
+            'numberOfPeople' => 'required|integer|min:1|max:6',
+            'rate_id' => 'required|exists:rates,id',
+        ]);
+    
+        $startDate = Carbon::parse($validatedData['startDate']);
+        $agreedEndDate = Carbon::parse($validatedData['agreedEndDate']);
+    
+        if ($agreedEndDate->lte($startDate)) {
+            return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
+        }
+
+        // if user click "Select room" (empty room code)
         if ($request->input('action_type') === 'select_room') {
             $queryParams = http_build_query([
                 'startDate' => $request->input('startDate'),
@@ -146,14 +170,44 @@ class BookingController extends Controller
                 'numberOfPeople' => $request->input('numberOfPeople'),
                 'returnDeposit' => $request->input('returnDeposit'),
                 'rate_id' => $request->input('rate_id'),
+                'user_id' => $request->input('user_id')
             ]);
     
             return redirect()->route('bookings.selectRoom', $queryParams)
             ->withInput($request->input());
         }
     
-        // If user click "Create" or "Update" booking
+        // If user click "Create" or "Update" booking (not empty room code)
+        if ($request->input('action_type') === 'save_booking') {
+            
+            $validatedData = $request->validate([
+                'startDate' => 'required|date',
+                'agreedEndDate' => 'required|date|after_or_equal:startDate',
+                'numberOfPeople' => 'required|integer|min:1',
+                'rate_id' => 'required|exists:rates,id',
+                'user_id' => 'required|exists:users,id',
+                'room_code' => 'required|string',
+                'returnDeposit' => 'nullable|boolean',
+            ]);
 
+            $room = Room::where('code',  $validatedData['room_code'])->first();
+            $returnDeposit = ($request->has('returnDeposit')) ? 1 : 0;
+            
+            $booking = Booking::create([
+                'startDate' => $validatedData['startDate'],
+                'agreedEndDate' => $validatedData['agreedEndDate'],
+                'numberOfPeople' => $validatedData['numberOfPeople'],
+                'rate_id' => $validatedData['rate_id'],
+                'user_id' => $validatedData['user_id'],
+                'room_id' => $room->id,
+                'returnDeposit' => $returnDeposit,
+                'bookingDate' => now()
+            ]);
+    
+            // Redirigir a la vista de detalles de la reserva o cualquier otra página
+            return redirect()->route('bookings.show', $booking->id)
+                             ->with('success', 'Reserva creada exitosamente.');
+        }
     }
 
     private function calculateBookingTotalPrice($breakdown){

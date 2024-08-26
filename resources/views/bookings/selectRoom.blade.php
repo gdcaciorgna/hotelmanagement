@@ -9,7 +9,15 @@
             <p>Fecha solicitada: <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} al {{ \Carbon\Carbon::parse($agreedEndDate)->format('d/m/Y') }}</strong></p>
         </div>
         <div class="col-3 d-flex align-items-center justify-content-end">
-            <a href="{{ route('bookings.create', compact('startDate', 'agreedEndDate', 'numberOfPeople', 'returnDeposit', 'rate_id')) }}" type="submit" class="btn btn-danger">Volver a la reserva</a>
+            <a href="{{ route('bookings.create', [
+                'startDate' => $startDate,
+                'agreedEndDate' => $agreedEndDate,
+                'numberOfPeople' => $numberOfPeople,
+                'returnDeposit' => $returnDeposit,
+                'rate_id' => $rate_id,
+                'user_id' => $user_id,
+                'cleanTotalBookingPrice' => true
+            ]) }}" class="btn btn-danger">Volver a la reserva</a>            
         </div>
     </div>
 </div>
@@ -34,7 +42,7 @@
                                             <p class="mt-1 mb-1" style="font-size: 12px">Descripción: {{$room->description}}</p>
                                             </div>
                                             <div class="col-5 text-end">
-                                                <a href="{{ route('bookings.create', ['roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id ]) }}" type="submit" class="btn btn-success btn-sm" style="font-size: 12px;">Seleccionar habitación</a>
+                                                <a href="{{ route('bookings.create', ['roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id, 'user_id' => $user_id]) }}" type="submit" class="btn btn-success btn-sm" style="font-size: 12px;">Seleccionar habitación</a>
                                                 <img src="{{asset('/img/rooms/' . $room->image)}}" alt="Habitación genérica" class="img-fluid mt-3" style="height: 90%; object-fit: cover;">
                                             </div>
                                         </div>

@@ -42,6 +42,11 @@
     <form action="{{$formAction}}" method="POST">
         @csrf
         <input type="hidden" name="action_type" id="action_type" value="">
+        <input type="hidden" name="room_code" id="room_code" value="
+        @if($roomCode) 
+            {{$roomCode}} 
+        @endif
+        ">
         @if(isset($method))
             @method($method)
         @endif
@@ -58,24 +63,38 @@
                 </div>
             </div>
         @endif
+
+        <div class="row mb-3">
+            <label for="startDate" class="col-sm-3">Fecha reserva</label>
+            <div class="col-sm-9">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
+        </div>
+        
         <div class="row mb-3">
             <label for="startDate" class="col-sm-3 col-form-label">Fecha inicio</label>
             <div class="col-sm-9">
                 <input type="date" class="form-control @error('startDate') is-invalid @enderror" id="startDate" name="startDate"
-                value="{{ old('startDate', isset($startDate) ? $startDate : '') }}">
-                @error('startDate')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror  
+                    value="{{ old('startDate', $startDate ?? '') }}"
+                    @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
+                    @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+                        <input type="hidden" name="startDate" value="{{ old('startDate', $startDate ?? '') }}">
+                    @endif
+                    @error('startDate')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror  
             </div>
         </div>
-    
+        
         <div class="row mb-3">
             <label for="agreedEndDate" class="col-sm-3 col-form-label">Fecha fin pactada</label>
             <div class="col-sm-9">
                 <input type="date" class="form-control @error('agreedEndDate') is-invalid @enderror" id="agreedEndDate" name="agreedEndDate"
-                value="{{ old('agreedEndDate', isset($agreedEndDate) ? $agreedEndDate : '') }}">
+                value="{{ old('agreedEndDate', isset($agreedEndDate) ? $agreedEndDate : '') }}"
+                @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
+                @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+                    <input type="hidden" name="agreedEndDate" value="{{ old('agreedEndDate', $agreedEndDate ?? '') }}">
+                @endif
                 @error('agreedEndDate')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -89,14 +108,19 @@
             <div class="col-sm-9">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit"
-                    {{ isset($returnDeposit) && $returnDeposit ? 'checked' : '' }}>
+                    {{ isset($returnDeposit) && $returnDeposit ? 'checked' : '' }}
+                    @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
+                    @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+                        <input type="hidden" name="returnDeposit" value="{{ old('returnDeposit', $returnDeposit ?? '') }}">
+                    @endif
                 </div>
             </div>
         </div> 
         <div class="row mb-3">
             <label for="rate_id" class="col-sm-3 col-form-label">Tarifa</label>
             <div class="col-sm-9">
-                <select name="rate_id" class="form-select">
+                <select name="rate_id" class="form-select" @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
+                    >
                     <option value="">Seleccione una tarifa</option>
                     @foreach($rates as $rate)
                         <option value="{{ $rate->id }}" {{ request('rate_id') == $rate->id ? 'selected' : '' }}>
@@ -104,9 +128,29 @@
                         </option>
                     @endforeach
                 </select>
+                @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+                    <input type="hidden" name="rate_id" value="{{ old('rate_id', $rate_id ?? '') }}">
+                @endif
             </div>
         </div>
         
+        <div class="row mb-3">
+            <label for="user_id" class="col-sm-3 col-form-label">Huésped principal</label>
+            <div class="col-sm-9">
+                <select name="user_id" class="form-select" @if(!empty($totalBookingPrice) && $totalBookingPrice > 0) disabled @endif>
+                    >
+                    <option value="">Seleccione un huésped</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->fullName }}
+                        </option>
+                    @endforeach
+                </select>
+                @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+                    <input type="hidden" name="user_id" value="{{ old('user_id', $user_id ?? '') }}">
+                @endif
+            </div>
+        </div>
 
         <div class="row mb-3">
             <label for="numberOfPeople" class="col-sm-3 col-form-label">Cantidad de huéspedes</label>
@@ -128,7 +172,11 @@
                 @if($roomCode)
                     <span class="me-3">N°:{{ $roomCode }}</span>
                 @endif
-                <button type="submit" id="selectRoom" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
+                <button type="submit" id="selectRoom" id="selectRoomButton" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';"
+                @if($roomCode && !empty($totalBookingPrice) && $totalBookingPrice > 0)
+                    disabled
+                @endif
+                >
                     {{ $selectRoomButtonText }}
                 </button>
             </div>
@@ -136,15 +184,15 @@
         
         @if(!empty($stayDays) && $stayDays > 0)
             <div class="row mb-3">
-                <p for="selectRoom" class="col-sm-3">Días en estadía:</p>
-                <p for="selectRoom" class="col-sm-9">{{ $stayDays }}</p>
+                <p for="stayDays" class="col-sm-3">Días en estadía:</p>
+                <p class="col-sm-9">{{ $stayDays }}</p>
             </div>
         @endif
         
         @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
             <div class="row mb-1">
-                <p for="selectRoom" class="col-sm-3">Precio reserva:</p>
-                <p for="selectRoom" class="col-sm-9">
+                <p for="totalBookingPrice" class="col-sm-3">Precio reserva:</p>
+                <p class="col-sm-9">
                     <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
                     <br> Desglose: 
                     ({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} [PBPD] 
@@ -168,18 +216,21 @@
             </ul>
         @endif
     
-
         <div class="row mb-3">
-            <div class="col-12  d-flex">
-                <button type="submit" class="btn btn-primary" disabled>{{ $saveButtonText }}</button>
-
+            <div class="col-12 d-flex">
+                <button type="submit" id="saveBookingButton" class="btn btn-primary" 
+                    onclick="document.getElementById('action_type').value='save_booking';"
+                    @if($totalBookingPrice <= 0) disabled="true" @endif>
+                    {{ $saveButtonText }}
+                </button>
+        
                 @if($action == 'edit')
                     <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
                     <button type="submit" class="btn btn-success ms-auto">Finalizar Reserva</button>
                 @endif
-                
             </div>
         </div>
+        
     </form>
 
     @if ($errors->any())
@@ -220,3 +271,40 @@
 @endif
 
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modifyRoomButton = document.getElementById('selectRoom');
+        const saveBookingButton = document.querySelector('button[type="submit"]');
+        const numberOfPeopleDropdown = document.querySelector('select[name="numberOfPeople"]');
+        const formFields = document.querySelectorAll('form input, form select, form textarea'); // Selecciona todos los campos del formulario
+
+        const totalBookingPrice = @json($totalBookingPrice ?? 0);
+
+        function updateButtonState() {
+            if (modifyRoomButton && saveBookingButton) {
+                if (totalBookingPrice > 0) {
+                    modifyRoomButton.disabled = false;
+                    saveBookingButton.disabled = true;
+                } else {
+                    modifyRoomButton.disabled = true;
+                }
+            }
+        }
+
+        if (numberOfPeopleDropdown) {
+            numberOfPeopleDropdown.addEventListener('change', function () {
+                // Habilita todos los campos del formulario
+                formFields.forEach(field => {
+                    field.disabled = false;
+                });
+
+                if (modifyRoomButton && saveBookingButton) {
+                    modifyRoomButton.disabled = true;
+                    saveBookingButton.disabled = false;
+                }
+            });
+        }
+
+        updateButtonState();
+    });
+</script>
