@@ -28,11 +28,12 @@
         </div>
     </div>
    
-    <form action="{{$formAction}}" method="POST">
+    <form action="{{$formAction}}" method="POST" enctype="multipart/form-data">
         @csrf
         @if(isset($method))
             @method($method)
         @endif
+
         <div class="row mb-3">
             <label for="code" class="col-sm-3 col-form-label">Nro Habitación</label>
             <div class="col-sm-9">
@@ -58,7 +59,7 @@
         <div class="row mb-3">
             <label for="description" class="col-sm-3 col-form-label">Descripción</label>
             <div class="col-sm-9">
-                <textarea class="form-control" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $room->description ?? '')}}</textarea>
+                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $room->description ?? '')}}</textarea>
                 @error('description')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -66,6 +67,28 @@
                 @enderror    
             </div>
         </div>
+        <div class="row mb-3">
+            <label for="image" class="col-sm-3 col-form-label">Imagen</label>
+            <div class="col-sm-9">
+
+                @if(isset($room) && $room->image)
+                    <div class="mb-2">
+                        <img src="{{ asset('/img/rooms/' . $room->image) }}" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px;">
+                        <p class="mt-2">{{ $room->image }}</p>
+                            <label class="form-check-label">
+                            <input type="checkbox" name="delete_image" value="1"> Eliminar imagen actual
+                        </label>
+                    </div>
+                @endif
+                <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" accept="image/*">
+                @error('image')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
+            </div>
+        </div>
+        
         <div class="row mb-3">
             <label for="description" class="col-sm-3 col-form-label">Estado actual</label>
             <div class="col-sm-9">

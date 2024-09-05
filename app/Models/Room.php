@@ -14,6 +14,7 @@ class Room extends Model
         'code',
         'maxOfGuests',
         'description',
+        'image',
         'status',
     ];
 

@@ -43,7 +43,7 @@
                                             </div>
                                             <div class="col-5 text-end">
                                                 <a href="{{ route('bookings.create', ['roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id, 'user_id' => $user_id]) }}" type="submit" class="btn btn-success btn-sm" style="font-size: 12px;">Seleccionar habitación</a>
-                                                <img src="{{asset('/img/rooms/' . $room->image)}}" alt="Habitación genérica" class="img-fluid mt-3" style="height: 90%; object-fit: cover;">
+                                                <img src="{{asset('/img/rooms/' . $room->image)}}" alt="{{$room->image}}" class="img-fluid mt-3" style="height: 90%; object-fit: cover;">
                                             </div>
                                         </div>
                                     </div>
