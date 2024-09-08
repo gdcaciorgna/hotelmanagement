@@ -8,17 +8,23 @@
             <p class="mb-1">Cantidad de huéspedes: <strong>{{$numberOfPeople}}</strong></p>
             <p>Fecha solicitada: <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} al {{ \Carbon\Carbon::parse($agreedEndDate)->format('d/m/Y') }}</strong></p>
         </div>
-        <div class="col-3 d-flex align-items-center justify-content-end">
-            <a href="{{ route('bookings.create', [
-                'startDate' => $startDate,
-                'agreedEndDate' => $agreedEndDate,
-                'numberOfPeople' => $numberOfPeople,
-                'returnDeposit' => $returnDeposit,
-                'rate_id' => $rate_id,
-                'user_id' => $user_id,
-                'cleanTotalBookingPrice' => true
-            ]) }}" class="btn btn-danger">Volver a la reserva</a>            
-        </div>
+        @if($action == 'create')
+            <div class="col-3 d-flex align-items-center justify-content-end">
+                <a href="{{ route('bookings.create', [
+                    'startDate' => $startDate,
+                    'agreedEndDate' => $agreedEndDate,
+                    'numberOfPeople' => $numberOfPeople,
+                    'returnDeposit' => $returnDeposit,
+                    'rate_id' => $rate_id,
+                    'user_id' => $user_id,
+                    'cleanTotalBookingPrice' => true
+                ]) }}" class="btn btn-danger">Volver a la reserva</a>            
+            </div>
+        @elseif($action == 'edit')
+            <div class="col-3 d-flex align-items-center justify-content-end">
+                <a href="{{ route('bookings.edit', $bookingId)}}" class="btn btn-danger">Volver a la reserva</a>                    
+            </div>
+        @endif
     </div>
 </div>
 <div class="row">
@@ -30,7 +36,6 @@
                             @if($rooms->isEmpty())
                                 <p>No hay habitaciones que cumplan con las condiciones buscadas.</p>
                             @endif
-                    
                             @foreach ($rooms as $room)
                                 <div class="col-sm-12 col-xl-6 justify-content-between">
                                     <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-between">
@@ -42,7 +47,13 @@
                                             <p class="mt-1 mb-1" style="font-size: 12px">Descripción: {{$room->description}}</p>
                                             </div>
                                             <div class="col-5 text-end">
-                                                <a href="{{ route('bookings.create', ['roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id, 'user_id' => $user_id]) }}" type="submit" class="btn btn-success btn-sm" style="font-size: 12px;">Seleccionar habitación</a>
+                                                @php
+                                                if($action == 'create') 
+                                                        $route = route('bookings.create', ['roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id, 'user_id' => $user_id]);
+                                                elseif($action == 'edit')
+                                                        $route = route('bookings.edit', ['id'=> $bookingId, 'roomCode' => $room->code, 'startDate' => $startDate, 'agreedEndDate' =>$agreedEndDate,  'numberOfPeople' => $numberOfPeople, 'returnDeposit' => $returnDeposit, 'rate_id' => $rate_id, 'user_id' => $user_id]);
+                                                @endphp
+                                                <a href="{{$route}}" type="submit" class="btn btn-success btn-sm" style="font-size: 12px;">Seleccionar habitación</a>
                                                 <img src="{{asset('/img/rooms/' . $room->image)}}" alt="{{$room->image}}" class="img-fluid mt-3" style="height: 90%; object-fit: cover;">
                                             </div>
                                         </div>

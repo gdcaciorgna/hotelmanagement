@@ -15,6 +15,7 @@ class BookingController extends Controller
     {
         $rates = Rate::all();
         $rooms = Room::all();
+        $users = User::where('userType', 'Guest')->get();
         $query = Booking::query();
 
         // Filter by booking ID
@@ -51,13 +52,21 @@ class BookingController extends Controller
             });
         }    
 
+        // Filter by main guest
+        if ($request->filled('user_id')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('id', '=', $request->user_id);
+            });
+        }    
+
         // Sort and paginate result
         $bookings = $query->orderBy('id')->simplePaginate(30);
-        return view('bookings.index', compact('bookings', 'rates', 'rooms'));
+        return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users'));
     }
     
     public function create(Request $request)
     {
+        $action = $request->input('action', old('action'));
         $startDate = $request->input('startDate', old('startDate'));
         $agreedEndDate = $request->input('agreedEndDate', old('agreedEndDate'));
         $numberOfPeople = $request->input('numberOfPeople', old('numberOfPeople'));
@@ -103,7 +112,7 @@ class BookingController extends Controller
     
             $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
         }    
-        return view('bookings.bookingInfo', compact('startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users','user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'breakdown'), ['action' => 'create']); 
+        return view('bookings.createBooking', compact('action', 'startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users','user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'breakdown'), ['action' => 'create']); 
     }
 
     public function edit($id, Request $request)
@@ -115,6 +124,7 @@ class BookingController extends Controller
         $users = User::where('userType', 'Guest')->get();
     
         // Extract values from the existing booking
+        $bookingId = $id;
         $startDate = $booking->startDate;
         $agreedEndDate = $booking->agreedEndDate;
         $numberOfPeople = $booking->numberOfPeople;
@@ -138,14 +148,16 @@ class BookingController extends Controller
         // Calculation logic (similar to create)
         $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
     
-        return view('bookings.bookingInfo', compact(
-            'booking', 'startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users', 'user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'cleanTotalBookingPrice', 'breakdown'
+        return view('bookings.editBooking', compact(
+            'booking', 'startDate', 'agreedEndDate', 'numberOfPeople', 'rates', 'users', 'user_id', 'rate_id', 'returnDeposit', 'roomCode', 'stayDays', 'totalBookingPrice', 'cleanTotalBookingPrice', 'breakdown', 'bookingId'
         ), ['action' => 'edit']);
     }    
 
     public function selectRoom(Request $request)
     {
         $query = Room::query();
+        $bookingId = (!empty($request->bookingId)) ? $request->bookingId : '';
+        $action = $request->action;
         $startDate = $request->startDate;
         $agreedEndDate = $request->agreedEndDate;
         $numberOfPeople = $request->numberOfPeople;
@@ -166,9 +178,8 @@ class BookingController extends Controller
         }
         $rooms = $query->orderBy('id')->simplePaginate(30);
 
-        return view('bookings.selectRoom', compact('rooms', 'startDate', 'agreedEndDate', 'numberOfPeople', 'returnDeposit', 'rate_id', 'user_id'));
+        return view('bookings.selectRoom', compact('action', 'rooms', 'startDate', 'agreedEndDate', 'numberOfPeople', 'returnDeposit', 'rate_id', 'user_id', 'bookingId'));
     }
-    
 
     public function store(Request $request)
     {        
@@ -186,9 +197,10 @@ class BookingController extends Controller
             return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
         }
 
-        // if user click "Select room" (empty room code)
+        // if user click "Select room"
         if ($request->input('action_type') === 'select_room') {
             $queryParams = http_build_query([
+                'action' => 'create',
                 'startDate' => $request->input('startDate'),
                 'agreedEndDate' => $request->input('agreedEndDate'),
                 'numberOfPeople' => $request->input('numberOfPeople'),
@@ -201,7 +213,7 @@ class BookingController extends Controller
             ->withInput($request->input());
         }
     
-        // If user click "Create" or "Update" booking (not empty room code)
+        // If user click "Create" or "Update" booking
         if ($request->input('action_type') === 'save_booking') {
             
             $validatedData = $request->validate([
@@ -231,6 +243,65 @@ class BookingController extends Controller
             // Redirigir a la vista de detalles de la reserva o cualquier otra página
             return redirect()->route('bookings.index', $booking->id)
                              ->with('success', 'Reserva creada exitosamente.');
+        }
+    }
+
+    public function update($id, Request $request)
+    {        
+        $booking = Booking::findOrFail($id);
+        $validatedData = $request->validate([
+            'startDate' => 'required|date',
+            'agreedEndDate' => 'required|date|after_or_equal:startDate',
+            'numberOfPeople' => 'required|integer|min:1|max:6',
+            'rate_id' => 'required|exists:rates,id',
+        ]);
+    
+        $startDate = Carbon::parse($validatedData['startDate']);
+        $agreedEndDate = Carbon::parse($validatedData['agreedEndDate']);
+    
+        if ($agreedEndDate->lte($startDate)) {
+            return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
+        }
+        // if user click "Select room"
+        if ($request->input('action_type') === 'select_room') {
+            return redirect()->route('bookings.selectRoom', [
+                'action' => 'edit',
+                'bookingId' => $id,
+                'startDate' => $request->input('startDate'),
+                'agreedEndDate' => $request->input('agreedEndDate'),
+                'numberOfPeople' => $request->input('numberOfPeople'),
+                'returnDeposit' => $request->input('returnDeposit'),
+                'rate_id' => $request->input('rate_id'),
+                'user_id' => $request->input('user_id'),
+            ]);
+        }
+    
+        // If user click "Create" or "Update" booking
+        if ($request->input('action_type') === 'save_booking') {
+            
+            $validatedData = $request->validate([
+                'startDate' => 'required|date',
+                'agreedEndDate' => 'required|date|after_or_equal:startDate',
+                'numberOfPeople' => 'required|integer|min:1',
+                'rate_id' => 'required|exists:rates,id',
+                'user_id' => 'required|exists:users,id',
+                'room_code' => 'required|string',
+            ]);
+            $room = Room::where('code',  $validatedData['room_code'])->first();
+            $returnDeposit = ($request->has('returnDeposit')) ? 1 : 0;
+            $booking->update([
+                'startDate' => $validatedData['startDate'],
+                'agreedEndDate' => $validatedData['agreedEndDate'],
+                'numberOfPeople' => $validatedData['numberOfPeople'],
+                'rate_id' => $validatedData['rate_id'],
+                'user_id' => $validatedData['user_id'],
+                'room_id' => $room->id,
+                'returnDeposit' => $returnDeposit
+            ]);
+    
+            // Redirigir a la vista de detalles de la reserva o cualquier otra página
+            return redirect()->route('bookings.index', $booking->id)
+                             ->with('success', 'Reserva actualizada exitosamente.');
         }
     }
 

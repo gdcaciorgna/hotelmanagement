@@ -57,9 +57,21 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="row mt-4">
+                <h6>Huésped principal</h6>
+                <select name="user_id" class="form-select" style="font-size: 0.8rem">
+                    <option value="">Seleccione un huésped</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->fullName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             
             <div class="row mt-4">
-                <h6>Código de Habitación</h6>
+                <h6>Habitación</h6>
                 <select name="room_code" class="form-select" style="font-size: 0.8rem">
                     <option value="">Seleccione una habitación</option>
                     @foreach($rooms as $room)
@@ -96,9 +108,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="mt-1 mb-1">Fecha Inicio: <strong>{{$booking->getFormattedStartDate()}}</strong></p>
-                                <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{$booking->getFormattedAgreedEndDate()}}</strong></p>
-                                <p class="mt-1 mb-1">Fecha Fin real: <strong>{{$booking->getFormattedActualEndDate()}}</strong></p>
+                                <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format('d/m/Y') }}</strong></p>
+                                <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
+                                <p class="mt-1 mb-1">Fecha Fin real: <strong>{{ \Carbon\Carbon::parse($booking->actualEndDate)->format('d/m/Y') }}</strong></p>
+                                <p class="mt-1 mb-1">Huésped principal: <strong>{{$booking->user->fullName}}</strong></p>
                                 <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
                                 <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
                                 <p class="mt-1 mb-1">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
