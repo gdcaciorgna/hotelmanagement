@@ -179,20 +179,20 @@
                     {{ $selectRoomButtonText }}
                 </button>
                 @if($roomCode)
-                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Limpiar</button>
+                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Habilitar modificación</button>
                 @endif
 
             </div>
         </div>      
         @if(!empty($stayDays) && $stayDays > 0)
-            <div class="row mb-3">
+            <div class="row mb-3 stay-days-info">
                 <p for="stayDays" class="col-sm-3">Días en estadía:</p>
                 <p class="col-sm-9">{{ $stayDays }}</p>
             </div>
         @endif
         
         @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
-            <div class="row mb-1">
+            <div class="row mb-1 booking-price-info">
                 <p for="totalBookingPrice" class="col-sm-3">Precio reserva:</p>
                 <p class="col-sm-9">
                     <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
@@ -207,7 +207,7 @@
                 </p>
             </div>
         
-            <ul class="list-group list-group-flush small mb-3">
+            <ul class="list-group list-group-flush small mb-3 booking-price-info">
                 <li class="list-group-item mb-1"><strong>p:</strong> cantidad de personas</li>
                 <li class="list-group-item mb-1"><strong>d:</strong> cantidad de días</li>
                 <li class="list-group-item mb-1"><strong>PBPD:</strong> Precio base por persona por día</li>
@@ -276,7 +276,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const modifyRoomButton = document.getElementById('selectRoom');
         const clearButton = document.getElementById('clearButton');
-        const returnDepositButton = document.getElementById('returnDeposit'); // Añadir el botón returnDeposit
+        const returnDepositButton = document.getElementById('returnDeposit');
         const formFields = document.querySelectorAll('form input:not([type="hidden"]), form select, form textarea');
 
         function blockFieldsExcept(exceptId) {
@@ -284,8 +284,6 @@
                 if (field.id !== exceptId) {
                     field.setAttribute('readonly', true);
                     field.setAttribute('disabled', true);
-                    
-                    // Agregar input hidden con el valor del campo deshabilitado
                     addHiddenInput(field);
                 }
             });
@@ -297,7 +295,6 @@
                     field.removeAttribute('readonly');
                     field.removeAttribute('disabled');
 
-                    // Remover input hidden correspondiente al campo
                     removeHiddenInput(field);
                 }
             });
@@ -331,13 +328,17 @@
 
         if (clearButton) {
             clearButton.addEventListener('click', function () {
+                document.querySelectorAll('.stay-days-info, .booking-price-info').forEach(element => {
+                    element.style.display = 'none';
+                });
+
                 formFields.forEach(field => {
                     if (field.type !== 'hidden') {
-                        field.value = '';
                     }
                 });
                 unblockFieldsExcept('id');
             });
+
         }
 
         // Manejar el caso del botón returnDeposit

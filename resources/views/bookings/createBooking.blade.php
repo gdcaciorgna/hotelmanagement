@@ -162,7 +162,7 @@
                     {{ $selectRoomButtonText }}
                 </button>
                 @if($roomCode)
-                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Limpiar</button>
+                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Habilitar modificación</button>
                 @endif
 
             </div>
@@ -279,7 +279,6 @@ document.addEventListener('DOMContentLoaded', function () {
         clearButton.addEventListener('click', function () {
             formFields.forEach(field => {
                 if (field.type !== 'hidden') {
-                    field.value = '';
                     field.removeAttribute('readonly');
                     field.removeAttribute('disabled');
                 }
