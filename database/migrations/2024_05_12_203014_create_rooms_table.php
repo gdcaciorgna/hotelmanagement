@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('maxOfGuests');
             $table->string('image')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
