@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar reserva')
+@section('title', 'Agregar reserva')
 @section('content')
 
 @php
@@ -207,11 +207,6 @@
                     onclick="document.getElementById('action_type').value='save_booking';">
                     Crear reserva
                 </button>
-        
-                @if($action == 'edit')
-                    <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
-                    <button type="submit" class="btn btn-success ms-auto">Finalizar Reserva</button>
-                @endif
             </div>
         </div>
         
@@ -228,31 +223,6 @@
 @endif
 
 </div>
-
-<!-- Modal para confirmación de eliminación -->
-@if($action == 'edit')
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta reserva?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{{route('bookings.destroy', $booking->id)}}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar Reserva</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
 
 @endsection
 

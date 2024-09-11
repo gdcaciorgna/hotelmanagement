@@ -92,5 +92,4 @@ class RoomController extends Controller
         return to_route('rooms.index');
     }
 
-
 }

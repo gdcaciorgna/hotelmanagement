@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar reserva')
+@section('title', 'Editar reserva')
 @section('content')
 
 @php
@@ -46,19 +46,17 @@
         ">
         <input type="hidden" name="action" id="action" value="{{$action}}">
 
-        @if($action == 'edit')
-            <div class="row mb-3">
-                <label for="id" class="col-sm-3 col-form-label">ID Reserva</label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control @error('id') is-invalid @enderror" id="id" name="id" placeholder="101" value="{{ old('code', $booking->id ?? '') }}" disabled>
-                    @error('id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror    
-                </div>
+        <div class="row mb-3">
+            <label for="id" class="col-sm-3 col-form-label">ID Reserva</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control @error('id') is-invalid @enderror" id="id" name="id" placeholder="101" value="{{ old('code', $booking->id ?? '') }}" disabled>
+                @error('id')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror    
             </div>
-        @endif
+        </div>
 
         <div class="row mb-3">
             <label for="startDate" class="col-sm-3">Fecha reserva</label>
@@ -225,10 +223,9 @@
                     Actualizar
                 </button>
         
-                @if($action == 'edit')
-                    <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
-                    <button type="submit" class="btn btn-success ms-auto">Finalizar Reserva</button>
-                @endif
+                <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
+                <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
+
             </div>
         </div>
         
@@ -247,29 +244,27 @@
 </div>
 
 <!-- Modal para confirmación de eliminación -->
-@if($action == 'edit')
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta reserva?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{{route('bookings.destroy', $booking->id)}}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar Reserva</button>
-                    </form>
-                </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta reserva?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form action="{{route('bookings.destroy', $booking->id)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Eliminar Reserva</button>
+                </form>
             </div>
         </div>
     </div>
-@endif
+</div>
 
 @endsection
 <script>

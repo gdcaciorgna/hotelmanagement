@@ -68,6 +68,8 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/bookings/create',  [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings/{id}/showCheckout',  [BookingController::class, 'showCheckout'])->name('bookings.showCheckout');
+
 
     
 });

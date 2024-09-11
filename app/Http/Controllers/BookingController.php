@@ -323,4 +323,46 @@ class BookingController extends Controller
         return $totalPrice;
     }
 
+    public function destroy(Request $request){
+        $booking = Booking::findOrFail($request->id);
+        $booking->delete();
+        return to_route('bookings.index');
+    }
+
+    public function showCheckout(Request $request){
+        $booking = Booking::findOrFail($request->id);
+
+        $startDateCarbon = Carbon::parse($booking->startDate);
+        $agreedEndDateCarbon = Carbon::parse($booking->agreedEndDate);
+
+        $stayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
+
+        $basePricePerPersonPerDayPolicy = Policy::where('description', 'basePricePerPersonPerDay')->first();
+        $basePricePerPersonPerDay = 0;
+        if ($basePricePerPersonPerDayPolicy) {
+            $basePricePerPersonPerDay = $basePricePerPersonPerDayPolicy->value;
+        }
+        
+        $rate = Rate::find($booking->rate->id);
+        $basePricePerRatePerDay = $rate ? $rate->getCurrentPriceAttribute() : 0;    
+        
+        $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
+        $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
+
+        //Harcoded commodities and additionalServices selected 
+
+        $breakdown = [
+            'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
+            'basePricePerRatePerDay' => $basePricePerRatePerDay,
+            'bookingCommodities' => 0,
+            'bookingAdditionalServices' => 0,
+            'numberOfPeople' => $booking->numberOfPeople,
+            'stayDays' => $stayDays,
+            'returnDepositValue' => $returnDepositValue
+        ];
+
+        $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
+
+        return view('bookings.showCheckout', compact('booking', 'breakdown')); 
+    }
 }

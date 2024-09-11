@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Carbon\Carbon;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes; 
 
     protected $fillable = [
         'bookingDate',
@@ -62,5 +64,13 @@ class Booking extends Model
 
         return $endDateFormatted;
     }
+
+    public function getReturnDepositText()
+    {
+        if ($this->returnDeposit)  
+            return 'Sí';
+        else return 'No';
+    }
+
 
 }
