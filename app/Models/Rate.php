@@ -20,6 +20,11 @@ class Rate extends Model
         return $this->hasMany(RatePricesHistory::class)->latest();
     }
 
+    public function additionalServices()
+    {
+        return $this->hasMany(AdditionalService::class);
+    }
+
     public function getCurrentPriceAttribute()
     {
         $latestPrice = $this->priceHistory()->first();
@@ -33,4 +38,8 @@ class Rate extends Model
         ]);
     }
 
+    public function commodities()
+    {
+        return $this->belongsToMany(Commodity::class, 'commodity_rate');
+    }
 }

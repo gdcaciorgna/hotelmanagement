@@ -20,8 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RateSeeder::class);
         $this->call(RatePricesSeeder::class);
         $this->call(BookingSeeder::class);
-
-
+        $this->call(CleaningSeeder::class);
     }
 }
 

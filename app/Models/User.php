@@ -83,6 +83,11 @@ class User extends Authenticatable
         return $formattedPhone;
     }
 
+    public function cleanings()
+    {
+        return $this->hasMany(Cleaning::class);
+    }
+
     /**
      * The attributes that should be cast.
      *

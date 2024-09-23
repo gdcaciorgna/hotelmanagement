@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamp('startDate');
             $table->timestamp('agreedEndDate');
             $table->timestamp('actualEndDate')->nullable();
+            $table->decimal('finalPrice', 10, 2)->nullable();
             $table->integer('numberOfPeople');
             $table->boolean('returnDeposit');
             $table->foreignId('rate_id')->constrained()->onDelete('cascade');

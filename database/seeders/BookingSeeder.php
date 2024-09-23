@@ -31,11 +31,17 @@ class BookingSeeder extends Seeder
             $agreedEndDate = $startDate->copy()->addDays(rand(1, 14));
             $actualEndDate = $agreedEndDate->isPast() ? $agreedEndDate : null;
 
+            $randomFinalPrice = null;
+            if(!empty($actualEndDate)){
+                $randomFinalPrice = mt_rand(300 * 100, 5000 * 100) / 100;
+            }
+
             $booking = Booking::create([
                 'bookingDate' => $bookingDate,
                 'startDate' => $startDate,
                 'agreedEndDate' => $agreedEndDate,
                 'actualEndDate' => $actualEndDate,
+                'finalPrice' => $randomFinalPrice,
                 'numberOfPeople' => rand(1, 5),
                 'returnDeposit' => (bool)rand(0, 1),
                 'rate_id' => $rateIds[array_rand($rateIds)],

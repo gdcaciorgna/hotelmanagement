@@ -17,6 +17,7 @@ class Booking extends Model
         'startDate',
         'agreedEndDate',
         'actualEndDate',
+        'finalPrice',
         'numberOfPeople',
         'returnDeposit',
         'rate_id',
@@ -27,6 +28,11 @@ class Booking extends Model
     public function rate()
     {
         return $this->belongsTo(Rate::class);
+    }
+    
+    public function additionalService()
+    {
+        return $this->belongsTo(AdditionalService::class);
     }
 
     public function room()
@@ -72,5 +78,34 @@ class Booking extends Model
         else return 'No';
     }
 
+    public function getCalculatedBookingPrice(){
+        $basePricePerPersonPerDay = $this->getBasePricePerPersonPerDay();
+        $basePricePerRatePerDay = $this->getBasePricePerRatePerDay();
+        $returnDepositValue = $this->getReturnDepositValue();
+        
+        $additionalServices = 0;
+        $additionalsCommoditiesPricePerDay = 0;
+        $totalPrice = ($basePricePerPersonPerDay + $basePricePerRatePerDay + $additionalsCommoditiesPricePerDay) * $this->numberOfPeople * $this->getStayDays() + $additionalServices - $returnDepositValue;
+        return $totalPrice;
+    }
 
+    public function getStayDays(){
+        $startDateCarbon = Carbon::parse($this->startDate);
+        $agreedEndDateCarbon = Carbon::parse($this->agreedEndDate);
+        return $agreedEndDateCarbon->diffInDays($startDateCarbon);
+    }
+
+    public function getBasePricePerPersonPerDay(){
+        return Policy::where('description', 'basePricePerPersonPerDay')->first()->value;
+    }
+
+    public function getBasePricePerRatePerDay(){
+        $rate = Rate::find($this->rate_id);
+        return $rate ? $rate->getCurrentPriceAttribute() : 0;    
+    }  
+    
+    public function getReturnDepositValue(){
+        $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
+        return (isset($this->returnDeposit) && $this->returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
+    }
 }

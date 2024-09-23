@@ -114,8 +114,18 @@
                                 <p class="mt-1 mb-1">Huésped principal: <strong>{{$booking->user->fullName}}</strong></p>
                                 <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
                                 <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
-                                <p class="mt-1 mb-1">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
+                                <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
                             </div>
+                            @if(!empty($booking->finalPrice))
+                                <div class="mt-auto">
+                                    <div class="bg-dark text-white text-center py-2 bottom-0 start-0 w-100">Precio final: {{ '$' . number_format($booking->finalPrice, 2)}}</div>
+                                </div>
+                            @else
+                                <div class="mt-auto">
+                                    <div class="bg-secondary text-white text-center py-2 bottom-0 start-0 w-100">Precio provisorio: {{ '$' . number_format($booking->getCalculatedBookingPrice(), 2)}}</div>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 @endforeach

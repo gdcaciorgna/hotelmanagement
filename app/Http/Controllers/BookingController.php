@@ -101,7 +101,6 @@ class BookingController extends Controller
             
             $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
             $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
-    
             $breakdown = [
                 'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
                 'basePricePerRatePerDay' => $basePricePerRatePerDay,
@@ -132,7 +131,7 @@ class BookingController extends Controller
         $user_id = $booking->user_id;
         $returnDeposit = $booking->returnDeposit;
         $roomCode = $booking->room->code;
-        $cleanTotalBookingPrice = true; // To skip recalculation
+        $cleanTotalBookingPrice = (!empty($request->cleanTotalBookingPrice) && $request->cleanTotalBookingPrice == true) ? true : false; // To skip recalculation
     
         $startDateCarbon = Carbon::parse($startDate);
         $agreedEndDateCarbon = Carbon::parse($agreedEndDate);
@@ -197,6 +196,7 @@ class BookingController extends Controller
             return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
         }
 
+        $returnDeposit = ($request->has('returnDeposit')) ? 1 : 0;
         // if user click "Select room"
         if ($request->input('action_type') === 'select_room') {
             $queryParams = http_build_query([
@@ -204,7 +204,7 @@ class BookingController extends Controller
                 'startDate' => $request->input('startDate'),
                 'agreedEndDate' => $request->input('agreedEndDate'),
                 'numberOfPeople' => $request->input('numberOfPeople'),
-                'returnDeposit' => $request->input('returnDeposit'),
+                'returnDeposit' => $returnDeposit,
                 'rate_id' => $request->input('rate_id'),
                 'user_id' => $request->input('user_id')
             ]);
@@ -223,7 +223,6 @@ class BookingController extends Controller
                 'rate_id' => 'required|exists:rates,id',
                 'user_id' => 'required|exists:users,id',
                 'room_code' => 'required|string',
-                'returnDeposit' => 'nullable|boolean',
             ]);
 
             $room = Room::where('code',  $validatedData['room_code'])->first();

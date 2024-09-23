@@ -188,32 +188,41 @@
                 <p class="col-sm-9">{{ $stayDays }}</p>
             </div>
         @endif
-        
-        @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+            
+        @if(empty($booking->finalPrice))           
+            @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0)
+                <div class="row mb-1 booking-price-info">
+                    <p for="totalBookingPrice" class="col-sm-3">Precio reserva provisorio:</p>
+                    <p class="col-sm-9">
+                        <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
+                        <br> Desglose: 
+                        ({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} [PBPD] 
+                        + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2) }} [PTPD] 
+                        + $0.00 [PCA]) 
+                        * {{$breakdown['numberOfPeople']}} [p] 
+                        * {{$breakdown['stayDays']}} [d] 
+                        + $0 [PSA] 
+                        - {{ '$' . number_format($breakdown['returnDepositValue'], 2) }} [VDep]
+                    </p>
+                </div>
+            
+                <ul class="list-group list-group-flush small mb-3 booking-price-info">
+                    <li class="list-group-item mb-1"><strong>p:</strong> cantidad de personas</li>
+                    <li class="list-group-item mb-1"><strong>d:</strong> cantidad de días</li>
+                    <li class="list-group-item mb-1"><strong>PBPD:</strong> Precio base por persona por día</li>
+                    <li class="list-group-item mb-1"><strong>PTPD:</strong> Precio tarifa por persona por día</li>
+                    <li class="list-group-item mb-1"><strong>PCA:</strong> Precio de comodidad adicional no incluída en la tarifa inicial</li>
+                    <li class="list-group-item mb-1"><strong>PSA:</strong> Precio total de los servicios adicionales contratados</li>
+                    <li class="list-group-item mb-1"><strong>VDep:</strong> Valor de depósito a devolver (opcional en caso de no encontrar anomalías)</li>
+                </ul>
+            @endif
+        @else
             <div class="row mb-1 booking-price-info">
-                <p for="totalBookingPrice" class="col-sm-3">Precio reserva:</p>
+                <p for="totalBookingPrice" class="col-sm-3">Precio final de reserva:</p>
                 <p class="col-sm-9">
-                    <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
-                    <br> Desglose: 
-                    ({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} [PBPD] 
-                    + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2) }} [PTPD] 
-                    + $0.00 [PCA]) 
-                    * {{$breakdown['numberOfPeople']}} [p] 
-                    * {{$breakdown['stayDays']}} [d] 
-                    + $0 [PSA] 
-                    - {{ '$' . number_format($breakdown['returnDepositValue'], 2) }} [VDep]
+                    <strong>{{ '$' . number_format($booking->finalPrice, 2) }}</strong>
                 </p>
             </div>
-        
-            <ul class="list-group list-group-flush small mb-3 booking-price-info">
-                <li class="list-group-item mb-1"><strong>p:</strong> cantidad de personas</li>
-                <li class="list-group-item mb-1"><strong>d:</strong> cantidad de días</li>
-                <li class="list-group-item mb-1"><strong>PBPD:</strong> Precio base por persona por día</li>
-                <li class="list-group-item mb-1"><strong>PTPD:</strong> Precio tarifa por persona por día</li>
-                <li class="list-group-item mb-1"><strong>PCA:</strong> Precio de comodidad adicional no incluída en la tarifa inicial</li>
-                <li class="list-group-item mb-1"><strong>PSA:</strong> Precio total de los servicios adicionales contratados</li>
-                <li class="list-group-item mb-1"><strong>VDep:</strong> Valor de depósito a devolver (opcional en caso de no encontrar anomalías)</li>
-            </ul>
         @endif
     
         <div class="row mb-3">
