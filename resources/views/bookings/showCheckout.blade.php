@@ -146,8 +146,16 @@
             </p>
             <p>
                 <span>Costo total de reserva = </span>  
-                <span><strong>{{$booking->calculatedPrice()}}</strong></span>     
+                <span><strong>{{'$' . number_format($booking->getCalculatedBookingPrice())}}</strong></span>     
             </p>
+            <div class="">
+            <a href="#" id="printScreen" class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i></a>
+            <form action="{{ route('bookings.setBookingAsFinished', $booking->id) }}" method="POST" style="display: inline;">
+                @csrf
+                @method('PUT')
+                <button type="submit" id="saveBookingButton" class="btn btn-primary">Finalizar Reserva</button>
+            </form>
+            </div>
         </div>
     </div>
 </div>

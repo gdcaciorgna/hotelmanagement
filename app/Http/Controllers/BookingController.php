@@ -304,6 +304,18 @@ class BookingController extends Controller
         }
     }
 
+    public function setBookingAsFinished($id)
+    {        
+        $booking = Booking::findOrFail($id);
+        $finishBookingDateTime = Carbon::now()->format('Y-m-d H:i:s');
+        $booking->update([
+            'actualEndDate' => $finishBookingDateTime,
+            'finalPrice' => $booking->getCalculatedBookingPrice()
+        ]);
+        return redirect()->route('bookings.index', $booking->id)
+        ->with('success', 'Reserva finalizada exitosamente.');        
+    }
+
     private function calculateBookingTotalPrice($breakdown){
         $basePricePerPersonPerDay = $breakdown['basePricePerPersonPerDay'] ?? 0; 
         $basePricePerRatePerDay = $breakdown['basePricePerRatePerDay'] ?? 0;
