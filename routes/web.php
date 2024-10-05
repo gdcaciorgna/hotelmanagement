@@ -7,6 +7,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CleaningController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -71,6 +72,9 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/bookings/{id}/showCheckout',  [BookingController::class, 'showCheckout'])->name('bookings.showCheckout');
     Route::put('/bookings/{id}/setBookingAsFinished',  [BookingController::class, 'setBookingAsFinished'])->name('bookings.setBookingAsFinished');
     
+    //CLEANINGS
+    Route::post('/cleanings', [CleaningController::class, 'create'])->name('cleanings.create');
+
 });
 
 Auth::routes();

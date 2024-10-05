@@ -95,14 +95,29 @@
                 @endif
         
                 @foreach ($bookings as $booking)
+                    @php 
+                        if($booking->room->status == 'Cleaning'){
+                            $requestCleaningButtonText = 'Terminar limpieza';
+                            $requestCleaningButtonColor = 'danger';
+                        }
+                        else{
+                             $requestCleaningButtonText = 'Solicitar limpieza';
+                             $requestCleaningButtonColor = 'success';
+                        }
+
+                    @endphp
+
                     <div class="col-sm-12 col-xl-6 justify-content-between">
                         <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-between">
                             <div class="row mb-2">
                                 <div class="col-2">
                                     <h6 class="mt-2">#{{$booking->id}}</h6>
                                 </div>
-                                <div class="col-10 text-end">
-                                    <a href="#" type="submit" class="btn btn-success btn-sm">Solicitar limpieza</a>
+                                <div class="col-10 text-end">             
+                                    <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn" 
+                                    data-room-id="{{ $booking->room_id }}" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#requestCleaningModal">{{$requestCleaningButtonText}}</a>
                                     <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
                                     <a href="#" type="submit" class="btn btn-info btn-sm">+</a>
                                 </div>
@@ -137,4 +152,40 @@
     </div>
 </div>
 
+{{-- Request a cleaning modal --}}
+<div class="modal fade" id="requestCleaningModal" tabindex="-1" aria-labelledby="requestCleaningModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="requestCleaningModalLabel">¿Desea confirmar la solicitud?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Se registrará un período de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{{ route('cleanings.create') }}">
+                    @csrf
+                    <input type="hidden" name="room_id" id="roomId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var requestCleaningModal = document.getElementById('requestCleaningModal');
+        var roomIdInput = document.getElementById('roomId');
+        
+        requestCleaningModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;            
+            var roomId = button.getAttribute('data-room-id');
+            
+            roomIdInput.value = roomId;
+        });
+    });
+</script>

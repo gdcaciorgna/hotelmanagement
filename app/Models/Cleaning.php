@@ -14,6 +14,7 @@ class Cleaning extends Model
         'requestedDateTime',
         'startDateTime',
         'endDateTime',
+        'room_id',
     ];
 
     public function user()
