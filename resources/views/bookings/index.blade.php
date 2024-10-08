@@ -99,10 +99,12 @@
                         if($booking->room->status == 'Cleaning'){
                             $requestCleaningButtonText = 'Terminar limpieza';
                             $requestCleaningButtonColor = 'danger';
+                            $cleaningModal = 'finishCleaningModal';
                         }
                         else{
                              $requestCleaningButtonText = 'Solicitar limpieza';
                              $requestCleaningButtonColor = 'success';
+                             $cleaningModal = 'requestCleaningModal';
                         }
 
                     @endphp
@@ -117,7 +119,7 @@
                                     <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn" 
                                     data-room-id="{{ $booking->room_id }}" 
                                     data-bs-toggle="modal" 
-                                    data-bs-target="#requestCleaningModal">{{$requestCleaningButtonText}}</a>
+                                    data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
                                     <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
                                     <a href="#" type="submit" class="btn btn-info btn-sm">+</a>
                                 </div>
@@ -164,7 +166,7 @@
                 <p>Se registrará un período de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{{ route('cleanings.create') }}">
+                <form method="POST" action="{{ route('cleanings.requestCleaning') }}">
                     @csrf
                     <input type="hidden" name="room_id" id="roomId">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
@@ -175,17 +177,49 @@
     </div>
 </div>
 
+{{-- Finish Cleaning as Admin --}}
+<div class="modal fade" id="finishCleaningModal" tabindex="-1" aria-labelledby="finishCleaningModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="finishCleaningModalLabel">¿Desea confirmar la finalización?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Se dará por finalizada la limpieza de esta habitación para el momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{{ route('cleanings.finishCleaningAsAdmin') }}">
+                    @method('PUT')
+                    @csrf
+                    <input type="hidden" name="room_id" id="roomIdFinish">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button type="submit" class="btn btn-danger">Confirmar finalización</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var requestCleaningModal = document.getElementById('requestCleaningModal');
+        var finishCleaningModal = document.getElementById('finishCleaningModal');
         var roomIdInput = document.getElementById('roomId');
+        var roomIdFinishInput = document.getElementById('roomIdFinish');
         
         requestCleaningModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;            
             var roomId = button.getAttribute('data-room-id');
-            
             roomIdInput.value = roomId;
+        });
+
+        finishCleaningModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;            
+            var roomId = button.getAttribute('data-room-id');
+            roomIdFinishInput.value = roomId;
         });
     });
 </script>

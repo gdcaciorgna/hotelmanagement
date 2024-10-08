@@ -91,5 +91,4 @@ class RoomController extends Controller
         $room->delete();
         return to_route('rooms.index');
     }
-
 }

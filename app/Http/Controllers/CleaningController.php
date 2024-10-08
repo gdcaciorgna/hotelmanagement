@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class CleaningController extends Controller
 {
-    public function create(Request $request){
+    public function requestCleaning(Request $request){
         $roomId = $request->room_id;
 
         Cleaning::create([
@@ -22,5 +22,30 @@ class CleaningController extends Controller
 
         return redirect()->route('bookings.index')
                          ->with('success', "Limpieza creada exitosamente para la habitación #{$room->code}");
+    }
+
+    public function finishCleaningAsAdmin(Request $request){
+        $roomId = $request->room_id;
+        $cleaning = Cleaning::where('room_id', $roomId)
+            ->orderBy('requestedDateTime', 'desc')
+            ->first();
+        
+        $room = Room::findOrFail($roomId);
+
+        $roomWithActiveBookings = $room->bookings
+                                    ->whereNull('actualEndDate')
+                                    ->where('startDate', '<', now());
+        
+        //If it is an active booking then set room as Unavailable else set as Available
+        if($roomWithActiveBookings->count() > 0){
+            $room->status = 'Unavailable';
+        }
+        else{
+            $room->status = 'Available';
+        }
+        $room->save();
+
+        return redirect()->route('bookings.index')
+                         ->with('success', "Limpieza finalizada exitosamente para la habitación #{$room->code}");
     }
 }

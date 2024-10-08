@@ -73,7 +73,8 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::put('/bookings/{id}/setBookingAsFinished',  [BookingController::class, 'setBookingAsFinished'])->name('bookings.setBookingAsFinished');
     
     //CLEANINGS
-    Route::post('/cleanings', [CleaningController::class, 'create'])->name('cleanings.create');
+    Route::post('/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
+    Route::put('/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
 
 });
 
