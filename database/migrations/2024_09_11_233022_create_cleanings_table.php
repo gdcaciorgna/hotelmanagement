@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamp('startDateTime')->nullable();
             $table->timestamp('endDateTime')->nullable();
             $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

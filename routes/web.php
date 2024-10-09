@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//ADMIN SER
 Route::middleware(['auth', 'receptionist'])->group(function (){
     //USERS
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -73,9 +75,18 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::put('/bookings/{id}/setBookingAsFinished',  [BookingController::class, 'setBookingAsFinished'])->name('bookings.setBookingAsFinished');
     
     //CLEANINGS
-    Route::post('/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
-    Route::put('/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
+    Route::post('/cleanings/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
+    Route::put('/cleanings/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
+    Route::get('/cleanings', [CleaningController::class, 'index'])->name('cleanings.index');
+    Route::put('/cleanings/startCleaningAsCleaner', [CleaningController::class, 'startCleaningAsCleaner'])->name('cleanings.startCleaningAsCleaner');
 
 });
+
+//CLEANER USERS
+Route::middleware(['auth', 'cleaner'])->group(function (){
+    //CLEANINGS
+    Route::put('/cleanings/startCleaningAsCleaner', [CleaningController::class, 'startCleaningAsCleaner'])->name('cleanings.startCleaningAsCleaner');
+});
+
 
 Auth::routes();

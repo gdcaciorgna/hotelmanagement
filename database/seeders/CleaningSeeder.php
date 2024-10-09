@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Cleaning;
-use App\Models\Rate;
+use App\Models\User;
 use App\Models\Room;
 use Carbon\Carbon;
 
@@ -15,7 +15,7 @@ class CleaningSeeder extends Seeder
      */
     public function run(): void
     {
-        $rateIds = Rate::pluck('id')->toArray();
+        $userIds = User::where('userType', 'Cleaner')->pluck('id')->toArray();
         $roomIds = Room::pluck('id')->toArray();
 
         // Crear 30 cleanings
@@ -32,6 +32,7 @@ class CleaningSeeder extends Seeder
                 'startDateTime' => $startDateTime,
                 'endDateTime' => $endDateTime,
                 'room_id' => $roomIds[array_rand($roomIds)],
+                'user_id' => $userIds[array_rand($userIds)]
             ]);
         }
     }       

@@ -8,6 +8,17 @@ use Carbon\Carbon;
 
 class CleaningController extends Controller
 {
+
+    public function index($id = null){
+
+        $cleanings = Cleaning::query()
+        ->whereNull('endDateTime')
+        ->orderBy('requestedDateTime')
+        ->simplePaginate(30);
+        
+        return view('cleanings.index')->with('cleanings', $cleanings);
+    }
+    
     public function requestCleaning(Request $request){
         $roomId = $request->room_id;
 
