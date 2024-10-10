@@ -4,7 +4,7 @@
 
 @php
     if($action == 'edit'){
-        $headerText = "Editar Usuario: #{$user->id}";
+        $headerText = "Editar asdsad Usuario: #{$user->id}";
         $formAction = route('users.update', ['id' => $user->id]);
         $method = 'PUT';
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Rate;
-
+use App\Models\Commodity;
 use Illuminate\Http\Request;
 
 class RateController extends Controller
@@ -15,39 +15,44 @@ class RateController extends Controller
     }
 
     public function create() {
-        return view('rates.rateInfo', ['action' => 'create']);
+        $commodities = Commodity::all();
+        return view('rates.rateInfo', ['action' => 'create', 'commodities' => $commodities]);
     }
 
     public function store(Request $request) {
         $rules = [
             'title' => 'required|max:250',
-            'description' => 'required|max:1000'
+            'description' => 'required|max:1000',
+            'commodities' => 'array'
         ];
 
         $request->validate($rules);
         $rate = Rate::create($request->except('currentPrice'));
         $rate->updateCurrentPrice($request->input('currentPrice'));
+        if ($request->has('commodities')) {
+            $rate->commodities()->sync($request->input('commodities'));
+        }    
         return redirect()->route('rates.index');
     }
 
     public function edit($id) {
         $rate = Rate::findOrFail($id);
-        return view('rates.rateInfo', ['rate' => $rate, 'action' => 'edit']);
+        $commodities = Commodity::all();
+        return view('rates.rateInfo', ['rate' => $rate, 'action' => 'edit', 'commodities' => $commodities]);
     }
 
     public function update($id, Request $request){
-
         $request->validate([
             'title' => 'required|max:250',
             'description' => 'required|max:1000',
-            'currentPrice' => 'required|numeric'
-
+            'currentPrice' => 'required|numeric',
+            'commodities' => 'array'
         ]);
 
         $rate = Rate::findOrFail($id);
         $rate->update($request->except('currentPrice'));
         $rate->updateCurrentPrice($request->input('currentPrice'));
-
+        $rate->commodities()->sync($request->input('commodities', [])); 
         return redirect()->route('rates.index');
     }
     

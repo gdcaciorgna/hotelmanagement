@@ -21,7 +21,7 @@ class BookingSeeder extends Seeder
     {
         $rateIds = Rate::pluck('id')->toArray();
         $roomIds = Room::pluck('id')->toArray();
-        $userIds = User::pluck('id')->toArray();
+        $userIds = User::where('userType', 'Guest')->pluck('id')->toArray();
         $commodityIds = Commodity::pluck('id')->toArray();
 
         // Crear 30 bookings

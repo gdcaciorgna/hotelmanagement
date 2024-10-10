@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="row g-4">
-        @foreach ($cleanings as $cleaning)
+        @foreach ($activeCleanings as $cleaning)
             <div class="col-sm-12 col-xl-6 justify-content-start">
                 <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">
                     <div class="row">
@@ -32,7 +32,40 @@
         @endforeach
     </div>
     <div class="d-flex justify-content-center mt-4">
-        {{ $cleanings->links() }}
+        {{ $activeCleanings->links() }}
+    </div>
+
+    <div class="row g-12 mt-4"> Historial de limpiezas </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nro. Habitación</th>
+                    @if(Auth::user()->userType == 'Receptionist')
+                        <th scope="col">Empleado</th>
+                    @endif
+                    <th scope="col">Fecha - Hora Solicitud</th>
+                    <th scope="col">Fecha - Hora Inicio</th>
+                    <th scope="col">Fecha - Hora Finalización</th>
+                </tr>
+            </thead>
+            <tbody>        
+                @foreach ($historyCleanings as $cleaning)
+                    <tr>
+                        <td>{{$cleaning->id}}</td>
+                        <td>{{$cleaning->room->code}}</td>
+                        <td>{{$cleaning->user->fullName}}</td>
+                        <td>{{\Carbon\Carbon::parse($cleaning->requestedDateTime)->format('d/m/Y H:i:s') }}</td>
+                        <td>{{\Carbon\Carbon::parse($cleaning->startDateTime)->format('d/m/Y H:i:s') }}</td>
+                        <td>{{\Carbon\Carbon::parse($cleaning->endDateTime)->format('d/m/Y H:i:s') }}</td>
+                    </tr>
+                @endforeach          
+            </tbody>
+        </table>
+    </div>  
+    <div class="d-flex justify-content-center mt-4">
+        {{ $historyCleanings->links() }}
     </div>
 </div>
 

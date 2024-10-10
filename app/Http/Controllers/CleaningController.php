@@ -11,12 +11,16 @@ class CleaningController extends Controller
 
     public function index($id = null){
 
-        $cleanings = Cleaning::query()
+        $activeCleanings = Cleaning::query()
         ->whereNull('endDateTime')
         ->orderBy('requestedDateTime')
-        ->simplePaginate(30);
-        
-        return view('cleanings.index')->with('cleanings', $cleanings);
+        ->simplePaginate(10);
+
+        $historyCleanings = Cleaning::query()
+        ->whereNotNull('endDateTime')
+        ->orderBy('requestedDateTime')
+        ->simplePaginate(10);
+        return view('cleanings.index', compact('activeCleanings', 'historyCleanings'));
     }
     
     public function requestCleaning(Request $request){

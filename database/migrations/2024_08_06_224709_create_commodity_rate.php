@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rates_bookings', function (Blueprint $table) {
+        Schema::create('commodity_rate', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rate_id')->constrained()->onDelete('cascade');
             $table->foreignId('commodity_id')->constrained()->onDelete('cascade');
+            $table->foreignId('rate_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rates_bookings');
+        Schema::dropIfExists('commodity_rate');
     }
 };

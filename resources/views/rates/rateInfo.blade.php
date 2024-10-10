@@ -73,6 +73,22 @@
             </div>
         </div>
         <div class="row mb-3">
+            <label for="commodities" class="col-sm-3 col-form-label">Comodidades</label>
+            <div class="col-sm-9">
+                @foreach ($commodities as $commodity)
+                    <input class="form-check-input" type="checkbox" name="commodities[]" id="commodityCheckbox{{$commodity->id}}" value="{{ $commodity->id }}"
+                        @if ($action=='edit' && ($rate->commodities->contains($commodity->id) || old('commodities') && in_array($commodity->id, old('commodities'))))
+                            checked
+                        @endif
+                    >
+                    <label class="form-check-label" for="commodityCheckbox">
+                        {{$commodity->title}}
+                    </label>
+                    <br>
+                @endforeach               
+            </div>
+        </div>
+        <div class="row mb-3">
             <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary">{{ $saveButtonText }}</button>
                 @if($action == 'edit')
