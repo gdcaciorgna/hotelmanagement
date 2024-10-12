@@ -76,7 +76,7 @@
                                                         <h6 class="mb-0">Fecha Nacimiento</h6>
                                                     </div>
                                                     <div class="col-sm-8 text-secondary">
-                                                        {{ Illuminate\Support\Carbon::parse(Auth::user()->disabledStartDate)->format('d/m/Y') }}
+                                                        {{ Illuminate\Support\Carbon::parse(Auth::user()->bornDate)->format('d/m/Y') }}
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -139,7 +139,7 @@
                                 <div class="card-body d-flex justify-content-between align-items-center">
                                     <div>
                                         <h5 class="card-title">¡Ups! No estás logueado</h5>
-                                        <p class="card-text">Para poder visualizar toda la información de la reserva, conocer tus comodidades y solicitar limpieza de habitación debes ingresar sesión con el usuario asignado por administración</p>
+                                        <p class="card-text">Para poder visualizar la información de todas tus reservas, conocer tus comodidades y solicitar la limpieza de tu habitación, debés iniciar sesión con el usuario asignado por recepción</p>
                                     </div>
                                     <a href="{{ route('login') }}" class="btn btn-primary w-50">Iniciar sesión</a>
                                 </div>

@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return $this->firstName . ' ' . $this->lastName;
+        return $this->lastName . ', ' . $this->firstName;
     }
 
     public function getUserTypeFormatted()

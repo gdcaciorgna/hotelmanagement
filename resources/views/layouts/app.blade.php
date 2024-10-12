@@ -10,7 +10,7 @@
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                <a href="/" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary"><i class="fa fa-hotel me-2"></i>Hotel</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
@@ -51,8 +51,8 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
                                 <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
-                                    <a href="#" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
+                                    <a href="{{route('commodities.create')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
+                                    <a href="{{route('commodities.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
                                 </div>
                             </div>
                             <div class="nav-item dropdown">

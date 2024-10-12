@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('bookingDate');
-            $table->timestamp('startDate');
-            $table->timestamp('agreedEndDate');
+            $table->timestamp('bookingDate')->nullable();
+            $table->timestamp('startDate')->nullable();
+            $table->timestamp('agreedEndDate')->nullable();
             $table->timestamp('actualEndDate')->nullable();
             $table->decimal('finalPrice', 10, 2)->nullable();
             $table->integer('numberOfPeople');
