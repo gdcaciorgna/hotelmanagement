@@ -51,7 +51,7 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
                                 <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="{{route('commodities.create')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
                                     <a href="{{route('commodities.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
                                 </div>
                             </div>
