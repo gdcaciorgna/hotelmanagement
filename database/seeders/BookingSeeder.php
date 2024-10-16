@@ -51,7 +51,7 @@ class BookingSeeder extends Seeder
 
             // Asignar commodities aleatorias a cada booking
             $randomCommodityIds = $this->getRandomCommodityIds($commodityIds);
-            $booking->commodities()->attach($randomCommodityIds);
+            $booking->commodities()->attach($randomCommodityIds);     
         }
     }
 

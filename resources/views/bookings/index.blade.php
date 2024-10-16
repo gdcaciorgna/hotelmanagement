@@ -180,24 +180,37 @@
 {{-- Finish Cleaning as Admin --}}
 <div class="modal fade" id="finishCleaningModal" tabindex="-1" aria-labelledby="finishCleaningModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="finishCleaningModalLabel">¿Desea confirmar la finalización?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Se dará por finalizada la limpieza de esta habitación para el momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
-            </div>
-            <div class="modal-footer">
-                <form method="POST" action="{{ route('cleanings.finishCleaningAsAdmin') }}">
-                    @method('PUT')
-                    @csrf
+        <form method="POST" action="{{ route('cleanings.finishCleaningAsAdmin') }}">
+        @method('PUT')
+        @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="finishCleaningModalLabel">¿Desea confirmar la finalización?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Se registrará la finalización de la limpieza en este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
+                    <div class="row mb-3">
+                        <label for="cleaner_id" class="col-sm-6 col-form-label">¿Quién llevó a cabo la limpieza?</label>
+                        <div class="col-sm-6">
+                            <select name="cleaner_id" class="form-select">
+                                <option value="">Seleccione un huésped</option>
+                                @foreach($cleaners as $cleaner)
+                                    <option value="{{ $cleaner->id }}" {{ request()->query('cleaner_id') == $cleaner->id ? 'selected' : '' }}>
+                                        {{ $cleaner->fullName }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
                     <input type="hidden" name="room_id" id="roomIdFinish">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
                     <button type="submit" class="btn btn-danger">Confirmar finalización</button>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

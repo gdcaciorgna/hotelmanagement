@@ -9,14 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Room extends Model
 {
     use HasFactory, SoftDeletes; 
-    private $statusColor;
 
     protected $fillable = [
         'code',
         'maxOfGuests',
         'description',
         'image',
-        'status',
     ];
 
     public function getStatusColor()
@@ -51,5 +49,32 @@ class Room extends Model
     {
         return $this->hasMany(Booking::class);
     }
+    
+    public function cleanings()
+    {
+        return $this->hasMany(Cleaning::class);
+    }
 
+    public function getStatusAttribute()
+    {
+        $roomWithActiveBookings = $this->bookings()
+                                        ->whereNull('actualEndDate')
+                                        ->where('startDate', '<', now())
+                                        ->exists();
+
+        if ($roomWithActiveBookings) {
+            return 'Unavailable';
+        }
+
+        $roomWithActiveCleanings = $this->cleanings()
+                                        ->whereNull('endDateTime')
+                                        ->where('startDateTime', '<', now())
+                                        ->exists();
+
+        if ($roomWithActiveCleanings) {
+            return 'Cleaning';
+        }
+
+        return 'Available';
+    }
 }

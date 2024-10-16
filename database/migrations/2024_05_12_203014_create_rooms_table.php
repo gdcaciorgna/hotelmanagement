@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('description');
-            $table->enum('status', ['Available', 'Cleaning', 'Unavailable']);
             $table->integer('maxOfGuests');
             $table->string('image')->nullable();
             $table->timestamps();

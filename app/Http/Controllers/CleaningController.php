@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Cleaning;
+use App\Models\User;
 use Carbon\Carbon;
 
 class CleaningController extends Controller
@@ -25,15 +26,12 @@ class CleaningController extends Controller
     
     public function requestCleaning(Request $request){
         $roomId = $request->room_id;
-
         Cleaning::create([
             'requestedDateTime' => now(),
             'room_id' => $roomId
         ]);
         
         $room = Room::findOrFail($roomId);
-        $room->status = 'Cleaning';
-        $room->save();
 
         return redirect()->route('bookings.index')
                          ->with('success', "Limpieza creada exitosamente para la habitación #{$room->code}");
@@ -41,24 +39,20 @@ class CleaningController extends Controller
 
     public function finishCleaningAsAdmin(Request $request){
         $roomId = $request->room_id;
+        $cleanerId = $request->cleaner_id;
+
+        //Update Cleaning
         $cleaning = Cleaning::where('room_id', $roomId)
             ->orderBy('requestedDateTime', 'desc')
             ->first();
-        
-        $room = Room::findOrFail($roomId);
 
-        $roomWithActiveBookings = $room->bookings
-                                    ->whereNull('actualEndDate')
-                                    ->where('startDate', '<', now());
-        
-        //If it is an active booking then set room as Unavailable else set as Available
-        if($roomWithActiveBookings->count() > 0){
-            $room->status = 'Unavailable';
-        }
-        else{
-            $room->status = 'Available';
-        }
-        $room->save();
+        $cleaning->user_id = $cleanerId;
+        $cleaning->startDateTime = now(); 
+        $cleaning->endDateTime = now();
+        $cleaning->save();
+
+        //Update room status
+        $room = Room::findOrFail($roomId);
 
         return redirect()->route('bookings.index')
                          ->with('success', "Limpieza finalizada exitosamente para la habitación #{$room->code}");

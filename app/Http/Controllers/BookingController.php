@@ -16,6 +16,7 @@ class BookingController extends Controller
         $rates = Rate::all();
         $rooms = Room::orderBy('code')->get();
         $users = User::where('userType', 'Guest')->orderBy('lastName')->orderBy('firstName')->get();
+        $cleaners = User::where('userType', 'Cleaner')->orderBy('lastName')->orderBy('firstName')->get();
         $query = Booking::query();
 
         // Filter by booking ID
@@ -61,7 +62,7 @@ class BookingController extends Controller
 
         // Sort and paginate result
         $bookings = $query->orderBy('id')->simplePaginate(30);
-        return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users'));
+        return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users', 'cleaners'));
     }
     
     public function create(Request $request)

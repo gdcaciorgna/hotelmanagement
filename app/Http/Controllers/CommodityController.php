@@ -10,7 +10,6 @@ class CommodityController extends Controller
     public function index(){
         $commodities = Commodity::query()
         ->simplePaginate(30);
-        
         return view('commodities.index')->with('commodities', $commodities);
     }
 

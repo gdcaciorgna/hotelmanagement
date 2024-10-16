@@ -90,25 +90,6 @@
         </div>
         
         <div class="row mb-3">
-            <label for="description" class="col-sm-3 col-form-label">Estado actual</label>
-            <div class="col-sm-9">
-                <select class="form-select" id="status" name="status">
-                    <option value="Available" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Available' || $action != 'edit') ? 'selected' : '' }}>
-                        Disponible
-                    </option>
-                    <option value="Unavailable" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Unavailable') ? 'selected' : '' }}>
-                        Inhabilitado
-                    </option>
-                    <option value="Cleaning" 
-                        {{ (old('status', isset($room) ? $room->status : '') == 'Cleaning') ? 'selected' : '' }}>
-                        En limpieza
-                    </option>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-3">
             <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary">{{ $saveButtonText }}</button>
                 @if($action == 'edit')
