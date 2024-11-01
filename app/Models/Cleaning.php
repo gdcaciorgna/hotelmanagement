@@ -27,6 +27,4 @@ class Cleaning extends Model
     {
         return $this->belongsTo(Room::class);
     }
-
-
 }

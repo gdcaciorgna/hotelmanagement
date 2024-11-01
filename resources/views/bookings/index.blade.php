@@ -96,7 +96,13 @@
         
                 @foreach ($bookings as $booking)
                     @php 
-                        if($booking->room->status == 'Cleaning'){
+                        $disabled = false;
+                        if($booking->room->status == 'Cleaning in process'){
+                            $requestCleaningButtonText = 'Terminar limpieza';
+                            $requestCleaningButtonColor = 'danger';
+                            $cleaningModal = 'finishCleaningModal';
+                        }
+                        elseif($booking->room->status == 'Cleaning requested'){
                             $requestCleaningButtonText = 'Terminar limpieza';
                             $requestCleaningButtonColor = 'danger';
                             $cleaningModal = 'finishCleaningModal';
@@ -116,7 +122,7 @@
                                     <h6 class="mt-2">#{{$booking->id}}</h6>
                                 </div>
                                 <div class="col-10 text-end">             
-                                    <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn" 
+                                    <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn @if($disabled == true) disabled @endif" 
                                     data-room-id="{{ $booking->room_id }}" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
@@ -132,6 +138,8 @@
                                 <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
                                 <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
                                 <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
+                                <p class="mt-1 mb-2">Estado: <strong>{{$booking->room->getStatusFormatted()}}</strong></p>
+
                             </div>
                             @if(!empty($booking->finalPrice))
                                 <div class="mt-auto">
@@ -194,7 +202,7 @@
                         <label for="cleaner_id" class="col-sm-6 col-form-label">¿Quién llevó a cabo la limpieza?</label>
                         <div class="col-sm-6">
                             <select name="cleaner_id" class="form-select">
-                                <option value="">Seleccione un huésped</option>
+                                <option value="">Seleccione un empleado de limpieza</option>
                                 @foreach($cleaners as $cleaner)
                                     <option value="{{ $cleaner->id }}" {{ request()->query('cleaner_id') == $cleaner->id ? 'selected' : '' }}>
                                         {{ $cleaner->fullName }}

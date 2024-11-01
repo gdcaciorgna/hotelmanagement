@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Cleaning;
-use App\Models\User;
+ use App\Models\User;
 use Carbon\Carbon;
 
 class CleaningController extends Controller
 {
 
     public function index($id = null){
-
         $activeCleanings = Cleaning::query()
         ->whereNull('endDateTime')
         ->orderBy('requestedDateTime')
@@ -25,31 +24,45 @@ class CleaningController extends Controller
     }
     
     public function requestCleaning(Request $request){
+
         $roomId = $request->room_id;
-        Cleaning::create([
-            'requestedDateTime' => now(),
+        $room = Room::findOrFail($roomId);
+
+        //Clear existing active cleanings for room
+        $cleaningsForRoom = $room->cleanings()
+                                ->where('requestedDateTime', '<', Carbon::now())
+                                ->whereNull('endDateTime')
+                                ->get();
+        foreach($cleaningsForRoom as $cleaning){
+            $cleaning->endDateTime = Carbon::now()->format('Y-m-d H:i:s');
+            $cleaning->save();
+        }
+        
+        $cleaning = Cleaning::create([
+            'requestedDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
             'room_id' => $roomId
         ]);
         
-        $room = Room::findOrFail($roomId);
-
         return redirect()->route('bookings.index')
-                         ->with('success', "Limpieza creada exitosamente para la habitación #{$room->code}");
+                         ->with('success', "Limpieza creada exitosamente para la habitación #{$room->code}.");
     }
 
     public function finishCleaningAsAdmin(Request $request){
         $roomId = $request->room_id;
         $cleanerId = $request->cleaner_id;
 
-        //Update Cleaning
-        $cleaning = Cleaning::where('room_id', $roomId)
-            ->orderBy('requestedDateTime', 'desc')
-            ->first();
+        //Update Cleanings
+        $activeCleanings = Cleaning::where('room_id', $roomId)
+        ->whereNull('endDateTime')
+        ->get();
 
-        $cleaning->user_id = $cleanerId;
-        $cleaning->startDateTime = now(); 
-        $cleaning->endDateTime = now();
-        $cleaning->save();
+        // Actualizar cada limpieza activa
+        foreach ($activeCleanings as $cleaning) {
+            $cleaning->user_id = $cleanerId;
+            $cleaning->startDateTime = Carbon::now(); 
+            $cleaning->endDateTime = Carbon::now();
+            $cleaning->save();
+        }
 
         //Update room status
         $room = Room::findOrFail($roomId);

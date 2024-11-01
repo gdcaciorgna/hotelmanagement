@@ -62,6 +62,8 @@ class BookingController extends Controller
 
         // Sort and paginate result
         $bookings = $query->orderBy('id')->simplePaginate(30);
+        sleep(2);
+
         return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users', 'cleaners'));
     }
     

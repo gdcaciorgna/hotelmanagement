@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Room extends Model
 {
@@ -22,8 +23,10 @@ class Room extends Model
         switch ($this->status) {
             case 'Available':
                 return 'bg-success';
-            case 'Cleaning':
+            case 'Cleaning requested':
                 return 'bg-primary';
+            case 'Cleaning in process':
+                return 'bg-warning';
             case 'Unavailable':
                 return 'bg-danger';
             default:
@@ -36,10 +39,12 @@ class Room extends Model
         switch ($this->status) {
             case 'Available':
                 return 'Disponible';
-            case 'Cleaning':
-                return 'En limpieza';
             case 'Unavailable':
                 return 'Ocupado';
+            case 'Cleaning in process':
+                return 'En proceso de limpieza';
+            case 'Cleaning requested':
+                return 'Limpieza solicitada';
             default:
                 return 'Estado desconocido';
         }
@@ -57,24 +62,34 @@ class Room extends Model
 
     public function getStatusAttribute()
     {
-        $roomWithActiveBookings = $this->bookings()
-                                        ->whereNull('actualEndDate')
-                                        ->where('startDate', '<', now())
-                                        ->exists();
-
-        if ($roomWithActiveBookings) {
-            return 'Unavailable';
-        }
 
         $roomWithActiveCleanings = $this->cleanings()
                                         ->whereNull('endDateTime')
-                                        ->where('startDateTime', '<', now())
+                                        ->whereNotNull('startDateTime')
+                                        ->where('startDateTime', '<', Carbon::now()->format('Y-m-d H:i:s'))
                                         ->exists();
 
         if ($roomWithActiveCleanings) {
-            return 'Cleaning';
+            return 'Cleaning in process';
         }
 
+        $roomWithRequestedCleanings = $this->cleanings()
+        ->whereNull('endDateTime')
+        ->where('requestedDateTime', '<', Carbon::now()->format('Y-m-d H:i:s'))
+        ->exists();
+
+        if ($roomWithRequestedCleanings) {
+            return 'Cleaning requested';
+        }
+
+        $roomWithActiveBookings = $this->bookings()
+                                        ->whereNull('actualEndDate')
+                                        ->where('startDate', '<', Carbon::now()->format('Y-m-d H:i:s'))
+                                        ->exists();
+        if ($roomWithActiveBookings) {
+            return 'Unavailable';
+        }
+      
         return 'Available';
     }
 }
