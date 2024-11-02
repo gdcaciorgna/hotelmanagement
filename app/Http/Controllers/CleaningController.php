@@ -10,18 +10,26 @@ use Carbon\Carbon;
 class CleaningController extends Controller
 {
 
-    public function index($id = null){
+    public function index()
+    {
+        $user = auth()->user();
+    
+        // Consulta base para obtener las limpiezas activas
         $activeCleanings = Cleaning::query()
-        ->whereNull('endDateTime')
-        ->orderBy('requestedDateTime')
-        ->simplePaginate(10);
-
-        $historyCleanings = Cleaning::query()
-        ->whereNotNull('endDateTime')
-        ->orderBy('requestedDateTime')
-        ->simplePaginate(10);
-        return view('cleanings.index', compact('activeCleanings', 'historyCleanings'));
+            ->whereNull('endDateTime')
+            ->orderBy('requestedDateTime');
+    
+        // Aplicar filtro de usuario si es de tipo "Cleaner"
+        if ($user->userType === 'Cleaner') {
+            $activeCleanings->where('user_id', $user->id);
+        }
+    
+        // Paginación y obtención de resultados finales
+        $activeCleanings = $activeCleanings->simplePaginate(10);
+    
+        return view('cleanings.index', compact('activeCleanings'));
     }
+    
     
     public function requestCleaning(Request $request){
 
@@ -70,4 +78,36 @@ class CleaningController extends Controller
         return redirect()->route('bookings.index')
                          ->with('success', "Limpieza finalizada exitosamente para la habitación #{$room->code}");
     }
+
+    public function startCleaningAsCleaner($id, Request $request){
+
+        $cleaning = Cleaning::findOrFail($id);
+        $cleaning->user_id = auth()->user()->id;
+        $cleaning->startDateTime = Carbon::now(); 
+        $cleaning->save();
+
+        // Recargar el modelo desde la base de datos para asegurar que los cambios estén actualizados
+        $cleaning->refresh();
+        sleep(1); // Espera de 1 segundo para permitir que la base de datos procese
+                
+        return redirect()->route('cleanercleanings.index')
+                         ->with('success', "Limpieza iniciada exitosamente para la habitación #{$cleaning->room->code}.");
+    }
+
+    public function finishCleaningAsCleaner($id, Request $request){
+
+        $cleaning = Cleaning::findOrFail($id);
+        $cleaning->user_id = auth()->user()->id;
+        $cleaning->endDateTime = Carbon::now(); 
+        $cleaning->save();
+
+        // Recargar el modelo desde la base de datos para asegurar que los cambios estén actualizados
+        $cleaning->refresh();
+        sleep(1); // Espera de 1 segundo para permitir que la base de datos procese
+
+                
+        return redirect()->route('cleanercleanings.index')
+                         ->with('success', "Limpieza iniciada exitosamente para la habitación #{$cleaning->room->code}.");
+    }
+
 }

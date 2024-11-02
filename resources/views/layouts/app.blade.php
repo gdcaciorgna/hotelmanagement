@@ -59,7 +59,7 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>
                                 <div class="dropdown-menu bg-transparent border-0">
                                     <a href="{{route('bookings.index')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Solicitar limpieza</a>
-                                    <a href="{{route('cleanings.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver limpiezas</a>
+                                    <a href="{{route('receptionistcleanings.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver limpiezas</a>
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
@@ -73,8 +73,15 @@
             
                                 </div>
                             </div>
+                        <!-- Cleaners view -->
                         @elseif (Auth::user()->userType == 'Cleaner')
-                            <a href="{{route('cleanings.index')}}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="{{route('bookings.index')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Solicitar limpieza</a>
+                                <a href="{{route('cleanercleanings.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver limpiezas</a>
+                            </div>
+                        </div>
                         @elseif(Auth::user()->userType == 'Guest')
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Solicitar limpieza</a>
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Ver comodidades</a>

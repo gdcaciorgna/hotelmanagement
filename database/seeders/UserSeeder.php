@@ -43,7 +43,16 @@ class UserSeeder extends Seeder
                 $email = 'gdecaciorgna@gmail.com';
 
             }
-                        
+
+            //CLEANER USER
+            if($i == 1){
+                $firstName = 'Esther';
+                $lastName = 'Sequeira';
+                $userType = 'Cleaner';
+                $email = 'esthersequeira@gmail.com';
+
+            }
+           
             $numDoc = mt_rand(10000000, 99999999);
             $docType = $docTypes[array_rand($docTypes)];;
             $status = rand(0, 5) === 5 ? false : true;

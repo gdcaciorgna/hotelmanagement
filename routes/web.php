@@ -75,17 +75,16 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::put('/bookings/{id}/setBookingAsFinished',  [BookingController::class, 'setBookingAsFinished'])->name('bookings.setBookingAsFinished');
     
     //CLEANINGS
+    Route::get('/receptionist/cleanings', [CleaningController::class, 'index'])->name('receptionistcleanings.index');
     Route::post('/cleanings/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
     Route::put('/cleanings/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
-    Route::get('/cleanings', [CleaningController::class, 'index'])->name('cleanings.index');
-    Route::put('/cleanings/startCleaningAsCleaner', [CleaningController::class, 'startCleaningAsCleaner'])->name('cleanings.startCleaningAsCleaner');
-
 });
 
 //CLEANER USERS
 Route::middleware(['auth', 'cleaner'])->group(function (){
-    //CLEANINGS
-    Route::put('/cleanings/startCleaningAsCleaner', [CleaningController::class, 'startCleaningAsCleaner'])->name('cleanings.startCleaningAsCleaner');
+    Route::get('/cleaner/cleanings', [CleaningController::class, 'index'])->name('cleanercleanings.index');
+    Route::put('/cleanings/{id}/startCleaningAsCleaner', [CleaningController::class, 'startCleaningAsCleaner'])->name('cleanings.startCleaningAsCleaner');
+    Route::put('/cleanings/{id}/finishCleaningAsCleaner', [CleaningController::class, 'finishCleaningAsCleaner'])->name('cleanings.finishCleaningAsCleaner');
 });
 
 
