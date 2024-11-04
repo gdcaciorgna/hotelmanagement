@@ -7,6 +7,11 @@ use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use App\Models\Commodity;
+
 
 class UserController extends Controller
 {
@@ -124,5 +129,40 @@ class UserController extends Controller
         return response()->json(['success' => 'true', 'message' => 'Contraseña actualizada correctamente']);
       
     }
+
+    public function lastBookingCommodities()
+    {
+        $booking = $this->getLastBooking();
     
+        // Obtener commodities de la tarifa del booking
+        $rateCommodities = $booking->rate->commodities;
+    
+        // Obtener commodities directamente relacionadas al booking
+        $bookingCommodities = $booking->commodities;
+    
+        // Combinar ambas colecciones
+        $activeCommodities = $rateCommodities->merge($bookingCommodities);
+    
+        // Obtener los IDs de los commodities activos para excluirlos de la siguiente consulta
+        $activeCommodityIds = $activeCommodities->pluck('id');
+    
+        // Obtener otros commodities excluyendo los activos
+        $otherCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get();
+    
+        return view('commodities.lastBookingCommodities')->with([
+            'booking' => $booking,
+            'activeCommodities' => $activeCommodities,
+            'otherCommodities' => $otherCommodities,
+        ]);
+    }
+        
+    public function getLastBooking(): mixed{
+        $user = User::findOrFail(auth()->user()->id);
+        $lastBooking = $user->bookings()
+        ->where('startDate', '<', Carbon::now())
+        ->whereNull('actualEndDate')
+        ->orderBy('startDate', 'desc') // Orden descendente
+        ->first(); // Obtener solo el primer resultado
+        return $lastBooking;
+    }    
 }

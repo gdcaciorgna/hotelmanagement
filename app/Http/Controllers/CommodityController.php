@@ -8,8 +8,20 @@ use Illuminate\Http\Request;
 class CommodityController extends Controller
 {
     public function index(){
-        $commodities = Commodity::query()
-        ->simplePaginate(30);
+
+        $user = auth()->user();
+    
+        // Consulta base para obtener las limpiezas activas
+        $commoditiesQuery = Commodity::query();
+    
+        // Aplicar filtro de usuario si es de tipo "Guest"
+        if ($user->userType === 'Guest') {
+            $commoditiesQuery->where('user_id', $user->id);
+        }
+    
+        // Paginación y obtención de resultados finales
+        $commodities = $commoditiesQuery->simplePaginate(30);
+
         return view('commodities.index')->with('commodities', $commodities);
     }
 
@@ -55,5 +67,21 @@ class CommodityController extends Controller
         $commodity->delete();
         return to_route('commodities.index');
     }
+
+    public function commoditiesReport(){
+        $commodities = Commodity::withCount('bookings')->orderBy('bookings_count', 'desc')->get();
+        return view('reports.commodities')->with('commodities', $commodities);
+    }
+
+    public function show($id) {
+        $commodity = Commodity::with('bookings.user')->findOrFail($id);
+        $response =  response()->json([
+            'id' => $commodity->id,
+            'title' => $commodity->title,
+            'description' => $commodity->description,
+            'bookings' => $commodity->bookings,
+        ]);
+        return $response;
+    }    
 
 }

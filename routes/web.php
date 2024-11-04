@@ -78,6 +78,11 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/receptionist/cleanings', [CleaningController::class, 'index'])->name('receptionistcleanings.index');
     Route::post('/cleanings/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
     Route::put('/cleanings/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
+
+    //REPORTS
+    Route::get('/reports/commodities', [CommodityController::class, 'commoditiesReport'])->name('reports.commodities');
+    Route::get('/commodities/{id}', [CommodityController::class, 'show'])->name('commodities.show');
+
 });
 
 //CLEANER USERS
@@ -87,5 +92,9 @@ Route::middleware(['auth', 'cleaner'])->group(function (){
     Route::put('/cleanings/{id}/finishCleaningAsCleaner', [CleaningController::class, 'finishCleaningAsCleaner'])->name('cleanings.finishCleaningAsCleaner');
 });
 
+//GUEST USERS
+Route::middleware(['auth', 'userGuest'])->group(function () {
+    Route::get('/guest/lastBookingCommodities', [UserController::class, 'lastBookingCommodities'])->name('lastBookingCommodities.index');
+});
 
 Auth::routes();

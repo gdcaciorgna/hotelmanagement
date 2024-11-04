@@ -88,6 +88,11 @@ class User extends Authenticatable
         return $this->hasMany(Cleaning::class);
     }
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     /**
      * The attributes that should be cast.
      *

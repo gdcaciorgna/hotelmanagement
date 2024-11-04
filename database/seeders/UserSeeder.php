@@ -41,7 +41,6 @@ class UserSeeder extends Seeder
                 $lastName = 'Caciorgna';
                 $userType = 'Receptionist';
                 $email = 'gdecaciorgna@gmail.com';
-
             }
 
             //CLEANER USER
@@ -50,7 +49,14 @@ class UserSeeder extends Seeder
                 $lastName = 'Sequeira';
                 $userType = 'Cleaner';
                 $email = 'esthersequeira@gmail.com';
+            }
 
+            //CLEANER USER
+            if($i == 2){
+                $firstName = 'Nahuel';
+                $lastName = 'Berli';
+                $userType = 'Guest';
+                $email = 'nahuelberli@gmail.com';
             }
            
             $numDoc = mt_rand(10000000, 99999999);
