@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         $userTypes = ['Receptionist', 'Cleaner', 'Guest'];
         $docTypes = ['DNI', 'PAS'];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
 
             $phone = '549' . mt_rand(2000000000, 9999999999);
             $streets = ['Calle A', 'Calle B', 'Calle C'];
@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
             $address = mt_rand(1, 500) . ' ' . $streets[array_rand($streets)] . ', ' . $cities[array_rand($cities)] . ', ' . $provinces[array_rand($provinces)];
             $userType = $userTypes[array_rand($userTypes)];
 
-            $firstNames = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía'];
-            $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz'];    
+            $firstNames = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía', 'Luis', 'Eduardo', 'Sandra', 'Rosana', 'Mariela', 'Clara'];
+            $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz', 'Falcón', 'Romero', 'Álvarez', 'Bustos'];    
             $firstName = $firstNames[array_rand($firstNames)];
             $lastName = $lastNames[array_rand($lastNames)];
 
@@ -53,10 +53,10 @@ class UserSeeder extends Seeder
 
             //CLEANER USER
             if($i == 2){
-                $firstName = 'Nahuel';
-                $lastName = 'Berli';
+                $firstName = 'Juan';
+                $lastName = 'Perez';
                 $userType = 'Guest';
-                $email = 'nahuelberli@gmail.com';
+                $email = 'juanperez@gmail.com';
             }
            
             $numDoc = mt_rand(10000000, 99999999);
