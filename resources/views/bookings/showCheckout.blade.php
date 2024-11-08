@@ -111,30 +111,29 @@
                     </tbody>
                 </table>            
             </div>
-            <div class="row m-3">
-                <h5>Servicios adicionales</h5>
-                <table class="table table-bordered">
-                    <thead class="table-secondary">
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Título</th>
-                            <th scope="col">Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>20/08/2024</td>
-                            <td>Coca Cola 1L</td>
-                            <td>$8.25</td>
-                        </tr>
-                        <tr>
-                            <td>25/04/2024</td>
-                            <td>Café Cortado</td>
-                            <td>$25</td>
-                        </tr>
-                    </tbody>
-                </table>                 
-            </div>
+            @if($additionalServices->isNotEmpty())
+                <div class="row m-3">
+                    <h5>Servicios adicionales</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Título</th>
+                                <th scope="col">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($additionalServices as $addSer)
+                                <tr>
+                                    <td>{{ Illuminate\Support\Carbon::parse($addSer->dateTime)->format('d/m/Y')}}</td>
+                                    <td>{{$addSer->title}}</td>
+                                    <td>${{number_format($addSer->price, 2)}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>                 
+                </div>
+            @endif
         </div>
     </div>
     <div class="row mb-3">

@@ -8,15 +8,13 @@
                 <p class="mt-1 mb-1">ID: <strong>{{ $booking->id }}</strong></p>
                 <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format('d/m/Y') }}</strong></p>
                 <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
-                <p class="mt-1 mb-1">Fecha Fin real: <strong>{{ \Carbon\Carbon::parse($booking->actualEndDate)->format('d/m/Y') }}</strong></p>
-                <p class="mt-1 mb-1">Huésped principal: <strong>{{$booking->user->fullName}}</strong></p>
                 <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
                 <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
                 <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
         </div>
     </div>
     <div class="row g-4">
-        <h3 class="mt-4">Mis comodidades</h3>
+        <h3 class="mt-4">Comodidades contratadas</h3>
         @foreach ($activeCommodities as $commodity)
             <div class="col-sm-12 col-xl-4 justify-content-start">
                 <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">

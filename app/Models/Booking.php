@@ -30,9 +30,9 @@ class Booking extends Model
         return $this->belongsTo(Rate::class);
     }
     
-    public function additionalService()
+    public function additionalServices()
     {
-        return $this->belongsTo(AdditionalService::class);
+        return $this->hasMany(AdditionalService::class);
     }
 
     public function room()
@@ -78,12 +78,13 @@ class Booking extends Model
         else return 'No';
     }
 
-    public function getCalculatedBookingPrice(){
+    public function getCalculatedBookingPrice(): float{
         $basePricePerPersonPerDay = $this->getBasePricePerPersonPerDay();
         $basePricePerRatePerDay = $this->getBasePricePerRatePerDay();
         $returnDepositValue = $this->getReturnDepositValue();
         
-        $additionalServices = 0;
+        
+        $additionalServices = $this->getAdditionalSercicesPrice();
         $additionalsCommoditiesPricePerDay = 0;
         $totalPrice = ($basePricePerPersonPerDay + $basePricePerRatePerDay + $additionalsCommoditiesPricePerDay) * $this->numberOfPeople * $this->getStayDays() + $additionalServices - $returnDepositValue;
         return $totalPrice;
@@ -107,5 +108,15 @@ class Booking extends Model
     public function getReturnDepositValue(){
         $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
         return (isset($this->returnDeposit) && $this->returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
+    }
+
+    public function getAdditionalSercicesPrice(){
+        $additionalServices = $this->additionalServices()->get();
+        $sum = 0;
+        foreach($additionalServices as $addSer){
+            $sum += $addSer->price;
+        }
+
+        return $sum;
     }
 }

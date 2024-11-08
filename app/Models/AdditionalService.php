@@ -11,8 +11,9 @@ class AdditionalService extends Model
     use HasFactory, SoftDeletes; 
 
     protected $fillable = [
+        'dateTime',
         'title',
-        'description',
+        'price',
         'booking_id'
     ];
 

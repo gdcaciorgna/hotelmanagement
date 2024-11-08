@@ -38,6 +38,17 @@ class BookingController extends Controller
                 }
             });
         }
+
+        //Filter by status
+        if ($request->filled('status')) {
+            $currentDate = now();
+            if ($request->status == 'actives') {
+                $query->whereDate('startDate', '<=', $currentDate)
+                    ->whereNull('actualEndDate');
+            } elseif ($request->status == 'finished') {
+                $query->whereDate('actualEndDate', '<', $currentDate);
+            }
+        }        
         
         // Filter by rate name
         if ($request->filled('rate_title')) {
@@ -103,6 +114,7 @@ class BookingController extends Controller
             $basePricePerRatePerDay = $rate ? $rate->getCurrentPriceAttribute() : 0;    
             
             $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
+            
             $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
             $breakdown = [
                 'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
@@ -139,13 +151,20 @@ class BookingController extends Controller
         $startDateCarbon = Carbon::parse($startDate);
         $agreedEndDateCarbon = Carbon::parse($agreedEndDate);
         $stayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
-    
+        
+        $additionalServices = $booking->additionalServices()->get();
+        $additionalServicesSum = 0;
+        foreach($additionalServices as $addSer){
+            $additionalServicesSum += $addSer->price;
+        }
+
         $breakdown = [
             'basePricePerPersonPerDay' => Policy::where('description', 'basePricePerPersonPerDay')->first()->value,
             'basePricePerRatePerDay' => $booking->rate->getCurrentPriceAttribute(),
             'numberOfPeople' => $numberOfPeople,
             'stayDays' => $stayDays,
-            'returnDepositValue' => $returnDeposit ? Policy::where('description', 'damageDeposit')->first()->value : 0
+            'returnDepositValue' => $returnDeposit ? Policy::where('description', 'damageDeposit')->first()->value : 0,
+            'additionalServices' => $additionalServicesSum
         ];
         // Calculation logic (similar to create)
         $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
@@ -361,22 +380,26 @@ class BookingController extends Controller
         $basePricePerRatePerDay = $rate ? $rate->getCurrentPriceAttribute() : 0;    
         
         $currentReturnDepositAmount = Policy::where('description', 'damageDeposit')->first();
-        $returnDepositValue = (isset($returnDeposit) && $returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
-
+        $returnDepositValue = (isset($booking->returnDeposit) && $booking->returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
         //Harcoded commodities and additionalServices selected 
+        $additionalServices = $booking->additionalServices()->get();
+        $additionalServicesSum = 0;
+        foreach($additionalServices as $addSer){
+            $additionalServicesSum += $addSer->price;
+        }
 
         $breakdown = [
             'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
             'basePricePerRatePerDay' => $basePricePerRatePerDay,
             'bookingCommodities' => 0,
-            'bookingAdditionalServices' => 0,
+            'bookingAdditionalServices' => $additionalServicesSum,
             'numberOfPeople' => $booking->numberOfPeople,
             'stayDays' => $stayDays,
-            'returnDepositValue' => $returnDepositValue
+            'returnDepositValue' => $returnDepositValue,
         ];
 
         $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
 
-        return view('bookings.showCheckout', compact('booking', 'breakdown')); 
+        return view('bookings.showCheckout', compact('booking', 'breakdown', 'additionalServices')); 
     }
 }

@@ -27,6 +27,16 @@
             <div class="row mt-4">
                 <input type="number" name="booking_id" class="form-control" id="exampleFormControlInput1" placeholder="# Reserva" style="font-size: 0.8rem" value="{{ old('booking_id', request('booking_id')) }}">
             </div>
+
+            <div class="row mt-4">
+                <h6>Estado</h6>
+                <select name="status" class="form-select" style="font-size: 0.8rem">
+                    <option value="all" {{request('status') == 'all' ? 'selected' : ''}}>Todas las reservas</option>
+                    <option value="actives" {{request('status') == 'actives' ? 'selected' : ''}}>Sólo reservas activas</option>
+                    <option value="finished" {{request('status') == 'finished' ? 'selected' : ''}}>Reservas finalizadas</option>
+                </select>
+            </div>
+
             <div class="row mt-4">
                 <h6>Cant. huéspedes</h6>
                 <div class="row mb-3">
@@ -127,7 +137,12 @@
                                     data-bs-toggle="modal" 
                                     data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
                                     <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" type="submit" class="btn btn-info btn-sm">+</a>
+                                    <a href="#" type="submit" class="btn btn-info btn-sm"
+                                        data-booking-id="{{ $booking->id }}" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#moreActionsModal">
+                                    +
+                                    </a>
                                 </div>
                             </div>
                             <div class="row">
@@ -228,15 +243,85 @@
     </div>
 </div>
 
+{{-- More Actions as Admin --}}
+<div class="modal fade" id="moreActionsModal" tabindex="-1" aria-labelledby="moreActionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{{ route('cleanings.finishCleaningAsAdmin') }}">
+        @method('PUT')
+        @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="moreActionsModalLabel">¿Qué desea agregar a la reserva #<span id="booking_id_title"></span>? </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="openAdditionalServicesModal(this)">Servicio adicional</button>
+                    <button type="submit" class="btn btn-primary">Comodidad adicional</button>                
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Additional Services Modal --}}
+<div class="modal fade" id="additionalServicesModal" tabindex="-1" aria-labelledby="additionalServicesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{{route('additionalServices.store')}}">
+        @csrf
+            <input type="hidden" name="booking_id" id="bookingIdInput">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="additionalServicesModalLabel">Servicio adicional - Reserva #<span id="booking_id_title_2"></span></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                            <div class="col-4"><label for="dateTime">Fecha y hora</label></div>
+                            <div class="col-8">
+                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput">
+                            </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4"><label for="dateTime">Servicio adicional</label></div>
+                        <div class="col-8"><input name="title" type="text" class="form-control"></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4"><label for="dateTime">Precio</label></div>
+                        <div class="col-8">
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="priceInput" name="price" placeholder="0.00" step="0.01" min="0">
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        {{ $bookings->links() }}
+    </div>
+</div>
 
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var requestCleaningModal = document.getElementById('requestCleaningModal');
         var finishCleaningModal = document.getElementById('finishCleaningModal');
+        var moreActionsModal = document.getElementById('moreActionsModal');
+        var additionalServicesModalModal = document.getElementById('additionalServicesModal');
         var roomIdInput = document.getElementById('roomId');
         var roomIdFinishInput = document.getElementById('roomIdFinish');
-        
+        var bookingIdInput = document.getElementById('bookingIdInput');
+        var booking_id_title = document.getElementById('booking_id_title');
+        var booking_id_title_2 = document.getElementById('booking_id_title_2');
+
+
         requestCleaningModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;            
             var roomId = button.getAttribute('data-room-id');
@@ -248,5 +333,36 @@
             var roomId = button.getAttribute('data-room-id');
             roomIdFinishInput.value = roomId;
         });
+
+        moreActionsModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;            
+            var bookingId = button.getAttribute('data-booking-id');
+            booking_id_title.innerText = bookingId;
+            booking_id_title_2.innerText = bookingId;
+            bookingIdInput.value = bookingId;
+        });
+
+        /**DATE TIME*/
+        var dateTimeInput = document.getElementById('dateTimeInput');
+        var now = new Date();
+        
+        // Formatea la fecha y hora actual a `YYYY-MM-DDTHH:MM` para `datetime-local`
+        var formattedDateTime = now.toISOString().slice(0, 16); 
+        dateTimeInput.value = formattedDateTime;
     });
+
+    function setBookingId() {
+        var bookingId = document.getElementById('booking_id').value;
+        document.getElementById('booking_id_title').innerText = bookingId;
+    }
+    
+    function openAdditionalServicesModal(button) {
+        var bookingId = button.getAttribute('data-booking-id');
+        
+        document.getElementById('booking_id_title').innerText = bookingId;
+        setTimeout(function() {
+            var additionalServicesModal = new bootstrap.Modal(document.getElementById('additionalServicesModal'));
+            additionalServicesModal.show();
+        }, 300);
+    }
 </script>

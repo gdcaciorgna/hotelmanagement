@@ -132,7 +132,7 @@ class UserController extends Controller
 
     public function lastBookingCommodities()
     {
-        $booking = $this->getLastBooking();
+        $booking = $this->getLastActiveBooking();
     
         // Obtener commodities de la tarifa del booking
         $rateCommodities = $booking->rate->commodities;
@@ -156,7 +156,7 @@ class UserController extends Controller
         ]);
     }
         
-    public function getLastBooking(): mixed{
+    public function getLastActiveBooking(): mixed{
         $user = User::findOrFail(auth()->user()->id);
         $lastBooking = $user->bookings()
         ->where('startDate', '<', Carbon::now())

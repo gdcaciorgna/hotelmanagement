@@ -8,6 +8,7 @@ use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CleaningController;
+use App\Http\Controllers\AdditionalServiceController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -83,6 +84,9 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/reports/commodities', [CommodityController::class, 'commoditiesReport'])->name('reports.commodities');
     Route::get('/commodities/{id}', [CommodityController::class, 'show'])->name('commodities.show');
 
+    //ADDITIONAL SERVICES
+    Route::post('/additionalServices/store', [AdditionalServiceController::class, 'store'])->name('additionalServices.store');
+    
 });
 
 //CLEANER USERS
