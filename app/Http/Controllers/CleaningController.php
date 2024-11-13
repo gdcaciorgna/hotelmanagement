@@ -10,24 +10,32 @@ use Carbon\Carbon;
 class CleaningController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
+        $rooms = Room::all();
+        $query = Cleaning::query();
     
         // Consulta base para obtener las limpiezas activas
-        $activeCleanings = Cleaning::query()
-            ->whereNull('endDateTime')
+        $query->whereNull('endDateTime')
             ->orderBy('requestedDateTime');
-    
-        // Aplicar filtro de usuario si es de tipo "Cleaner"
-        if ($user->userType === 'Cleaner') {
-            $activeCleanings->where('user_id', $user->id);
+
+        // Filter by booking ID
+        if ($request->filled('cleaning_id')) {
+            $query->where('id', $request->input('cleaning_id'));
         }
+
+        // Filter by room code
+        if ($request->filled('room_code')) {
+            $query->whereHas('room', function($q) use ($request) {
+                $q->where('code', 'like', '%' . $request->room_code . '%');
+            });
+        }         
     
         // Paginación y obtención de resultados finales
-        $activeCleanings = $activeCleanings->simplePaginate(10);
+        $activeCleanings = $query->simplePaginate(10);
     
-        return view('cleanings.index', compact('activeCleanings'));
+        return view('cleanings.index', compact('activeCleanings', 'rooms'));
     }
     
     

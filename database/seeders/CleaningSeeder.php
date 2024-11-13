@@ -46,13 +46,19 @@ class CleaningSeeder extends Seeder
             $selectedRoomId = $availableRoomIds[array_rand($availableRoomIds)];
             $usedRoomIds[] = $selectedRoomId; // Añadir la habitación utilizada a la lista
     
+            //Seleccionar un usuario si solamente si ya finalizó la limpieza, sino evitarlo.
+            $cleanerId =  null;
+            if(!empty($endDateTime)){
+                $cleanerId = $userIds[array_rand($userIds)];
+            }
+
             // Crear el cleaning
             Cleaning::create([
                 'requestedDateTime' => $requestedDateTime,
                 'startDateTime' => $startDateTime,
                 'endDateTime' => $endDateTime,
                 'room_id' => $selectedRoomId,
-                'user_id' => $userIds[array_rand($userIds)]
+                'user_id' => $cleanerId
             ]);
         }
     }
