@@ -74,7 +74,9 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::get('/bookings/{id}/showCheckout',  [BookingController::class, 'showCheckout'])->name('bookings.showCheckout');
     Route::put('/bookings/{id}/setBookingAsFinished',  [BookingController::class, 'setBookingAsFinished'])->name('bookings.setBookingAsFinished');
-    
+    Route::get('/booking/{id}/commodities', [BookingController::class, 'viewExtraCommoditiesForBooking'])->name('bookings.viewExtraCommoditiesForBooking');
+    Route::post('/bookings/{id}/addCommodity', [BookingController::class, 'addCommodity'])->name('bookings.addCommodity');
+
     //CLEANINGS
     Route::get('/receptionist/cleanings', [CleaningController::class, 'index'])->name('receptionistcleanings.index');
     Route::post('/cleanings/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');

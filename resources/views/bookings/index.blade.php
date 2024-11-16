@@ -247,7 +247,6 @@
 {{-- More Actions as Admin --}}
 <div class="modal fade" id="moreActionsModal" tabindex="-1" aria-labelledby="moreActionsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form method="POST" action="{{ route('cleanings.finishCleaningAsAdmin') }}">
         @method('PUT')
         @csrf
             <div class="modal-content">
@@ -256,12 +255,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="openAdditionalServicesModal(this)">Servicio adicional</button>
-                    <button type="submit" class="btn btn-primary">Comodidad adicional</button>                
+                        <form method="GET" action="{{ route('bookings.viewExtraCommoditiesForBooking', ['id' => ':booking_id_input']) }}" id="contractForm">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="openAdditionalServicesModal(this)">Servicio adicional</button>
+                        <button type="submit" class="btn btn-primary">Comodidad adicional</button>      
+                    </form>
                 </div>
             </div>
-        </form>
     </div>
 </div>
 
@@ -321,7 +321,7 @@
         var bookingIdInput = document.getElementById('bookingIdInput');
         var booking_id_title = document.getElementById('booking_id_title');
         var booking_id_title_2 = document.getElementById('booking_id_title_2');
-
+        var modalFormAction = document.querySelector('#contractForm');
 
         requestCleaningModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;            
@@ -341,6 +341,11 @@
             booking_id_title.innerText = bookingId;
             booking_id_title_2.innerText = bookingId;
             bookingIdInput.value = bookingId;
+
+            // Actualizar la acción del formulario con el booking_id dinámico
+            var formActionUrl = "{{ route('bookings.viewExtraCommoditiesForBooking', ['id' => ':booking_id_input']) }}";
+            formActionUrl = formActionUrl.replace(':booking_id_input', bookingId);
+            modalFormAction.action = formActionUrl;
         });
 
         /**DATE TIME*/

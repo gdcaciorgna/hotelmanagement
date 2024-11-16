@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Rate;
 use App\Models\User;
+use App\Models\Commodity;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Carbon\Carbon;
@@ -338,6 +339,35 @@ class BookingController extends Controller
         ->with('success', 'Reserva finalizada exitosamente.');        
     }
 
+    public function viewExtraCommoditiesForBooking($bookingId)
+    {
+        // Encuentra el booking o lanza una excepción si no existe
+        $booking = Booking::findOrFail($bookingId);
+    
+        // 1. Comodidades incluidas en la tarifa del booking
+        $rateCommodities = $booking->rate->commodities;
+    
+        // 2. Comodidades adicionales directamente relacionadas al booking
+        // Excluir las comodidades ya incluidas en la tarifa
+        $bookingCommodities = $booking->commodities->diff($rateCommodities);
+    
+        // Combinar comodidades activas (rate y adicionales) y asegurarse de que sean únicas
+        $activeCommodities = $rateCommodities->merge($bookingCommodities)->unique('id');
+    
+        // IDs de las comodidades activas
+        $activeCommodityIds = $activeCommodities->pluck('id');
+    
+        // 3. Comodidades contratables (excluyendo las activas) y asegurarse de que sean únicas
+        $availableCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get()->unique('id');
+    
+        return view('commodities.commoditiesForBooking', [
+            'booking' => $booking,
+            'rateCommodities' => $rateCommodities->unique('id'),  // Comodidades del rate
+            'bookingCommodities' => $bookingCommodities->unique('id'), // Comodidades adicionales
+            'availableCommodities' => $availableCommodities       // Comodidades contratables
+        ]);
+    }
+    
     private function calculateBookingTotalPrice($breakdown){
         $basePricePerPersonPerDay = $breakdown['basePricePerPersonPerDay'] ?? 0; 
         $basePricePerRatePerDay = $breakdown['basePricePerRatePerDay'] ?? 0;
@@ -361,6 +391,23 @@ class BookingController extends Controller
         $booking->delete();
         return to_route('bookings.index');
     }
+
+    public function addCommodity(Request $request){
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'commodity_id' => 'required|exists:commodities,id',
+        ]);
+    
+        // Obtener el Booking y Commodity por sus IDs
+        $booking = Booking::findOrFail($request->booking_id);
+        $commodity = Commodity::findOrFail($request->commodity_id);
+    
+        // Agregar la comodidad a la reserva (con la tabla intermedia)
+        $booking->commodities()->attach($commodity->id);
+        // Confirmación
+        return redirect()->route('bookings.viewExtraCommoditiesForBooking', ['id' => $request->booking_id])
+                         ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
+        }
 
     public function showCheckout(Request $request){
         $booking = Booking::findOrFail($request->id);

@@ -98,7 +98,7 @@ class BookingSeeder extends Seeder
         return array_diff($roomIds, $conflictingRoomIds);
     }
     
-    private function getRandomCommodityIds(array $commodityIds, $max = 15)
+    private function getRandomCommodityIds(array $commodityIds, $max = 3)
     {
         shuffle($commodityIds);
         return array_slice($commodityIds, 0, rand(1, $max));
