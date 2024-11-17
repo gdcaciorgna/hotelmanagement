@@ -59,6 +59,16 @@
                         <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
                         <div class="mt-auto">
                             <div class="bg-success text-white text-center py-2 bottom-0 start-0 w-100">Contratado</div>
+                            <form method="POST" action="{{route('bookings.deleteCommodity')}}">
+                                @method('DELETE')
+                                @csrf
+                                <input type="hidden" name="booking_id" id="booking_id" value="{{$booking->id}}">
+                                <input type="hidden" name="commodity_id" id="commodity_id" value="{{$commodity->id}}">
+                                <div class="text-center mt-2">
+                                    <button type="submit" class="btn btn-link text-danger p-0 m-0" style="text-decoration: none;">Quitar comodidad</button>
+                                </div>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>

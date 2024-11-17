@@ -407,7 +407,23 @@ class BookingController extends Controller
         // Confirmación
         return redirect()->route('bookings.viewExtraCommoditiesForBooking', ['id' => $request->booking_id])
                          ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
-        }
+    }
+
+    public function deleteCommodity(Request $request){
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'commodity_id' => 'required|exists:commodities,id',
+        ]);
+    
+        // Obtener el Booking y Commodity por sus IDs
+        $booking = Booking::findOrFail($request->booking_id);
+        $commodity = Commodity::findOrFail($request->commodity_id);
+        $booking->commodities()->detach($request->commodity_id);
+
+        // Confirmación
+        return redirect()->route('bookings.viewExtraCommoditiesForBooking', ['id' => $request->booking_id])
+                         ->with('success', "Se ha eliminado la comodidad \"{$commodity->title}\" correctamente de la reserva #{$request->booking_id}.");
+        }   
 
     public function showCheckout(Request $request){
         $booking = Booking::findOrFail($request->id);
