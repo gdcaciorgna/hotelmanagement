@@ -158,7 +158,6 @@
                                                         <h5 class="mt-1">{{$commodity->title}}</h5>
                                                     </div>
                                                     <div class="col-3">
-                                                        <a href="{{route('commodities.edit', $commodity->id)}}" type="submit" class="btn btn-primary">Editar</a>
                                                     </div>
                                                 </div>
                                                 <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
