@@ -38,6 +38,7 @@
                 <div class="navbar-nav w-100">
                     <!-- All users -->
                     <a href="{{route('home')}}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Escritorio</a>
+                    
                     @auth
                         <!-- Recepcionist view -->
                         @if(Auth::user()->userType == 'Receptionist')
@@ -46,13 +47,6 @@
                                 <div class="dropdown-menu bg-transparent border-0">
                                     <a href="{{route('bookings.create')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Crear reserva</a>
                                     <a href="{{route('bookings.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver reservas</a>
-                                </div>
-                            </div>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-swimming-pool me-2"></i>Comodidades</a>
-                                <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="#" class="dropdown-item"><i class="fas fa-plus me-2"></i>Reservar Comodidad</a>
-                                    <a href="{{route('commodities.index')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Ver comodidades</a>
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
@@ -84,8 +78,9 @@
                             <a href="{{route('cleanercleanings.index')}}" class="nav-item nav-link"><i class="fas fa-broom me-2"></i>Limpiezas</a>
                         </div>
                         @elseif(Auth::user()->userType == 'Guest')
-                            <a href="{{route('lastBookingCommodities.index')}}" class="nav-link"><i class="fas fa-swimming-pool me-2"></i>Ver comodidades</a>
+                            <a href="{{route('lastBookingCommodities.index')}}" class="nav-link"><i class="fas fa-swimming-pool me-2"></i>Ver comodidades</a>                   
                         @endif
+                        
                     @endauth
                 </div>
             </nav>

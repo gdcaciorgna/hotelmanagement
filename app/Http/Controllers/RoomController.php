@@ -21,7 +21,7 @@ class RoomController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'code' => 'required|integer|min:1',
+            'code' => 'required|integer|min:1|unique:rooms,code',
             'maxOfGuests' => 'required|integer|min:1',
             'description' => 'required|max:1000',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192'
@@ -54,11 +54,10 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
     
         $request->validate([
-            'code' => 'required|integer|min:1',
+            'code' => 'required|integer|min:1|unique:rooms,code,' . $room->id, // Ignorar el código actual
             'maxOfGuests' => 'required|integer|min:1',
             'description' => 'required|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
-            'status' => 'nullable|string'
         ]);
     
         if ($request->has('delete_image') && $request->delete_image) {
@@ -81,7 +80,6 @@ class RoomController extends Controller
         $room->code = $request->code;
         $room->maxOfGuests = $request->maxOfGuests;
         $room->description = $request->description;
-        $room->status = $request->status;
         $room->save();
     
         return redirect()->route('rooms.edit', $room->id)->with('success', 'Habitación actualizada correctamente.');
