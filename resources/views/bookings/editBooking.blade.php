@@ -198,10 +198,10 @@
                         <br> Desglose: 
                         ({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} [PBPD] 
                         + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2) }} [PTPD] 
-                        + $0.00 [PCA]) 
+                        + {{'$' . number_format($breakdown['additionalCommodities'], 2)}} [PCA]) 
                         * {{$breakdown['numberOfPeople']}} [p] 
                         * {{$breakdown['stayDays']}} [d] 
-                        + $0 [PSA] 
+                        + {{'$' . number_format($breakdown['additionalServices'], 2)}} [PSA]) 
                         - {{ '$' . number_format($breakdown['returnDepositValue'], 2) }} [VDep]
                     </p>
                 </div>
@@ -233,8 +233,9 @@
                 </button>
         
                 <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
-                <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
-
+                @if(empty($booking->finalPrice))
+                    <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
+                @endif
             </div>
         </div>
         

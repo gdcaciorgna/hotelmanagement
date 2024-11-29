@@ -25,7 +25,7 @@
                 <p class="col-sm-7 pt-0 m-0">Fecha fin pactada</p>
                 <p class="col-sm-5 pt-0 m-0">{{ Illuminate\Support\Carbon::parse($booking->agreedEndDate)->format('d/m/Y')}}</p>
                 <p class="col-sm-7 pt-0 m-0">Cantidad de huéspedes</p>
-                <p class="col-sm-5 pt-0 m-0">{{ Illuminate\Support\Carbon::parse($booking->numberOfPeople)->format('d/m/Y')}}</p>
+                <p class="col-sm-5 pt-0 m-0">{{ $booking->numberOfPeople}}</p>
                 <p class="col-sm-7 pt-0 m-0">Devolver depósito</p>
                 <p class="col-sm-5 pt-0 m-0">{{$booking->getReturnDepositText()}}</p>
             </div>
@@ -85,11 +85,18 @@
             </div>
             <div class="row">
                 <p class="col-sm-9 pt-0 m-0">[d] - Cantidad de días</p>
-                <p class="col-sm-3 pt-0 m-0">{{$breakdown['stayDays']}}</p>
+                <p class="col-sm-3 pt-0 m-0">{{$breakdown['actualStayDays']}} 
+                <p> 
+                    @if($breakdown['actualStayDays'] != $breakdown['agreedStayDays'])
+                        (Dias acordados: {{$breakdown['agreedStayDays']}})
+                    @endif
+                </p>
+                </p>
             </div>
 
         </div>
         <div class="col-sm-7 border border-secondary p-3">
+            @if($additionalCommodities->isNotEmpty())
             <div class="row m-3">
                 <h5>Comodidades adicionales contratadas</h5>
                 <table class="table table-bordered">
@@ -100,17 +107,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Comodidad #1</td>
-                            <td>$80</td>
-                        </tr>
-                        <tr>
-                            <td>Comodidad #2</td>
-                            <td>$25</td>
-                        </tr>
+                        @foreach($additionalCommodities as $addCom)
+                            <tr>
+                                <td>{{$addCom->title}}</td>
+                                <td>${{number_format($addCom->current_price, 2)}}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
-                </table>            
+                </table>                 
             </div>
+            @endif
             @if($additionalServices->isNotEmpty())
                 <div class="row m-3">
                     <h5>Servicios adicionales</h5>
@@ -136,22 +142,26 @@
             @endif
         </div>
     </div>
+    @php
+        $actualFinalPrice = ($breakdown['basePricePerPersonPerDay'] + $breakdown['basePricePerRatePerDay'] + $breakdown['bookingCommodities']) * $breakdown['actualStayDays'] * $breakdown['numberOfPeople']  + $breakdown['bookingAdditionalServices'] - $breakdown['returnDepositValue'] ;
+    @endphp
     <div class="row mb-3">
         <div class="col-12 border border-secondary p-3">
             <p class="pt-0 m-0">CTR = (PBPD + PTPD + PCA) * p * d + PSA - [VDep]</p>
             <p class="pt-0 m-0">
                 <span>Costo total de reserva =</span>
-                <span>({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2)}} +  {{ '$' . number_format($breakdown['bookingCommodities'], 2)}} ) * {{$breakdown['stayDays']}} * {{$breakdown['numberOfPeople']}} + {{ '$' . number_format($breakdown['bookingAdditionalServices'], 2)}} - {{ '$' . number_format($breakdown['returnDepositValue'], 2)}}</span>
+                <span>({{ '$' . number_format($breakdown['basePricePerPersonPerDay'], 2) }} + {{ '$' . number_format($breakdown['basePricePerRatePerDay'], 2)}} +  {{ '$' . number_format($breakdown['bookingCommodities'], 2)}} ) * {{$breakdown['actualStayDays']}} * {{$breakdown['numberOfPeople']}} + {{ '$' . number_format($breakdown['bookingAdditionalServices'], 2)}} - {{ '$' . number_format($breakdown['returnDepositValue'], 2)}}</span>
             </p>
             <p>
                 <span>Costo total de reserva = </span>  
-                <span><strong>{{'$' . number_format($booking->getCalculatedBookingPrice())}}</strong></span>     
+                <span><strong>{{'$' . number_format($actualFinalPrice)}}</strong></span>     
             </p>
             <div class="">
             <a href="#" id="printScreen" class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i></a>
             <form action="{{ route('bookings.setBookingAsFinished', $booking->id) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="actualFinalPrice" value="{{$actualFinalPrice}}">
                 <button type="submit" id="saveBookingButton" class="btn btn-primary">Finalizar Reserva</button>
             </form>
             </div>

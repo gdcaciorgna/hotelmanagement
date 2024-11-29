@@ -131,11 +131,13 @@
                                     <div class="col-2">
                                         <h6 class="mt-2">#{{$booking->id}}</h6>
                                     </div>
-                                    <div class="col-10 text-end">             
+                                    <div class="col-10 text-end">   
+                                    @if(empty($booking->actualEndDate))          
                                         <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn @if($disabled == true) disabled @endif" 
                                         data-room-id="{{ $booking->room_id }}" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
+                                    @endif
                                         <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
                                         <a href="#" type="submit" class="btn btn-info btn-sm"
                                             data-booking-id="{{ $booking->id }}" 
@@ -146,6 +148,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <p class="mt-1 mb-1">Huésped: <strong>{{$booking->user->fullName}}</strong></p>
                                     <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format('d/m/Y') }}</strong></p>
                                     <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
                                     <p class="mt-1 mb-1">Fecha Fin real: 
@@ -155,7 +158,6 @@
                                             <strong>Sin determinar</strong>
                                         @endif
                                     </p>
-                                    <p class="mt-1 mb-1">Huésped principal: <strong>{{$booking->user->fullName}}</strong></p>
                                     <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
                                     <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
                                     <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>

@@ -85,8 +85,8 @@ class Booking extends Model
         
         
         $additionalServices = $this->getAdditionalSercicesPrice();
-        $additionalsCommoditiesPricePerDay = 0;
-        $totalPrice = ($basePricePerPersonPerDay + $basePricePerRatePerDay + $additionalsCommoditiesPricePerDay) * $this->numberOfPeople * $this->getStayDays() + $additionalServices - $returnDepositValue;
+        $additionalCommoditiesPricePerDay = $this->getAdditionalCommoditiesPrice();
+        $totalPrice = ($basePricePerPersonPerDay + $basePricePerRatePerDay + $additionalCommoditiesPricePerDay) * $this->numberOfPeople * $this->getStayDays() + $additionalServices - $returnDepositValue;
         return $totalPrice;
     }
 
@@ -119,4 +119,14 @@ class Booking extends Model
 
         return $sum;
     }
+
+    public function getAdditionalCommoditiesPrice(){
+        $additionalCommodities = $this->commodities()->get();
+        $additionalCommoditiesSum = 0;
+        foreach($additionalCommodities as $addCom){
+            $additionalCommoditiesSum += $addCom->getCurrentPriceAttribute();
+        }
+        return $additionalCommoditiesSum;
+    }
+
 }

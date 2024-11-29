@@ -57,10 +57,20 @@ class UserController extends Controller
                 }),
             ],
         ];
+        $status = false;
 
+        $arrayDisabled = [];
+        if(!$request->has('status')){
+            $status = true;
+            $arrayDisabled = [
+                'disabledStartDate' => null,
+                'disabledReason' => null
+            ];
+        }
+        
         $request->validate($rules);
         
-        User::create($request->all());
+        User::create(array_merge($request->all(), ['status' => $status], $arrayDisabled));
         return redirect()->route('users.index');
     }
 

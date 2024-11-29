@@ -159,13 +159,20 @@ class BookingController extends Controller
             $additionalServicesSum += $addSer->price;
         }
 
+        $additionalCommodities = $booking->commodities()->get();
+        $additionalCommoditiesSum = 0;
+        foreach($additionalCommodities as $addCom){
+            $additionalCommoditiesSum += $addCom->getCurrentPriceAttribute();
+        }
+
         $breakdown = [
             'basePricePerPersonPerDay' => Policy::where('description', 'basePricePerPersonPerDay')->first()->value,
             'basePricePerRatePerDay' => $booking->rate->getCurrentPriceAttribute(),
             'numberOfPeople' => $numberOfPeople,
             'stayDays' => $stayDays,
             'returnDepositValue' => $returnDeposit ? Policy::where('description', 'damageDeposit')->first()->value : 0,
-            'additionalServices' => $additionalServicesSum
+            'additionalServices' => $additionalServicesSum,
+            'additionalCommodities' => $additionalCommoditiesSum
         ];
         // Calculation logic (similar to create)
         $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
@@ -327,13 +334,13 @@ class BookingController extends Controller
         }
     }
 
-    public function setBookingAsFinished($id)
+    public function setBookingAsFinished($id, Request $request) 
     {        
         $booking = Booking::findOrFail($id);
         $finishBookingDateTime = Carbon::now()->format('Y-m-d H:i:s');
         $booking->update([
             'actualEndDate' => $finishBookingDateTime,
-            'finalPrice' => $booking->getCalculatedBookingPrice()
+            'finalPrice' => $request->actualFinalPrice
         ]);
         return redirect()->route('bookings.index', $booking->id)
         ->with('success', 'Reserva finalizada exitosamente.');        
@@ -371,12 +378,8 @@ class BookingController extends Controller
     private function calculateBookingTotalPrice($breakdown){
         $basePricePerPersonPerDay = $breakdown['basePricePerPersonPerDay'] ?? 0; 
         $basePricePerRatePerDay = $breakdown['basePricePerRatePerDay'] ?? 0;
-        $additionalsCommoditiesPricePerDay = 0;
-        if(isset($breakdown['basePricePerAdditionalsCommoditiesPerDay']) && !empty($breakdown['basePricePerAdditionalsCommoditiesPerDay'] && is_array($breakdown['basePricePerAdditionalsCommoditiesPerDay']))){
-            foreach($breakdown['basePricePerAdditionalsCommoditiesPerDay'] as $additionalCommodityPrice){
-                $additionalsCommoditiesPricePerDay += $additionalCommodityPrice;
-            }
-        }
+        $additionalsCommoditiesPricePerDay = $breakdown['additionalCommodities'] ?? 0;
+
         $numberOfPeople = $breakdown['numberOfPeople'] ?? 0;
         $stayDays = $breakdown['stayDays'] ?? 0;
         $additionalServices = $breakdown['additionalServices'] ?? 0;
@@ -431,7 +434,10 @@ class BookingController extends Controller
         $startDateCarbon = Carbon::parse($booking->startDate);
         $agreedEndDateCarbon = Carbon::parse($booking->agreedEndDate);
 
-        $stayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
+        $agreedStayDays = $agreedEndDateCarbon->diffInDays($startDateCarbon);
+
+        $today = Carbon::now();
+        $actualStayDays =  $today->diffInDays($startDateCarbon);
 
         $basePricePerPersonPerDayPolicy = Policy::where('description', 'basePricePerPersonPerDay')->first();
         $basePricePerPersonPerDay = 0;
@@ -451,18 +457,24 @@ class BookingController extends Controller
             $additionalServicesSum += $addSer->price;
         }
 
+        $additionalCommodities = $booking->commodities()->get();
+        $additionalCommoditiesSum = 0;
+        foreach($additionalCommodities as $addCom){
+            $additionalCommoditiesSum += $addCom->getCurrentPriceAttribute();
+        }
         $breakdown = [
             'basePricePerPersonPerDay' => $basePricePerPersonPerDay,
             'basePricePerRatePerDay' => $basePricePerRatePerDay,
-            'bookingCommodities' => 0,
+            'bookingCommodities' => $additionalCommoditiesSum,
             'bookingAdditionalServices' => $additionalServicesSum,
             'numberOfPeople' => $booking->numberOfPeople,
-            'stayDays' => $stayDays,
+            'agreedStayDays' => $agreedStayDays,
+            'actualStayDays' => $actualStayDays,
             'returnDepositValue' => $returnDepositValue,
         ];
 
         $totalBookingPrice = $this->calculateBookingTotalPrice($breakdown);
 
-        return view('bookings.showCheckout', compact('booking', 'breakdown', 'additionalServices')); 
+        return view('bookings.showCheckout', compact('booking', 'breakdown', 'additionalServices', 'additionalCommodities')); 
     }
 }
