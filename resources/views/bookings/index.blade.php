@@ -139,12 +139,14 @@
                                         data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
                                     @endif
                                         <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
+                                    @if(empty($booking->actualEndDate))          
                                         <a href="#" type="submit" class="btn btn-info btn-sm"
                                             data-booking-id="{{ $booking->id }}" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#moreActionsModal">
                                         +
                                         </a>
+                                    @endif
                                     </div>
                                 </div>
                                 <div class="row">

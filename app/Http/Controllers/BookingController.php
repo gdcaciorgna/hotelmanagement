@@ -412,6 +412,19 @@ class BookingController extends Controller
                          ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
     }
 
+    public function addCommodityToBookingView(Request $request){
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'commodity_id' => 'required|exists:commodities,id',
+        ]);
+    
+        // Obtener el Booking y Commodity por sus IDs
+        $booking = Booking::findOrFail($request->booking_id);
+        $commodity = Commodity::findOrFail($request->commodity_id);
+    
+        return view('bookings.addCommodityToBooking', compact('booking', 'commodity')); 
+    }
+
     public function deleteCommodity(Request $request){
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',

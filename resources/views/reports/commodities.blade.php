@@ -31,6 +31,9 @@
         </table>
     </div>
     <span class="mt-2">Observación: Este listado contiene las comodidades que han sido solicitadas adicionalmente a las comodidades que están previamente incluídas para la tarifa solicitada</span>
+    <div class="mt-2">
+        <a href="#" id="printScreen" class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i></a>
+    </div>
 </div>
 {{-- View More Info Modal --}}
 <div class="modal fade" id="viewMoreInfoModal" tabindex="-1" aria-labelledby="viewMoreInfoModalLabel" aria-hidden="true">

@@ -92,14 +92,11 @@
                 <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
                 <p class="mt-2">Precio final: {{ '$' . number_format($commodity->currentPrice, 2)}}</p>
                 <div class="mt-auto">
-                    <form action="#">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contractModal"
-                            data-booking-id="{{ $booking->id }}"
-                            data-commodity-id="{{ $commodity->id }}"
-                            data-commodity-title="{{ $commodity->title }}"
-                            data-commodity-price="{{ $commodity->currentPrice }}">
-                            Contratar adicional
-                        </button>
+                    <form action="{{ route('bookings.addCommodityToBookingView', ['bookingId' => $booking->id, 'commodity' => $commodity->id]) }}" method="GET">
+                        @csrf
+                        <input type="hidden" name="booking_id" id="booking_id_input" value="{{$booking->id}}">
+                        <input type="hidden" name="commodity_id" id="commodity_id" value="{{$commodity->id}}">
+                        <button type="submit" class="btn btn-primary">Contratar adicional</button>
                     </form>
                 </div>
             </div>
@@ -107,36 +104,6 @@
         @endforeach
     </div>
     @endif
-</div>
-
-<!-- Modal para contratar comodidad adicional -->
-<div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="contractModalLabel">Contratar Comodidad Adicional al booking #<span id="booking_id"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('bookings.addCommodity', ['id' => ':booking_id_input']) }}" method="POST" id="contractForm">
-                    @csrf
-                    <input type="hidden" name="booking_id" id="booking_id_input">
-                    <input type="hidden" name="commodity_id" id="commodity_id">
-                    <div class="mb-3">
-                        <label for="commodity_id" class="form-label">Comodidad Adicional</label>
-                        <input type="text" class="form-control" id="commodity_title" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Precio</label>
-                        <input type="text" class="form-control" id="commodity_price" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-success">Confirmar Contratación</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>

@@ -77,6 +77,8 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::get('/booking/{id}/commodities', [BookingController::class, 'viewExtraCommoditiesForBooking'])->name('bookings.viewExtraCommoditiesForBooking');
     Route::post('/bookings/{id}/addCommodity', [BookingController::class, 'addCommodity'])->name('bookings.addCommodity');
     Route::delete('/bookings/deleteCommodity', [BookingController::class, 'deleteCommodity'])->name('bookings.deleteCommodity');
+    Route::get('/booking/{bookingId}/addCommodityToBookingView/{commodity}', [BookingController::class, 'addCommodityToBookingView'])->name('bookings.addCommodityToBookingView');
+  
     //CLEANINGS
     Route::get('/receptionist/cleanings', [CleaningController::class, 'index'])->name('receptionistcleanings.index');
     Route::post('/cleanings/requestCleaning', [CleaningController::class, 'requestCleaning'])->name('cleanings.requestCleaning');
