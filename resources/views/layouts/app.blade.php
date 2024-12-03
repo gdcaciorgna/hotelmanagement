@@ -50,12 +50,6 @@
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-broom me-2"></i>Limpiezas</a>
-                                <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="{{route('bookings.index')}}" class="dropdown-item"><i class="fas fa-plus me-2"></i>Solicitar limpieza</a>
-                                </div>
-                            </div>
-                            <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-th me-2"></i>Configuraciones</a>
                                 <div class="dropdown-menu bg-transparent border-0">
                                     <a href="{{route('users.index')}}" class="dropdown-item"><i class="fas fa-users me-2"></i>Usuarios</a>

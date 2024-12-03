@@ -35,7 +35,6 @@
                                                 <div class="mt-3">
                                                     <h4>{{Auth::user()->fullName}}</h4>
                                                     <p class="text-secondary mb-1">{{Auth::user()->getUserTypeFormatted()}}</p>
-                                                    <a href="{{route('users.edit', Auth::user()->id)}}" class="btn btn-outline-primary">Editar</a>
                                                 </div>
                                                 </div>
                                             </div>

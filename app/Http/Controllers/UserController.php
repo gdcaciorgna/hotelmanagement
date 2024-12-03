@@ -143,22 +143,26 @@ class UserController extends Controller
     public function lastBookingCommodities()
     {
         $booking = $this->getLastActiveBooking();
-    
-        // Obtener commodities de la tarifa del booking
-        $rateCommodities = $booking->rate->commodities;
-    
-        // Obtener commodities directamente relacionadas al booking
-        $bookingCommodities = $booking->commodities;
-    
-        // Combinar ambas colecciones
-        $activeCommodities = $rateCommodities->merge($bookingCommodities);
-    
-        // Obtener los IDs de los commodities activos para excluirlos de la siguiente consulta
-        $activeCommodityIds = $activeCommodities->pluck('id');
-    
-        // Obtener otros commodities excluyendo los activos
-        $otherCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get();
-    
+        $bookingCommodities = null;
+        $activeCommodities = null;
+        $otherCommodities = null;
+        if(!empty($booking)){
+            // Obtener commodities de la tarifa del booking
+            $rateCommodities = $booking->rate->commodities;
+        
+            // Obtener commodities directamente relacionadas al booking
+            $bookingCommodities = $booking->commodities;
+        
+            // Combinar ambas colecciones
+            $activeCommodities = $rateCommodities->merge($bookingCommodities);
+        
+            // Obtener los IDs de los commodities activos para excluirlos de la siguiente consulta
+            $activeCommodityIds = $activeCommodities->pluck('id');
+        
+            // Obtener otros commodities excluyendo los activos
+            $otherCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get();
+        
+        }
         return view('commodities.lastBookingCommodities')->with([
             'booking' => $booking,
             'activeCommodities' => $activeCommodities,
