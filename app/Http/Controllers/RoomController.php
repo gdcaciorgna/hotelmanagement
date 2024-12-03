@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Room;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -85,8 +86,18 @@ class RoomController extends Controller
         return redirect()->route('rooms.edit', $room->id)->with('success', 'Habitación actualizada correctamente.');
     }
     public function destroy(Request $request){
+    
         $room = Room::findOrFail($request->id);
+
+        // Comprobar si hay reservas asociadas a esta habitación
+        $hasBookings = Booking::where('room_id', $room->id)->exists();
+
+        if ($hasBookings) {
+            return redirect()->route('rooms.edit', $request->id)
+                ->withErrors('No se puede eliminar la habitación porque hay reservas asociadas a ella.');
+        }
+        
         $room->delete();
-        return to_route('rooms.index');
+        return to_route('rooms.index')->with('success', 'Habitación eliminada exitosamente.');
     }
 }

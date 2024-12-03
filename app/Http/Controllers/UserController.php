@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -119,8 +120,16 @@ class UserController extends Controller
 
     public function destroy(Request $request){
         $user = User::findOrFail($request->user_id);
+
+        // Comprobar si hay reservas asociadas a ese usuario
+        $hasBookings = Booking::where('user_id', $user->id)->exists();
+
+        if ($hasBookings) {
+            return redirect()->route('users.index')
+                ->withErrors("No se puede eliminar el usuario #{$user->id} ({$user->fullName}) porque hay reservas asociadas.");
+        }
         $user->delete();
-        return to_route('users.index');
+        return to_route('users.index')->with('success', 'Usuario eliminado exitosamente.');
     }
 
     public function setNewPassword(Request $request){

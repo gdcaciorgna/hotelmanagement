@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Rate;
 use App\Models\Commodity;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class RateController extends Controller
@@ -56,10 +57,20 @@ class RateController extends Controller
         return redirect()->route('rates.index');
     }
     
-    public function destroy(Request $request){
+    public function destroy(Request $request)
+    {
         $rate = Rate::findOrFail($request->id);
+    
+        // Comprobar si hay reservas asociadas a esta tarifa
+        $hasBookings = Booking::where('rate_id', $rate->id)->exists();
+    
+        if ($hasBookings) {
+            return redirect()->route('rates.edit', $request->id)
+                ->withErrors('No se puede eliminar la tarifa porque hay reservas asociadas a ella.');
+        }
+    
         $rate->delete();
-        return to_route('rates.index');
+        return to_route('rates.index')->with('success', 'Tarifa eliminada exitosamente.');;
     }
 
 }

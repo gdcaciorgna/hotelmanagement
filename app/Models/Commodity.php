@@ -40,7 +40,7 @@ class Commodity extends Model
 
     public function rates()
     {
-        return $this->belongsToMany(Rate::class, 'rate_commodity');
+        return $this->belongsToMany(Rate::class, 'commodity_rate');
     }
 
 }

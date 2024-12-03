@@ -40,14 +40,7 @@
                     </div>
                 
                     <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Iniciar sesión</button>
-                    <p class="text-center mb-0">No tenés una cuenta? <a href="">Contactate con recepción</a></p>
-                    <div class="text-center mb-4">
-                        @if (Route::has('password.request'))
-                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                Olvidé mi contraseña
-                            </a>
-                        @endif
-                </div>
+                    <p class="text-center mb-0">¿No tenés una cuenta? <a href="tel:5493462634739">Contactate con recepción</a></p>
                 </form>
                 </div>
             </div>

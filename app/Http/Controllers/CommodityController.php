@@ -64,8 +64,16 @@ class CommodityController extends Controller
     
     public function destroy(Request $request){
         $commodity = Commodity::findOrFail($request->id);
+
+        $hasBookings = $commodity->bookings()->exists();
+        $hasRates = $commodity->rates()->exists();
+
+        if ($hasBookings || $hasRates) {
+            return redirect()->route('commodities.edit', $commodity->id)
+                ->withErrors('No se puede eliminar la comodidad porque está asociada a reservas o tarifas.');
+        }        
         $commodity->delete();
-        return to_route('commodities.index');
+        return to_route('commodities.index')->with('success', 'Comodidad eliminada exitosamente.');
     }
 
     public function commoditiesReport(){
