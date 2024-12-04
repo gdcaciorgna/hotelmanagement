@@ -76,7 +76,10 @@ class BookingController extends Controller
         $bookings = $query->orderBy('id')->simplePaginate(30);
         sleep(2);
 
-        return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users', 'cleaners'));
+        $cleaningWorkingHoursFrom = (Policy::where('description', 'cleaningWorkingHoursFrom')->first())->value;
+        $cleaningWorkingHoursTo = (Policy::where('description', 'cleaningWorkingHoursTo')->first())->value;
+
+        return view('bookings.index', compact('bookings', 'rates', 'rooms', 'users', 'cleaners', 'cleaningWorkingHoursFrom', 'cleaningWorkingHoursTo'));
     }
     
     public function create(Request $request)

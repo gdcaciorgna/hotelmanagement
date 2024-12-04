@@ -193,23 +193,45 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="requestCleaningModalLabel">¿Desea confirmar la solicitud?</h1>
+                <h1 class="modal-title fs-5" id="requestCleaningModalLabel">
+                    @php
+                        $currentHour = \Carbon\Carbon::now()->format('H:i');
+                        $isWithinWorkingHours = $currentHour >= $cleaningWorkingHoursFrom && $currentHour <= $cleaningWorkingHoursTo;
+                    @endphp
+                    
+                    @if($isWithinWorkingHours)
+                        ¿Desea confirmar la solicitud?
+                    @else
+                        Fuera del horario permitido
+                    @endif
+                </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Se registrará un período de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
+                @if($isWithinWorkingHours)
+                    <p>Se registrará un período de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</b></p>
+                @else
+                    <p>No puede solicitar una limpieza fuera del horario permitido: 
+                        <b>({{ $cleaningWorkingHoursFrom }}</b> - <b>{{ $cleaningWorkingHoursTo }})</b>.
+                    </p>
+                @endif
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{{ route('cleanings.requestCleaning') }}">
-                    @csrf
-                    <input type="hidden" name="room_id" id="roomId">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                    <button type="submit" class="btn btn-primary">Confirmar</button>
-                </form>
+                @if($isWithinWorkingHours)
+                    <form method="POST" action="{{ route('cleanings.requestCleaning') }}">
+                        @csrf
+                        <input type="hidden" name="room_id" id="roomId">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                    </form>
+                @else
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                @endif
             </div>
         </div>
     </div>
 </div>
+
 
 {{-- Finish Cleaning as Admin --}}
 <div class="modal fade" id="finishCleaningModal" tabindex="-1" aria-labelledby="finishCleaningModalLabel" aria-hidden="true">
