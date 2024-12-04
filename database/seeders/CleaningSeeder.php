@@ -20,11 +20,11 @@ class CleaningSeeder extends Seeder
         $usedRoomIds = [];
 
         // Crear 30 cleanings
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $requestedDateTime = Carbon::now()->subDays(rand(1, 14));
 
             // Determina si este cleaning estará finalizado y establece el endDateTime
-            $randomFinishedCleaning = rand(1, 100) <= 40;
+            $randomFinishedCleaning = rand(1, 100) <= 10;
             $endDateTime = $randomFinishedCleaning ? Carbon::now()->subDays(rand(1, 14)) : null;
 
             // Genera startDateTime basado en las condiciones:

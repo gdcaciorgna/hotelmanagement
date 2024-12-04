@@ -49,6 +49,10 @@ class BookingSeeder extends Seeder
                 continue; // Saltar esta iteración si no hay disponibilidad
             }
     
+            $rateId = $rateIds[array_rand($rateIds)];
+            $roomId = $availableRoomIds[array_rand($availableRoomIds)];
+            $userId = $availableUserIds[array_rand($availableUserIds)];
+        
             $booking = Booking::create([
                 'bookingDate' => $bookingDate,
                 'startDate' => $startDate,
@@ -57,13 +61,12 @@ class BookingSeeder extends Seeder
                 'finalPrice' => $randomFinalPrice,
                 'numberOfPeople' => rand(1, 5),
                 'returnDeposit' => (bool)rand(0, 1),
-                'rate_id' => $rateIds[array_rand($rateIds)],
-                'room_id' => $availableRoomIds[array_rand($availableRoomIds)],
-                'user_id' => $availableUserIds[array_rand($availableUserIds)],
+                'rate_id' => $rateId,
+                'room_id' => $roomId,
+                'user_id' => $userId,
             ]);
-    
-            // Asignar commodities aleatorias a cada booking
-            $randomCommodityIds = $this->getRandomCommodityIds($commodityIds);
+
+            $randomCommodityIds = $this->getRandomCommodityIds($commodityIds, $rateId);
             $booking->commodities()->attach($randomCommodityIds);
         }
     }
@@ -98,10 +101,20 @@ class BookingSeeder extends Seeder
         return array_diff($roomIds, $conflictingRoomIds);
     }
     
-    private function getRandomCommodityIds(array $commodityIds, $max = 3)
+    private function getRandomCommodityIds(array $commodityIds, $rateId, $max = 3)
     {
-        shuffle($commodityIds);
-        return array_slice($commodityIds, 0, rand(1, $max));
+        // Obtener commodities asociadas a la tarifa
+        $commoditiesInRate = DB::table('commodity_rate')
+        ->where('rate_id', $rateId)
+        ->pluck('commodity_id')
+        ->toArray();
+
+        // Filtrar commodities que no estén incluidas en la tarifa
+        $availableCommodities = array_diff($commodityIds, $commoditiesInRate);
+
+        // Mezclar y seleccionar commodities aleatorias
+        shuffle($availableCommodities);
+        return array_slice($availableCommodities, 0, rand(1, $max));
     }
        
 }

@@ -25,7 +25,7 @@ class RoomController extends Controller
             'code' => 'required|integer|min:1|unique:rooms,code',
             'maxOfGuests' => 'required|integer|min:1',
             'description' => 'required|max:1000',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192'
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:8192'
         ];
         $request->validate($rules);
     
@@ -44,7 +44,7 @@ class RoomController extends Controller
             Room::create($request->all());
         }
     
-        return redirect()->route('rooms.index');
+        return redirect()->route('rooms.index')->with('success', 'Habitación creada exitosamente.');
     }
 
     public function edit($id) {
@@ -83,7 +83,7 @@ class RoomController extends Controller
         $room->description = $request->description;
         $room->save();
     
-        return redirect()->route('rooms.edit', $room->id)->with('success', 'Habitación actualizada correctamente.');
+        return redirect()->route('rooms.edit', $room->id)->with('success', 'Habitación modificada correctamente.');
     }
     public function destroy(Request $request){
     

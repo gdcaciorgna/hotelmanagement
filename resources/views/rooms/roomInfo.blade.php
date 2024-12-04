@@ -19,6 +19,14 @@
 @endphp
 
 <div class="bg-light rounded h-100 p-4">
+    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row mb-3">
         <div class="col-sm-3">
             <h6 class="mb-4"> {{ $headerText}} </h6>
@@ -37,34 +45,19 @@
         <div class="row mb-3">
             <label for="code" class="col-sm-3 col-form-label">Nro Habitación</label>
             <div class="col-sm-9">
-                <input type="number" class="form-control @error('code') is-invalid @enderror" id="code" name="code" placeholder="101" value="{{ old('code', $room->code ?? '') }}">
-                @error('code')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
+                <input type="number" class="form-control @error('code') is-invalid @enderror" id="code" name="code" placeholder="101" value="{{ old('code', $room->code ?? '') }}">   
             </div>
         </div>
         <div class="row mb-3">
             <label for="maxOfGuests" class="col-sm-3 col-form-label">Cant. máxima de huéspedes</label>
             <div class="col-sm-9">
                 <input type="number" class="form-control @error('maxOfGuests') is-invalid @enderror" id="maxOfGuests" name="maxOfGuests" placeholder="2" value="{{ old('maxOfGuests', $room->maxOfGuests ?? '')  }}">
-                @error('maxOfGuests')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
             </div>
         </div>
         <div class="row mb-3">
             <label for="description" class="col-sm-3 col-form-label">Descripción</label>
             <div class="col-sm-9">
                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Escribe aquí la descripción...">{{ old('description', $room->description ?? '')}}</textarea>
-                @error('description')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
             </div>
         </div>
         <div class="row mb-3">
@@ -80,12 +73,7 @@
                         </label>
                     </div>
                 @endif
-                <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" accept="image/*">
-                @error('image')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
+                <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" accept="image/*"> 
             </div>
         </div>
         

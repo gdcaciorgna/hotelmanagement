@@ -90,7 +90,7 @@ class UserController extends Controller
         $request->validate($rules);
         
         User::create(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
     }
 
     public function update($id, Request $request){
@@ -151,7 +151,7 @@ class UserController extends Controller
 
         $user->update(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'Usuario modificado exitosamente.');;
     }
 
     public function destroy(Request $request){

@@ -19,6 +19,13 @@
 @endphp
 
 <div class="bg-light rounded h-100 p-4">
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="row mb-3">
         <div class="col-sm-3">
             <h6 class="mb-4"> {{ $headerText}} </h6>
@@ -47,7 +54,7 @@
         </div>
 
         <div class="row mb-3">
-            <label for="currentPrice" class="col-sm-3 col-form-label">Precio</label>
+            <label for="currentPrice" class="col-sm-3 col-form-label">Precio x persona x día</label>
             <div class="col-sm-9">
                 <div class="input-group">
                     <div class="input-group-text">$</div>

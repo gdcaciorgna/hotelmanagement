@@ -33,7 +33,7 @@ class RateController extends Controller
         if ($request->has('commodities')) {
             $rate->commodities()->sync($request->input('commodities'));
         }    
-        return redirect()->route('rates.index');
+        return redirect()->route('rates.index')->with('success', 'Tarifa creada exitosamente.');
     }
 
     public function edit($id) {
@@ -54,7 +54,7 @@ class RateController extends Controller
         $rate->update($request->except('currentPrice'));
         $rate->updateCurrentPrice($request->input('currentPrice'));
         $rate->commodities()->sync($request->input('commodities', [])); 
-        return redirect()->route('rates.index');
+        return redirect()->route('rates.index')->with('success', 'Tarifa modificada exitosamente.');
     }
     
     public function destroy(Request $request)
@@ -70,7 +70,7 @@ class RateController extends Controller
         }
     
         $rate->delete();
-        return to_route('rates.index')->with('success', 'Tarifa eliminada exitosamente.');;
+        return to_route('rates.index')->with('success', 'Tarifa eliminada exitosamente.');
     }
 
 }

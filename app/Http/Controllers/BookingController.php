@@ -5,6 +5,7 @@ use App\Models\Room;
 use App\Models\Rate;
 use App\Models\User;
 use App\Models\Commodity;
+use App\Models\Cleaning;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Carbon\Carbon;
@@ -345,6 +346,24 @@ class BookingController extends Controller
     public function setBookingAsFinished($id, Request $request) 
     {        
         $booking = Booking::findOrFail($id);
+
+        $room = Room::findOrFail($booking->room_id);
+
+        //Clear existing active cleanings for room
+        $cleaningsForRoom = $room->cleanings()
+                                ->where('requestedDateTime', '<', Carbon::now())
+                                ->whereNull('endDateTime')
+                                ->get();
+        foreach($cleaningsForRoom as $cleaning){
+            $cleaning->endDateTime = Carbon::now()->format('Y-m-d H:i:s');
+            $cleaning->save();
+        }
+        
+        $cleaning = Cleaning::create([
+            'requestedDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+            'room_id' => $booking->room_id
+        ]);
+
         $finishBookingDateTime = Carbon::now()->format('Y-m-d H:i:s');
         $booking->update([
             'actualEndDate' => $finishBookingDateTime,
