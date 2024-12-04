@@ -220,8 +220,8 @@ class BookingController extends Controller
     public function store(Request $request)
     {        
         $validatedData = $request->validate([
-            'startDate' => 'required|date',
-            'agreedEndDate' => 'required|date|after_or_equal:startDate',
+            'startDate' => 'required|date|after_or_equal:today',
+            'agreedEndDate' => 'required|date|after:startDate',
             'numberOfPeople' => 'required|integer|min:1|max:6',
             'rate_id' => 'required|exists:rates,id',
         ]);
@@ -254,8 +254,8 @@ class BookingController extends Controller
         if ($request->input('action_type') === 'save_booking') {
             
             $validatedData = $request->validate([
-                'startDate' => 'required|date',
-                'agreedEndDate' => 'required|date|after_or_equal:startDate',
+                'startDate' => 'required|date|after_or_equal:today',
+                'agreedEndDate' => 'required|date|after:startDate',
                 'numberOfPeople' => 'required|integer|min:1',
                 'rate_id' => 'required|exists:rates,id',
                 'user_id' => 'required|exists:users,id',

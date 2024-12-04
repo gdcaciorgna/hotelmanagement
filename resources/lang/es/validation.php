@@ -16,6 +16,7 @@ return [
     ],
     'exists' => 'El campo :attribute seleccionado no es válido.',
     'after_or_equal' => 'El campo :attribute debe ser una fecha posterior o igual a :date.',
+    'after' => 'El campo :attribute debe ser una fecha posterior a :date.',
     'attributes' => [
         
         'startDate' => 'fecha de inicio',
@@ -43,4 +44,10 @@ return [
         'newPassword' => 'nueva contraseña',
         'newPassword_confirmation' => 'confirmación de contraseña',
     ],
+    'custom' => [
+        'startDate' => [
+            'after_or_equal' => 'El campo fecha de inicio debe ser una fecha posterior o igual a hoy.',
+        ],
+    ],
+
 ];
