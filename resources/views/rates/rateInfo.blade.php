@@ -73,7 +73,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="commodities" class="col-sm-3 col-form-label">Comodidades</label>
+            <label for="commodities" class="col-sm-3 col-form-label">Comodidades incluídas</label>
             <div class="col-sm-9">
                 @foreach ($commodities as $commodity)
                     <input class="form-check-input" type="checkbox" name="commodities[]" id="commodityCheckbox{{$commodity->id}}" value="{{ $commodity->id }}"

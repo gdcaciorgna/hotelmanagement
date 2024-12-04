@@ -51,6 +51,12 @@
                     <p class="col-sm-8 pt-0 m-0">{{$booking->rate->title}}</p>
                     <p class="col-sm-4 pt-0 m-0">Descripción</p>
                     <p class="col-sm-8 pt-0 m-0">{{$booking->rate->description}}</p>
+                    <p class="col-sm-4 pt-0 mt-4">Comodidades incluídas</p>
+                    <div class="col-sm-8 pt-0 mt-4">
+                        @foreach($booking->rate->commodities()->get() as $comm)
+                            <li>{{$comm->title}}</li>
+                        @endforeach
+                    </div>
                 </div>
             </div>
            
