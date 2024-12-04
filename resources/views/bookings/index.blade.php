@@ -325,7 +325,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <button type="submit" id="confirmButton" class="btn btn-primary" onclick="disableButton()">Confirmar</button>
                 </div>
             </div>
         </form>
@@ -397,4 +397,12 @@
             additionalServicesModal.show();
         }, 300);
     }
+
+    function disableButton() {
+        const button = document.getElementById('confirmButton');
+        button.disabled = true;
+        button.innerHTML = 'Procesando...';
+        button.form.submit(); 
+    }
+
 </script>
