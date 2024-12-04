@@ -17,6 +17,7 @@ return [
     'exists' => 'El campo :attribute seleccionado no es válido.',
     'after_or_equal' => 'El campo :attribute debe ser una fecha posterior o igual a :date.',
     'after' => 'El campo :attribute debe ser una fecha posterior a :date.',
+    'before_or_equal' => 'El campo :attribute debe ser una fecha anterior o igual a :date.',
     'attributes' => [
         
         'startDate' => 'fecha de inicio',
@@ -25,7 +26,7 @@ return [
         'rate_id' => 'tarifa',
         'user_id' => 'huésped',
         'room_code' => 'código de habitación',
-
+        'today' => 'hoy',
         'docType' => 'tipo de documento',
         'numDoc' => 'número de documento',
         'firstName' => 'nombre',
@@ -43,10 +44,14 @@ return [
         'disabledReason' => 'motivo de inhabilitación',
         'newPassword' => 'nueva contraseña',
         'newPassword_confirmation' => 'confirmación de contraseña',
+
     ],
     'custom' => [
         'startDate' => [
             'after_or_equal' => 'El campo fecha de inicio debe ser una fecha posterior o igual a hoy.',
+        ],
+        'disabledStartDate' => [
+            'before_or_equal' => 'La fecha de inhabilitación debe ser una fecha anterior o igual a hoy.',
         ],
     ],
 

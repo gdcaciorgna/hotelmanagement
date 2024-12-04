@@ -204,11 +204,12 @@ class BookingController extends Controller
             $query->where('maxOfGuests', '=', $request->numberOfPeople);
         }
 
+        //Filtrar habitaciones disponibles
         if ($request->filled('startDate') && $request->filled('agreedEndDate')) {
             $query->whereDoesntHave('bookings', function($query) use ($request) {
                 $query->where(function ($q) use ($request) {
-                    $q->where('startDate', '<=', $request->agreedEndDate)
-                    ->where('agreedEndDate', '>=', $request->startDate);
+                    $q->where('startDate', '<', $request->agreedEndDate)
+                    ->where('agreedEndDate', '>', $request->startDate);
                 });
             });
         }

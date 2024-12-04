@@ -57,6 +57,7 @@ class UserController extends Controller
                     return $query->where('docType', $request->input('docType'));
                 }),
             ],
+            'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ];
         $status = false;
 
@@ -99,6 +100,7 @@ class UserController extends Controller
                     return $query->where('docType', $request->input('docType'));
                 }),
             ],
+            'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ]);
 
         $user = User::findOrFail($id);
