@@ -61,18 +61,35 @@ class UserController extends Controller
         ];
         $status = false;
 
-        $arrayDisabled = [];
+        $fieldsDisabled = [];
         if(!$request->has('status')){
             $status = true;
-            $arrayDisabled = [
+            $fieldsDisabled = [
                 'disabledStartDate' => null,
                 'disabledReason' => null
             ];
         }
-        
+
+        //Delete disabled fields for usertype different to guest and delete 
+        if($request->userType == 'Guest'){
+            $fieldsDisabled = [
+                'weekdayStartWorkHours' => null,
+                'weekdayEndWorkHours' => null,
+                'startEmploymentDate' => null 
+            ];
+        }
+        //Receptionist or cleaner
+        else{
+            $fieldsDisabled = [
+                'status' => 1,
+                'disabledStartDate' => null,
+                'disabledReason' => null
+            ];
+        }
+
         $request->validate($rules);
         
-        User::create(array_merge($request->all(), ['status' => $status], $arrayDisabled));
+        User::create(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
         return redirect()->route('users.index');
     }
 
@@ -106,16 +123,33 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $status = false;
 
-        $arrayDisabled = [];
+        $fieldsDisabled = [];
         if(!$request->has('status')){
             $status = true;
-            $arrayDisabled = [
+            $fieldsDisabled = [
                 'disabledStartDate' => null,
                 'disabledReason' => null
             ];
         }
 
-        $user->update(array_merge($request->all(), ['status' => $status], $arrayDisabled));
+        //Delete disabled fields for usertype different to guest and delete 
+        if($request->userType == 'Guest'){
+            $fieldsDisabled = [
+                'weekdayStartWorkHours' => null,
+                'weekdayEndWorkHours' => null,
+                'startEmploymentDate' => null 
+            ];
+        }
+        //Receptionist or cleaner
+        else{
+            $fieldsDisabled = [
+                'status' => 1,
+                'disabledStartDate' => null,
+                'disabledReason' => null
+            ];
+        }
+
+        $user->update(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
 
         return redirect()->route('users.index');
     }
