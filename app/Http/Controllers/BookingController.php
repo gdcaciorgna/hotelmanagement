@@ -92,7 +92,9 @@ class BookingController extends Controller
         $cleanTotalBookingPrice = $request->input('cleanTotalBookingPrice', old('cleanTotalBookingPrice'));
 
         $rates = Rate::all();
-        $users = User::where('userType', 'Guest')->get();
+        $users = User::where('userType', 'Guest')
+            ->where('status', 1)    
+            ->get();
 
         $startDateCarbon = Carbon::parse($request->input('startDate', old('startDate')));
         $agreedEndDateCarbon = Carbon::parse($request->input('agreedEndDate', old('agreedEndDate')));
@@ -136,7 +138,9 @@ class BookingController extends Controller
         
         // Load related data
         $rates = Rate::all();
-        $users = User::where('userType', 'Guest')->get();
+        $users = User::where('userType', 'Guest')
+            ->where('status', 1)    
+            ->get();
     
         // Extract values from the existing booking
         $bookingId = $id;

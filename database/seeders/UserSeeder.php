@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
             $provinces = ['Buenos Aires', 'Córdoba', 'Santa Fe'];
             $address = mt_rand(1, 500) . ' ' . $streets[array_rand($streets)] . ', ' . $cities[array_rand($cities)] . ', ' . $provinces[array_rand($provinces)];
             $userType = $userTypes[array_rand($userTypes)];
+            $disabledReasons = ["Ruidos molestos fuera del horario permitido", "Rotura sobre instalaciones del hotel"];
 
             $firstNames = ['Juan', 'María', 'Carlos', 'Laura', 'Pedro', 'Ana', 'José', 'Sofía', 'Miguel', 'Lucía', 'Luis', 'Eduardo', 'Sandra', 'Rosana', 'Mariela', 'Clara'];
             $lastNames = ['García', 'Fernández', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Gómez', 'Díaz', 'Falcón', 'Romero', 'Álvarez', 'Bustos'];    
@@ -60,10 +61,13 @@ class UserSeeder extends Seeder
             }
            
             $numDoc = mt_rand(10000000, 99999999);
-            $docType = $docTypes[array_rand($docTypes)];;
-            $status = rand(0, 5) === 5 ? false : true;
+            $docType = $docTypes[array_rand($docTypes)];
+            $status = true;
+            if($userType == "Guest"){
+                $status = rand(0, 3) === 3 ? false : true;
+            }min: 
             $disabledStartDate = $status ? null : now();
-            $disabledReason = $status ? null : 'Motivo de inhabilitacion en testeo';
+            $disabledReason = $status ? null : $disabledReasons[array_rand($disabledReasons)];
             $bornDateTimestamp = mt_rand(strtotime('1950-01-01'), strtotime('2005-12-31'));
             $bornDate = date('Y-m-d', $bornDateTimestamp);    
             

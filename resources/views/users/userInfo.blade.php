@@ -4,7 +4,7 @@
 
 @php
     if($action == 'edit'){
-        $headerText = "Editar asdsad Usuario: #{$user->id}";
+        $headerText = "Editar Usuario: #{$user->id}";
         $formAction = route('users.update', ['id' => $user->id]);
         $method = 'PUT';
     }
@@ -53,30 +53,15 @@
             <label for="numDoc" class="col-sm-3 col-form-label">Nro Doc</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control @error('numDoc') is-invalid @enderror" id="numDoc" name="numDoc" data-bs-decimals="0" data-bs-step="1" placeholder="12.345.678" value="{{ old('numDoc', $user->numDoc ?? '')  }}">
-                @error('numDoc')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
             </div>
         </div>
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Nombre y apellido</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" placeholder="Nombre" value="{{ old('firstName', $user->firstName ?? '')  }}">
-                @error('firstName')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
             </div>
             <div class="col-sm-5">
                 <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" placeholder="Apellido" value="{{ old('lastName', $user->lastName ?? '')  }}">
-                @error('lastName')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror    
             </div>
         </div>
         <div class="row mb-3">
@@ -107,11 +92,6 @@
                    value="{{ \Carbon\Carbon::parse($user->bornDate)->format('Y-m-d') }}" 
                 @endif
                >
-               @error('bornDate')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror  
             </div>
           
         </div>
@@ -171,53 +151,54 @@
             </div>      
         </div>
                 
-        <div class="row mb-3">
-            <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
-            <div class="col-sm-9">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="status" id="disabledCheckbox" 
+        <div id="disableUserSection" style="display: none;">
+            <div class="row mb-3">
+                <legend class="col-form-label col-sm-3 pt-0">Usuario Inhabilitado</legend>
+                <div class="col-sm-9">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="status" id="disabledCheckbox" 
+                        @if (isset($user) && $user->status == 0 || old('status'))
+                            checked 
+                        @endif
+                        >
+                        
+                        <label class="form-check-label" for="disabledCheckbox">
+                            Inhabilitar Usuario
+                        </label>
+                    </div>
+                    <div class="mt-3" id="dateInput"
                     @if (isset($user) && $user->status == 0 || old('status'))
-                        checked 
+                        style="display:block"
+                    @else
+                        style="display:none"
+                    @endif
+                >
+                    <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
+                    <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate" 
+                        
+                        @if(old('disabledStartDate')) 
+                            value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
+                            @elseif(isset($user) && $user->disabledStartDate) 
+                            value="{{ \Carbon\Carbon::parse($user->disabledStartDate)->format('Y-m-d') }}" 
+                            @endif
+                        @if (isset($user) && $user->status == 0 || old('status'))
+                            style="display:block"
+                        @endif
+                    >
+                    </div>            
+                    <div class="mt-3" id="disabledReason" value="{{ old('disabledReason', $user->disabledReason ?? '')  }}"
+                    @if (isset($user) && $user->status == 0 || old('status'))
+                        style="display:block"
+                    @else
+                        style="display:none"
                     @endif
                     >
-                    
-                    <label class="form-check-label" for="disabledCheckbox">
-                        Inhabilitar Usuario
-                    </label>
-                </div>
-                <div class="mt-3" id="dateInput"
-                @if (isset($user) && $user->status == 0 || old('status'))
-                    style="display:block"
-                @else
-                    style="display:none"
-                @endif
-            >
-                <label for="disabledStartDateInput" class="form-label">Fecha de Inhabilitación:</label>
-                <input type="date" class="form-control" id="disabledStartDateInput" name="disabledStartDate" 
-                       
-                       @if(old('disabledStartDate')) 
-                        value="{{ \Carbon\Carbon::parse(old('disabledStartDate'))->format('Y-m-d') }}" 
-                        @elseif(isset($user) && $user->disabledStartDate) 
-                        value="{{ \Carbon\Carbon::parse($user->disabledStartDate)->format('Y-m-d') }}" 
-                        @endif
-                       @if (isset($user) && $user->status == 0 || old('status'))
-                           style="display:block"
-                       @endif
-                >
-                </div>            
-                <div class="mt-3" id="disabledReason" value="{{ old('disabledReason', $user->disabledReason ?? '')  }}"
-                @if (isset($user) && $user->status == 0 || old('status'))
-                    style="display:block"
-                @else
-                    style="display:none"
-                @endif
-                >
-                    <label for="disabledReasonTextarea" class="form-label">Motivo de Inhabilitación:</label>
-                    <textarea class="form-control" id="disabledReasonTextarea" name="disabledReason"> {{ old('disabledReason', $user->disabledReason ?? '')  }} </textarea>
+                        <label for="disabledReasonTextarea" class="form-label">Motivo de Inhabilitación:</label>
+                        <textarea class="form-control" id="disabledReasonTextarea" name="disabledReason"> {{ old('disabledReason', $user->disabledReason ?? '')  }} </textarea>
+                    </div>
                 </div>
             </div>
-        </div>    
-     
+        </div>     
         <div class="row mb-3">
             @if($action == 'edit')
                 <div class="col-sm-3">
@@ -233,6 +214,17 @@
                     <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
         </div>
+
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
     </form>
 </div>
   
@@ -301,6 +293,8 @@
             }
         });
 
+        toggleDisableSection();
+
         action = "{{$action}}";
         if(action == 'edit'){
             document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
@@ -339,6 +333,19 @@
             });
         }
     });
+
+    function toggleDisableSection() {
+        const userType = document.getElementById("userType").value;
+        const disableUserSection = document.getElementById("disableUserSection");
+
+        if (userType === "Guest") {
+            disableUserSection.style.display = "block";
+        } else {
+            disableUserSection.style.display = "none";
+        }
+    }
+
+    document.getElementById("userType").addEventListener("change", toggleDisableSection);
 
     const userTypeDropdown = document.getElementById('userType');
         const workInformation = document.querySelector('.workInformation');
