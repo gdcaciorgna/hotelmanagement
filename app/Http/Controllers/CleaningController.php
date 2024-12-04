@@ -16,10 +16,7 @@ class CleaningController extends Controller
         $rooms = Room::all();
         $query = Cleaning::query();
     
-        // Consulta base para obtener las limpiezas activas
-        $query->whereNull('endDateTime')
-            ->orderBy('requestedDateTime');
-
+        $query->whereNull('endDateTime');
         // Filter by booking ID
         if ($request->filled('cleaning_id')) {
             $query->where('id', $request->input('cleaning_id'));
@@ -32,11 +29,15 @@ class CleaningController extends Controller
             });
         }         
     
-        // Paginación y obtención de resultados finales
-        $activeCleanings = $query->simplePaginate(10);
+        // Sort by room code
+        $query->join('rooms', 'cleanings.room_id', '=', 'rooms.id')
+            ->orderBy('rooms.code');
+    
+        $activeCleanings = $query->select('cleanings.*')->simplePaginate(10);
     
         return view('cleanings.index', compact('activeCleanings', 'rooms'));
     }
+    
     
     
     public function requestCleaning(Request $request){

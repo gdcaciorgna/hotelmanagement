@@ -79,8 +79,18 @@
                         // Llenar la tabla con los bookings
                         data.bookings.forEach(booking => {
                             var row = document.createElement('tr');
+
+                            //Format date
+                            const originalDate = new Date(booking.startDate);
+                            const day = String(originalDate.getDate()).padStart(2, '0'); // Asegura dos dígitos
+                            const month = String(originalDate.getMonth() + 1).padStart(2, '0'); // Mes es 0-indexado
+                            const year = originalDate.getFullYear();
+                            // const hours = String(originalDate.getHours()).padStart(2, '0');
+                            // const minutes = String(originalDate.getMinutes()).padStart(2, '0');
+                            const formattedDateTime = `${day}/${month}/${year}`; //${hours}:${minutes}
+
                             row.innerHTML = `
-                                <td>${booking.startDate}</td>
+                                <td>${formattedDateTime}</td>
                                 <td>${booking.user.firstName} ${booking.user.lastName}</td>
                                 <td>${booking.id}</td>
                             `;
