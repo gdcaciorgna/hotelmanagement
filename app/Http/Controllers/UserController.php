@@ -113,7 +113,7 @@ class UserController extends Controller
                     return $query
                     ->where('docType', $request->input('docType'))
                     ->whereNull('deleted_at'); 
-                }),
+                })->ignore($id),
             ],
             'email' => [
                 'required',
@@ -121,7 +121,7 @@ class UserController extends Controller
                 Rule::unique('users')->where(function ($query) {
                     return $query
                         ->whereNull('deleted_at'); 
-                }),
+                })->ignore($id),
             ],        
             'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ]);

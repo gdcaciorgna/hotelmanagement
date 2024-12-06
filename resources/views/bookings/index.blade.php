@@ -312,7 +312,7 @@
                     <div class="row mb-2">
                             <div class="col-4"><label>Fecha y hora</label></div>
                             <div class="col-8">
-                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput" disabled>
+                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput">
                             </div>
                     </div>
                     <div class="row mb-2">

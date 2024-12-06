@@ -191,7 +191,7 @@
         @endif
             
         @if(empty($booking->finalPrice))           
-            @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0 && !$errors->any()))
+            @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0 && !$errors->any())
                 <div class="row mb-1 booking-price-info">
                     <p for="totalBookingPrice" class="col-sm-3">Precio reserva provisorio:</p>
                     <p class="col-sm-9">
@@ -225,7 +225,7 @@
                 </p>
             </div>
         @endif
-    
+   
         @if(empty($booking->finalPrice))
             <div class="row mb-3">
                 <div class="col-12 d-flex">
@@ -235,7 +235,7 @@
                     </button>
             
                     <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
-                    @if(empty($booking->finalPrice))
+                    @if(empty($booking->finalPrice) && \Carbon\Carbon::now()->greaterThanOrEqualTo(\Carbon\Carbon::parse($booking->startDate)))
                         <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
                     @endif
                 </div>
