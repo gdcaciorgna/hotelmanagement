@@ -23,9 +23,10 @@ class RoomController extends Controller
     public function store(Request $request) {
         $rules = [
             'code' => 'required|integer|min:1|unique:rooms,code',
-            'maxOfGuests' => 'required|integer|min:1',
+            'maxOfGuests' => 'required|integer|min:1|max:6',
             'description' => 'required|max:1000',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:8192'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192'
+            
         ];
         $request->validate($rules);
     
@@ -55,10 +56,10 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
     
         $request->validate([
-            'code' => 'required|integer|min:1|unique:rooms,code,' . $room->id, // Ignorar el código actual
-            'maxOfGuests' => 'required|integer|min:1',
+            'code' => 'required|integer|min:1|unique:rooms,code,' . $room->id,
+            'maxOfGuests' => 'required|integer|min:1|max:6',
             'description' => 'required|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
         ]);
     
         if ($request->has('delete_image') && $request->delete_image) {

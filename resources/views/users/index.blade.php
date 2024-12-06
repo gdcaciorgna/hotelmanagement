@@ -33,7 +33,7 @@
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Tipo Doc</th>
                     <th scope="col">Nro Doc</th>
                     <th scope="col">Nombre y apellido</th>
@@ -43,16 +43,12 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $counter = 1; 
-                @endphp
-        
                 @foreach ($users as $user)
                     @php
                         $disabledStartDateFormatted = $user->disabledStartDate ? date('d/m/Y', strtotime($user->disabledStartDate)) : '';   
                     @endphp
                     <tr>
-                        <th scope="row">{{$counter}}</th>
+                        <td scope="row">{{$user->id}}</td>
                         <td>{{$user->docType}}</td>
                         <td>{{number_format($user->numDoc, 0, ',', '.')}}</td>
                         <td>{{$user->fullName}}</td>
@@ -72,11 +68,8 @@
                             <button type="button" class="btn btn-sm btn-sm-square btn-outline-danger m-2 deleteButton" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-user-id="{{$user->id}}" data-full-name="{{$user->fullName}}"><i class="fa fa-trash-alt"></i></button>
                         </td>
                     </tr>
-                    @php
-                        $counter++;
-                    @endphp 
+                  
                 @endforeach
-                
             </tbody>
         </table>
     </div>
@@ -112,7 +105,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>¿Estás seguro de querer eliminar el usuario <strong id="userFullName"></strong></p>
+                <p>¿Estás seguro de querer eliminar el usuario <strong id="userFullName"></strong>?</p>
             </div>
             <div class="modal-footer">
                 <form method="POST" action="{{route('users.destroy', $user->id)}}">

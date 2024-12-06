@@ -13,7 +13,7 @@ class CleaningController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $rooms = Room::all();
+        $rooms = Room::orderBy('code')->get();
         $query = Cleaning::query();
     
         $query->whereNull('endDateTime');

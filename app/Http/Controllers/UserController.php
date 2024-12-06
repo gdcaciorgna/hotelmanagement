@@ -47,16 +47,19 @@ class UserController extends Controller
             'numDoc' => [
                 'required',
                 Rule::unique('users')->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
+                    return $query
+                    ->where('docType', $request->input('docType'))
+                    ->whereNull('deleted_at'); 
                 }),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
+                Rule::unique('users')->where(function ($query) {
+                    return $query
+                        ->whereNull('deleted_at'); 
                 }),
-            ],
+            ],        
             'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ];
         $status = false;
@@ -106,17 +109,20 @@ class UserController extends Controller
             'bornDate' => 'required|date|before_or_equal:today',
             'numDoc' => [
                 'required',
-                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    return $query
+                    ->where('docType', $request->input('docType'))
+                    ->whereNull('deleted_at'); 
                 }),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore($id)->where(function ($query) use ($request) {
-                    return $query->where('docType', $request->input('docType'));
+                Rule::unique('users')->where(function ($query) {
+                    return $query
+                        ->whereNull('deleted_at'); 
                 }),
-            ],
+            ],        
             'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ]);
 

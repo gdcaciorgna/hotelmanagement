@@ -24,7 +24,9 @@ class RateController extends Controller
         $rules = [
             'title' => 'required|max:250',
             'description' => 'required|max:1000',
-            'commodities' => 'array'
+            'commodities' => 'array',
+            'currentPrice' => 'required|numeric|min:0' 
+
         ];
 
         $request->validate($rules);
@@ -46,8 +48,9 @@ class RateController extends Controller
         $request->validate([
             'title' => 'required|max:250',
             'description' => 'required|max:1000',
-            'currentPrice' => 'required|numeric',
-            'commodities' => 'array'
+            'commodities' => 'array',
+            'currentPrice' => 'required|numeric|min:0' 
+
         ]);
 
         $rate = Rate::findOrFail($id);

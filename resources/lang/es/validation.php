@@ -146,7 +146,6 @@ return [
     'integer' => 'El campo :attribute debe ser un número entero.',
     'confirmed' => 'Las contraseñas ingresadas deben coincidir.',
     'attributes' => [
-        
         'startDate' => 'fecha de inicio',
         'agreedEndDate' => 'fecha de fin pactada',
         'numberOfPeople' => 'número de huéspedes',
@@ -174,8 +173,8 @@ return [
         'code' => 'código',
         'maxOfGuests' => 'máximo de huéspedes',
         'image' => 'imagen',
-        'description' => 'descripción'
-
+        'description' => 'descripción',
+        'currentPrice' => 'precio',
     ],
     'custom' => [
         'startDate' => [
@@ -183,6 +182,9 @@ return [
         ],
         'disabledStartDate' => [
             'before_or_equal' => 'La fecha de inhabilitación debe ser una fecha anterior o igual a hoy.',
+        ],
+        'bornDate' => [
+            'before_or_equal' => 'La fecha de nacimiento debe ser una fecha anterior o igual a hoy.',
         ],
         'numDoc' => [
             'unique' => 'El número de documento ingresado ya ha sido registrado.',

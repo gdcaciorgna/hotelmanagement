@@ -67,7 +67,7 @@
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Correo electrónico</label>
             <div class="col-sm-9">
-                <input type="email" class="form-control" id="email" name="email" placeholder="juanperez@gmail.com" value="{{ old('email', $user->email ?? '')  }}" required>
+                <input type="email" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" placeholder="juanperez@gmail.com" value="{{ old('email', $user->email ?? '')  }}" required>
             </div>
         </div>
         <div class="row mb-3">

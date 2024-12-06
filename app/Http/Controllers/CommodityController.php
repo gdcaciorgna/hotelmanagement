@@ -32,7 +32,8 @@ class CommodityController extends Controller
     public function store(Request $request) {
         $rules = [
             'title' => 'required|max:250',
-            'description' => 'required|max:1000'
+            'description' => 'required|max:1000',
+            'currentPrice' => 'required|numeric|min:0' 
         ];
 
         $request->validate($rules);
@@ -51,8 +52,7 @@ class CommodityController extends Controller
         $request->validate([
             'title' => 'required|max:250',
             'description' => 'required|max:1000',
-            'currentPrice' => 'required|numeric'
-
+            'currentPrice' => 'required|numeric|min:0' 
         ]);
 
         $commodity = Commodity::findOrFail($id);

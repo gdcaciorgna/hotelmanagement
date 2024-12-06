@@ -51,7 +51,7 @@
             <div class="col-sm-9">
                 <div class="input-group">
                     <div class="input-group-text">$</div>
-                    <input type="number" step="0.01" class="form-control @error('currentPrice') is-invalid @enderror" id="currentPrice" name="currentPrice" placeholder="2000" value="{{ old('currentPrice', $commodity->currentPrice ?? '')  }}">
+                    <input type="number" step="0.01" class="form-control @error('currentPrice') is-invalid @enderror" id="currentPrice" name="currentPrice" placeholder="90" value="{{ old('currentPrice', $commodity->currentPrice ?? '')  }}">
                 </div>
                 @error('currentPrice')
                     <div class="invalid-feedback">

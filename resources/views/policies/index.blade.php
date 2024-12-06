@@ -19,7 +19,7 @@
                     @method('PUT')
                     <div class="row">
                         <div class="col-8">
-                            <input type="number" class="form-control MilesNumberFormatted" id="damageDeposit" name="damageDeposit" value="{{ $damageDeposit }}" max="1000000000" required>
+                            <input type="number" class="form-control MilesNumberFormatted" id="damageDeposit" name="damageDeposit" value="{{ $damageDeposit }}" min="0" max="1000000000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -37,7 +37,7 @@
                     @method('PUT')
                     <div class="row">
                         <div class="col-8">
-                            <input type="number" class="form-control MilesNumberFormatted" id="basePricePerPersonPerDay" name="basePricePerPersonPerDay" value="{{$basePricePerPersonPerDay}}" max="1000000000" required>
+                            <input type="number" class="form-control MilesNumberFormatted" id="basePricePerPersonPerDay" name="basePricePerPersonPerDay" value="{{$basePricePerPersonPerDay}}" min="0" max="1000000000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
