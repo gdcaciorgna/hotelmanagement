@@ -173,13 +173,14 @@
                 @if($roomCode)
                     <span class="me-3">N°:{{ $roomCode }}</span>
                 @endif
-                <button type="submit" id="selectRoom" id="selectRoomButton" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
-                    {{ $selectRoomButtonText }}
-                </button>
-                @if($roomCode)
-                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Habilitar modificación</button>
+                @if(empty($booking->finalPrice))           
+                    <button type="submit" id="selectRoom" id="selectRoomButton" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
+                        {{ $selectRoomButtonText }}
+                    </button>
+                    @if($roomCode)
+                        <button type="button" id="clearButton" class="btn btn-secondary ms-2">Habilitar modificación</button>
+                    @endif
                 @endif
-
             </div>
         </div>      
         @if(!empty($stayDays) && $stayDays > 0)
@@ -190,7 +191,7 @@
         @endif
             
         @if(empty($booking->finalPrice))           
-            @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0)
+            @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0 && !$errors->any()))
                 <div class="row mb-1 booking-price-info">
                     <p for="totalBookingPrice" class="col-sm-3">Precio reserva provisorio:</p>
                     <p class="col-sm-9">
@@ -225,19 +226,21 @@
             </div>
         @endif
     
-        <div class="row mb-3">
-            <div class="col-12 d-flex">
-                <button type="submit" id="saveBookingButton" class="btn btn-primary" 
-                    onclick="document.getElementById('action_type').value='save_booking';">
-                    Actualizar
-                </button>
-        
-                <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
-                @if(empty($booking->finalPrice))
-                    <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
-                @endif
+        @if(empty($booking->finalPrice))
+            <div class="row mb-3">
+                <div class="col-12 d-flex">
+                    <button type="submit" id="saveBookingButton" class="btn btn-primary" 
+                        onclick="document.getElementById('action_type').value='save_booking';">
+                        Actualizar
+                    </button>
+            
+                    <button type="button" class="btn btn-link text-danger p-0 ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
+                    @if(empty($booking->finalPrice))
+                        <a href="{{route('bookings.showCheckout', $booking->id)}}" type="submit" class="btn btn-success ms-auto">Finalizar Reserva</a>
+                    @endif
+                </div>
             </div>
-        </div>
+        @endif
         
     </form>
 

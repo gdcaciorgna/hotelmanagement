@@ -76,6 +76,8 @@
                         var bookingsTableBody = modal.querySelector('#bookingsTableBody');
                         bookingsTableBody.innerHTML = '';
 
+                        data.bookings.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                        
                         // Llenar la tabla con los bookings
                         data.bookings.forEach(booking => {
                             var row = document.createElement('tr');

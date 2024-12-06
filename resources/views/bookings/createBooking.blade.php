@@ -174,9 +174,9 @@
             </div>
         @endif
         
-        @if(!empty($totalBookingPrice) && $totalBookingPrice > 0)
+        @if(!empty($totalBookingPrice) && $totalBookingPrice > 0 && !$errors->any())
             <div class="row mb-1">
-                <p for="totalBookingPrice" class="col-sm-3">Precio reserva:</p>
+                <p for="totalBookingPrice" class="col-sm-3">Precio reserva provisorio:</p>
                 <p class="col-sm-9">
                     <strong>{{ '$' . number_format($totalBookingPrice, 2) }}</strong>
                     <br> Desglose: 

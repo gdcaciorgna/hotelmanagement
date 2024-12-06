@@ -10,13 +10,18 @@
 <div class="container">
     <div class="row g-12 mb-4">
         <div class="row mb-3">
-            <h3 class="mt-2">Reserva #{{ $booking->id }}</h3>
-                <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format(
-                    'd/m/Y') }}</strong></p>
-                <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
-                <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
-                <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
-                <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
+            <div class="col-8">
+                <h3 class="mt-2">Reserva #{{ $booking->id }}</h3>
+                    <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format(
+                        'd/m/Y') }}</strong></p>
+                    <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
+                    <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
+                    <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
+                    <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
+            </div>
+            <div class="col-4 text-end">
+                <a href="{{route('bookings.index')}}" class="btn btn-dark">Ver reservas</a>
+            </div>
         </div>
     </div>
     @if($rateCommodities->isEmpty())

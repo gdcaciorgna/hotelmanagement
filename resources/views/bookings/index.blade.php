@@ -138,7 +138,13 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#{{$cleaningModal}}">{{$requestCleaningButtonText}}</a>
                                     @endif
-                                        <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">Editar</a>
+                                        <a href="{{ route('bookings.edit', $booking->id) }}" type="submit" class="btn btn-primary btn-sm">
+                                            @if(empty($booking->actualEndDate))
+                                                Editar
+                                            @else
+                                                Ver
+                                            @endif
+                                        </a>
                                     @if(empty($booking->actualEndDate))          
                                         <a href="#" type="submit" class="btn btn-info btn-sm"
                                             data-booking-id="{{ $booking->id }}" 
@@ -304,21 +310,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-2">
-                            <div class="col-4"><label for="dateTime">Fecha y hora</label></div>
+                            <div class="col-4"><label>Fecha y hora</label></div>
                             <div class="col-8">
-                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput">
+                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput" disabled>
                             </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-4"><label for="dateTime">Servicio adicional</label></div>
-                        <div class="col-8"><input name="title" type="text" class="form-control"></div>
+                        <div class="col-4"><label>Servicio adicional</label></div>
+                        <div class="col-8"><input name="title" type="text" class="form-control" required></div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-4"><label for="dateTime">Precio</label></div>
+                        <div class="col-4"><label>Precio</label></div>
                         <div class="col-8">
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" class="form-control" id="priceInput" name="price" placeholder="0.00" step="0.01" min="0">
+                                <input type="number" class="form-control" id="priceInput" name="price" placeholder="0.00" step="0.01" min="0" required>
                             </div>                        
                         </div>
                     </div>
@@ -399,9 +405,28 @@
     }
 
     function disableButton() {
+
+        const title = document.querySelector('input[name="title"]');
+        const price = document.querySelector('input[name="price"]');
+        const dateTime = document.querySelector('input[name="dateTime"]');
+        const confirmButton = document.getElementById('confirmButton');
+
+        // Verificar que el servicio adicional y la fecha/hora no estén vacíos
+        if (!title.value.trim() || !dateTime.value.trim()) {
+            alert("Por favor, complete todos los campos obligatorios.");
+            return false;
+        }
+
+        // Verificar que el precio sea un número positivo
+        if (price.value <= 0) {
+            alert("El precio debe ser un valor positivo.");
+            return false;
+        }
+
+        confirmButton.disabled = true;
+        confirmButton.innerHTML = 'Procesando...';
+
         const button = document.getElementById('confirmButton');
-        button.disabled = true;
-        button.innerHTML = 'Procesando...';
         button.form.submit(); 
     }
 

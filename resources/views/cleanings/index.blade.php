@@ -76,7 +76,7 @@
                         </form>    
                     </div>
                 </div>
-                <p class="m-0">Solicitado: <strong>{{ \Carbon\Carbon::parse($cleaning->requestedDateTime)->format('d/m/Y') }}</strong></p>
+                <p class="m-0">Solicitado: <strong>{{ \Carbon\Carbon::parse($cleaning->requestedDateTime)->format('d/m/Y H:i') }}</strong></p>
 
                 @if(Auth::user()->userType == 'Receptionist')
                     <p class="m-0">Empleado asignado: <strong>{{$cleaning->user->fullname}}</strong></p>
