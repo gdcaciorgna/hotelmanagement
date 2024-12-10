@@ -247,15 +247,27 @@
         @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="finishCleaningModalLabel">¿Desea confirmar la finalización?</h1>
+                    <h1 class="modal-title fs-5" id="finishCleaningModalLabel">
+                        @php
+                            $currentHour = \Carbon\Carbon::now()->format('H:i');
+                            $isWithinWorkingHours = $currentHour >= $cleaningWorkingHoursFrom && $currentHour <= $cleaningWorkingHoursTo;
+                        @endphp
+                        
+                        @if($isWithinWorkingHours)
+                            ¿Desea confirmar la finalización?
+                        @else
+                            Fuera del horario permitido
+                        @endif
+                    </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if($isWithinWorkingHours)
                     <p>Se registrará la finalización de la limpieza en este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}<b></p>
                     <div class="row mb-3">
-                        <label for="cleaner_id" class="col-sm-6 col-form-label">¿Quién llevó a cabo la limpieza?</label>
-                        <div class="col-sm-6">
-                            <select name="cleaner_id" class="form-select">
+                        <label for="cleaner_id">¿Quién llevó a cabo la limpieza?</label>
+                        <div class="mt-2">
+                            <select name="cleaner_id" class="form-select mb-5">
                                 <option value="">Seleccione un empleado de limpieza</option>
                                 @foreach($cleaners as $cleaner)
                                     <option value="{{ $cleaner->id }}" {{ request()->query('cleaner_id') == $cleaner->id ? 'selected' : '' }}>
@@ -265,11 +277,20 @@
                             </select>
                         </div>
                     </div>
+                    @else
+                        <p>No puede solicitar una limpieza fuera del horario permitido: 
+                            <b>({{ $cleaningWorkingHoursFrom }}</b> - <b>{{ $cleaningWorkingHoursTo }})</b>.
+                        </p>
+                    @endif
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="room_id" id="roomIdFinish">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                    <button type="submit" class="btn btn-danger">Confirmar finalización</button>
+                    @if($isWithinWorkingHours)
+                        <input type="hidden" name="room_id" id="roomIdFinish">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <button type="submit" class="btn btn-danger">Confirmar finalización</button>
+                    @else
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    @endif
                 </div>
             </div>
         </form>
@@ -312,7 +333,7 @@
                     <div class="row mb-2">
                             <div class="col-4"><label>Fecha y hora</label></div>
                             <div class="col-8">
-                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput">
+                                <input type="datetime-local" name="dateTime" class="form-control" id="dateTimeInput" disabled>
                             </div>
                     </div>
                     <div class="row mb-2">
@@ -379,14 +400,6 @@
             formActionUrl = formActionUrl.replace(':booking_id_input', bookingId);
             modalFormAction.action = formActionUrl;
         });
-
-        /**DATE TIME*/
-        var dateTimeInput = document.getElementById('dateTimeInput');
-        var now = new Date();
-        
-        // Formatea la fecha y hora actual a `YYYY-MM-DDTHH:MM` para `datetime-local`
-        var formattedDateTime = now.toISOString().slice(0, 16); 
-        dateTimeInput.value = formattedDateTime;
     });
 
     function setBookingId() {
@@ -402,6 +415,29 @@
             var additionalServicesModal = new bootstrap.Modal(document.getElementById('additionalServicesModal'));
             additionalServicesModal.show();
         }, 300);
+
+        /**DATE TIME*/
+        var dateTimeInput = document.getElementById('dateTimeInput');
+        
+        // Obtener la fecha y hora actual en la zona horaria de Buenos Aires
+        var now = new Date();
+
+        // Convertir la hora local a la zona horaria de Buenos Aires usando `toLocaleString`
+        var options = { timeZone: 'America/Argentina/Buenos_Aires' };
+        var localDate = new Date(now.toLocaleString('en-US', options));
+
+        // Obtener los componentes de la fecha (año, mes, día, hora, minuto)
+        var year = localDate.getFullYear();
+        var month = String(localDate.getMonth() + 1).padStart(2, '0');  // Los meses empiezan desde 0
+        var day = String(localDate.getDate()).padStart(2, '0');
+        var hours = String(localDate.getHours()).padStart(2, '0');
+        var minutes = String(localDate.getMinutes()).padStart(2, '0');
+
+        // Crear el formato correcto para datetime-local (YYYY-MM-DDTHH:mm)
+        var formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        // Asignar al input de datetime-local
+        dateTimeInput.value = formattedDateTime;
     }
 
     function disableButton() {
@@ -413,13 +449,11 @@
 
         // Verificar que el servicio adicional y la fecha/hora no estén vacíos
         if (!title.value.trim() || !dateTime.value.trim()) {
-            alert("Por favor, complete todos los campos obligatorios.");
             return false;
         }
 
         // Verificar que el precio sea un número positivo
         if (price.value <= 0) {
-            alert("El precio debe ser un valor positivo.");
             return false;
         }
 

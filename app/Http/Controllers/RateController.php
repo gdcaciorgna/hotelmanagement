@@ -22,7 +22,7 @@ class RateController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'title' => 'required|max:250',
+            'title' => 'required|max:250|unique:rates,title',
             'description' => 'required|max:1000',
             'commodities' => 'array',
             'currentPrice' => 'required|numeric|min:0' 

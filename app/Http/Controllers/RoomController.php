@@ -10,7 +10,7 @@ class RoomController extends Controller
 {
     public function index(){
         $rooms = Room::query()
-        ->orderBy('code')
+        ->orderByRaw('CAST(code AS UNSIGNED)')
         ->simplePaginate(30);
         
         return view('rooms.index')->with('rooms', $rooms);
@@ -59,7 +59,6 @@ class RoomController extends Controller
             'code' => 'required|integer|min:1|unique:rooms,code,' . $room->id,
             'maxOfGuests' => 'required|integer|min:1|max:6',
             'description' => 'required|max:1000',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
         ]);
     
         if ($request->has('delete_image') && $request->delete_image) {
@@ -84,7 +83,7 @@ class RoomController extends Controller
         $room->description = $request->description;
         $room->save();
     
-        return redirect()->route('rooms.edit', $room->id)->with('success', 'Habitación modificada correctamente.');
+        return redirect()->route('rooms.index', $room->id)->with('success', 'Habitación modificada correctamente.');
     }
     public function destroy(Request $request){
     

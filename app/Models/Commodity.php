@@ -35,7 +35,8 @@ class Commodity extends Model
 
     public function bookings()
     {
-        return $this->belongsToMany(Booking::class, 'booking_commodity');
+        return $this->belongsToMany(Booking::class, 'booking_commodity')
+                    ->withPivot('created_at');
     }
 
     public function rates()

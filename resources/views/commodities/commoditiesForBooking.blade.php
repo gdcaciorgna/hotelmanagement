@@ -24,9 +24,7 @@
             </div>
         </div>
     </div>
-    @if($rateCommodities->isEmpty())
-        <p>No hay reservas que cumplan con las condiciones buscadas.</p>
-    @else
+    @if(!($rateCommodities->isEmpty()))
         <div class="row mt-4 g-4">
             <h3 class="mt-4">Comodidades incluídas para la tarifa: {{$booking->rate->title}}</h3>
             @foreach ($rateCommodities as $commodity)
@@ -47,9 +45,7 @@
             @endforeach
         </div>
     @endif
-    @if($bookingCommodities->isEmpty())
-        <p>No hay reservas que cumplan con las condiciones buscadas.</p>
-    @else
+    @if(!($bookingCommodities->isEmpty()))
         <div class="row mt-4 g-4">
             <h3 class="mt-4">Comodidades adicionales contratadas</h3>
             @foreach ($bookingCommodities as $commodity)
@@ -80,34 +76,32 @@
             @endforeach
         </div>
     @endif
-    @if($availableCommodities->isEmpty())
-        <p>No hay reservas que cumplan con las condiciones buscadas.</p>
-    @else
-    <div class="row mt-4 g-4">
-        <h3 class="mt-4">También podes reservar</h3>
-        @foreach ($availableCommodities as $commodity)
-        <div class="col-sm-12 col-xl-4 justify-content-start">
-            <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">
-                <div class="row">
-                    <div class="col-12">
-                        <span class="text-secondary small">#{{$commodity->id}}</span>
-                        <h5 class="mt-1">{{$commodity->title}}</h5>
+    @if(!($availableCommodities->isEmpty()))
+        <div class="row mt-4 g-4">
+            <h3 class="mt-4">También podes reservar</h3>
+            @foreach ($availableCommodities as $commodity)
+            <div class="col-sm-12 col-xl-4 justify-content-start">
+                <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="text-secondary small">#{{$commodity->id}}</span>
+                            <h5 class="mt-1">{{$commodity->title}}</h5>
+                        </div>
+                    </div>
+                    <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
+                    <p class="mt-2">Precio final: {{ '$' . number_format($commodity->currentPrice, 2)}}</p>
+                    <div class="mt-auto">
+                        <form action="{{ route('bookings.addCommodityToBookingView', ['bookingId' => $booking->id, 'commodity' => $commodity->id]) }}" method="GET">
+                            @csrf
+                            <input type="hidden" name="booking_id" id="booking_id_input" value="{{$booking->id}}">
+                            <input type="hidden" name="commodity_id" id="commodity_id" value="{{$commodity->id}}">
+                            <button type="submit" class="btn btn-primary">Contratar adicional</button>
+                        </form>
                     </div>
                 </div>
-                <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
-                <p class="mt-2">Precio final: {{ '$' . number_format($commodity->currentPrice, 2)}}</p>
-                <div class="mt-auto">
-                    <form action="{{ route('bookings.addCommodityToBookingView', ['bookingId' => $booking->id, 'commodity' => $commodity->id]) }}" method="GET">
-                        @csrf
-                        <input type="hidden" name="booking_id" id="booking_id_input" value="{{$booking->id}}">
-                        <input type="hidden" name="commodity_id" id="commodity_id" value="{{$commodity->id}}">
-                        <button type="submit" class="btn btn-primary">Contratar adicional</button>
-                    </form>
-                </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
-    </div>
     @endif
 </div>
 

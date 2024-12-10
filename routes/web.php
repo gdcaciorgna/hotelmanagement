@@ -85,8 +85,8 @@ Route::middleware(['auth', 'receptionist'])->group(function (){
     Route::put('/cleanings/finishCleaningAsAdmin', [CleaningController::class, 'finishCleaningAsAdmin'])->name('cleanings.finishCleaningAsAdmin');
 
     //REPORTS
-    Route::get('/reports/commodities', [CommodityController::class, 'commoditiesReport'])->name('reports.commodities');
-    Route::get('/commodities/{id}', [CommodityController::class, 'show'])->name('commodities.show');
+    Route::get('/commodities-report', [CommodityController::class, 'commoditiesReport'])->name('commodities.report');
+    Route::get('/commodities-report/{id}', [CommodityController::class, 'getCommodityDetails'])->name('commodities.details');
 
     //ADDITIONAL SERVICES
     Route::post('/additionalServices/store', [AdditionalServiceController::class, 'store'])->name('additionalServices.store');

@@ -74,7 +74,7 @@ class BookingController extends Controller
         }    
 
         // Sort and paginate result
-        $bookings = $query->orderBy('id')->simplePaginate(30);
+        $bookings = $query->orderBy('id')->simplePaginate(16);
         sleep(2);
 
         $cleaningWorkingHoursFrom = (Policy::where('description', 'cleaningWorkingHoursFrom')->first())->value;
@@ -433,10 +433,12 @@ class BookingController extends Controller
         $commodity = Commodity::findOrFail($request->commodity_id);
     
         // Agregar la comodidad a la reserva (con la tabla intermedia)
-        $booking->commodities()->attach($commodity->id);
+        $booking->commodities()->attach($commodity->id, [
+            'created_at' => now(),
+        ]);
         // Confirmación
         return redirect()->route('bookings.viewExtraCommoditiesForBooking', ['id' => $request->booking_id])
-                         ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
+                        ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
     }
 
     public function addCommodityToBookingView(Request $request){

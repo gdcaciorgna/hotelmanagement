@@ -6,7 +6,7 @@ use App\Models\AdditionalService;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Cleaning;
- use App\Models\User;
+use App\Models\User;
 use Carbon\Carbon;
 
 class AdditionalServiceController extends Controller
@@ -23,6 +23,6 @@ class AdditionalServiceController extends Controller
 
         $priceFormatted = '$ ' . number_format( $request['price'], 2);
         return redirect()->route('bookings.index')
-            ->with('success', "El servicio adicional {$request['title']} ({$priceFormatted}) ha sido agregado exitosamente a  la reserva #{$request['booking_id']}.");        
+            ->with('success', "El servicio adicional {$request['title']} ({$priceFormatted}) ha sido agregado exitosamente a la reserva #{$request['booking_id']}.");        
     }
 }

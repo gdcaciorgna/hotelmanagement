@@ -18,48 +18,74 @@ class CleaningSeeder extends Seeder
         $userIds = User::where('userType', 'Cleaner')->pluck('id')->toArray();
         $roomIds = Room::pluck('id')->toArray();
         $usedRoomIds = [];
+        $cleanings = [];
 
         // Crear 30 cleanings
         for ($i = 0; $i < 15; $i++) {
             $requestedDateTime = Carbon::now()->subDays(rand(1, 14));
+            $requestedDateTime = $requestedDateTime->hour(rand(7, 14))->minute(rand(0, 59))->second(rand(0, 59));
 
-            // Determina si este cleaning estará finalizado y establece el endDateTime
-            $randomFinishedCleaning = rand(1, 100) <= 10;
-            $endDateTime = $randomFinishedCleaning ? Carbon::now()->subDays(rand(1, 14)) : null;
+            $hasStartDateTime = rand(1, 100) <= 70;
+            $startDateTime = $hasStartDateTime ? $requestedDateTime->copy()->addHours(rand(1, 48)) : null;
 
-            // Genera startDateTime basado en las condiciones:
-            // Puede ser nulo o un valor mayor a requestedDateTime y menor que endDateTime o menor que hoy si endDateTime está vacío
-            $startDateTime = rand(0, 1) ? null : $requestedDateTime->copy()->addHours(rand(1, 48));
+            if ($startDateTime) {
+                if ($startDateTime->greaterThanOrEqualTo(Carbon::now())) {
+                    $startDateTime = Carbon::now()->subHours(rand(1, 48));
+                }
+                if ($startDateTime->hour < 7) {
+                    $startDateTime->hour(7)->minute(rand(0, 59))->second(rand(0, 59));
+                } elseif ($startDateTime->hour > 15) {
+                    $startDateTime->hour(14)->minute(rand(0, 59))->second(rand(0, 59));
+                }
 
-            if ($startDateTime && $endDateTime && $startDateTime->greaterThan($endDateTime)) {
-                $startDateTime = $endDateTime->copy()->subHours(rand(1, 24));
-            } elseif ($startDateTime && !$endDateTime && $startDateTime->greaterThan(Carbon::now())) {
-                $startDateTime = Carbon::now()->subHours(rand(1, 24));
+                $hasEndDateTime = rand(1, 100) <= 30;
+                $endDateTime = $hasEndDateTime ? $startDateTime->copy()->addHours(rand(1, 48)) : null;
+
+                if ($endDateTime) {
+                    if ($endDateTime->lessThanOrEqualTo($startDateTime)) {
+                        $endDateTime = $startDateTime->copy()->addHours(rand(1, 48));
+                    }
+                    $endDateTime = $endDateTime->hour(rand(7, 14))->minute(rand(0, 59))->second(rand(0, 59));
+                    $updatedAt = $endDateTime->copy();
+                } else {
+                    $updatedAt = $requestedDateTime->copy();
+                }
+            } else {
+                $endDateTime = null;
+                $updatedAt = $requestedDateTime->copy();
             }
 
-            // Selecciona un room_id aleatorio que no se haya utilizado
             $availableRoomIds = array_diff($roomIds, $usedRoomIds);
             if (empty($availableRoomIds)) {
-                // Si no hay habitaciones disponibles, termina el ciclo
                 break;
             }
             $selectedRoomId = $availableRoomIds[array_rand($availableRoomIds)];
-            $usedRoomIds[] = $selectedRoomId; // Añadir la habitación utilizada a la lista
-    
-            //Seleccionar un usuario si solamente si ya finalizó la limpieza, sino evitarlo.
-            $cleanerId =  null;
-            if(!empty($endDateTime)){
+            $usedRoomIds[] = $selectedRoomId;
+
+            $cleanerId = null;
+            if (!empty($endDateTime)) {
                 $cleanerId = $userIds[array_rand($userIds)];
             }
 
-            // Crear el cleaning
-            Cleaning::create([
+            $cleanings[] = [
                 'requestedDateTime' => $requestedDateTime,
                 'startDateTime' => $startDateTime,
                 'endDateTime' => $endDateTime,
                 'room_id' => $selectedRoomId,
-                'user_id' => $cleanerId
-            ]);
+                'user_id' => $cleanerId,
+                'created_at' => $requestedDateTime,
+                'updated_at' => $updatedAt
+            ];
+        }
+
+        // Ordenar las cleanings por requestedDateTime
+        usort($cleanings, function ($a, $b) {
+            return $a['requestedDateTime']->greaterThan($b['requestedDateTime']);
+        });
+
+        // Insertar las cleanings en la base de datos
+        foreach ($cleanings as $cleaning) {
+            Cleaning::create($cleaning);
         }
     }
 }

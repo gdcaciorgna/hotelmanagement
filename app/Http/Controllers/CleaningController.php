@@ -19,7 +19,7 @@ class CleaningController extends Controller
         $query->whereNull('endDateTime');
         // Filter by booking ID
         if ($request->filled('cleaning_id')) {
-            $query->where('id', $request->input('cleaning_id'));
+            $query->where('cleanings.id', $request->input('cleaning_id'));
         }
 
         // Filter by room code

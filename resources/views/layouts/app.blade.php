@@ -63,7 +63,7 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-file me-2"></i>Informes</a>
                                 <div class="dropdown-menu bg-transparent border-0">
-                                    <a href="{{route('reports.commodities')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Comodidades</a>
+                                    <a href="{{route('commodities.report')}}" class="dropdown-item"><i class="fas fa-list me-2"></i>Comodidades</a>
                                 </div>
                             </div>
                         <!-- Cleaners view -->
@@ -108,7 +108,7 @@
                     </div>
                     @endauth
                     @guest
-                        <div class="navbar-nav mx-3">
+                        <div class="navbar-nav mx-3 my-2">
                             <a href="{{route('login')}}" class="btn btn-primary">
                                 Iniciar sesión
                             </a>

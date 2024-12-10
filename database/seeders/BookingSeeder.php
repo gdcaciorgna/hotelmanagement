@@ -28,7 +28,7 @@ class BookingSeeder extends Seeder
         // Crear 50 bookings
         for ($i = 0; $i < 50; $i++) {
             $bookingDate = Carbon::now()->subDays(rand(1, 14));
-            $startDate = Carbon::now()->subDays(rand(1, 14));
+            $startDate = $bookingDate->copy()->addDays(rand(0, 14));
             $agreedEndDate = $startDate->copy()->addDays(rand(1, 14));
             $actualEndDate = $agreedEndDate->isPast() ? $agreedEndDate : null;
     
@@ -53,13 +53,18 @@ class BookingSeeder extends Seeder
             $roomId = $availableRoomIds[array_rand($availableRoomIds)];
             $userId = $availableUserIds[array_rand($availableUserIds)];
         
+            $room = Room::find($roomId); // Obtener la habitación completa
+
+            // Usar el valor de maxOfGuests de la habitación para asignarlo al número de personas
+            $numberOfPeople = $room->maxOfGuests; // Usamos el valor máximo de huéspedes permitido para esa habitación
+
             $booking = Booking::create([
                 'bookingDate' => $bookingDate,
                 'startDate' => $startDate,
                 'agreedEndDate' => $agreedEndDate,
                 'actualEndDate' => $actualEndDate,
                 'finalPrice' => $randomFinalPrice,
-                'numberOfPeople' => rand(1, 5),
+                'numberOfPeople' => $numberOfPeople,
                 'returnDeposit' => (bool)rand(0, 1),
                 'rate_id' => $rateId,
                 'room_id' => $roomId,
@@ -67,7 +72,11 @@ class BookingSeeder extends Seeder
             ]);
 
             $randomCommodityIds = $this->getRandomCommodityIds($commodityIds, $rateId);
-            $booking->commodities()->attach($randomCommodityIds);
+            foreach ($randomCommodityIds as $commodityId) {
+                $booking->commodities()->attach($commodityId, [
+                    'created_at' => now(),
+                ]);
+            }
         }
     }
     
