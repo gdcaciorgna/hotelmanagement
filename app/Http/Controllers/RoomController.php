@@ -59,6 +59,7 @@ class RoomController extends Controller
             'code' => 'required|integer|min:1|unique:rooms,code,' . $room->id,
             'maxOfGuests' => 'required|integer|min:1|max:6',
             'description' => 'required|max:1000',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:8192'
         ]);
     
         if ($request->has('delete_image') && $request->delete_image) {
