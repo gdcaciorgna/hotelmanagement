@@ -97,7 +97,8 @@ class BookingController extends Controller
 
         $rates = Rate::all();
         $users = User::where('userType', 'Guest')
-            ->where('status', 1)    
+            ->where('status', 1)
+            ->orderBy('lastName')->orderBy('firstName')   
             ->get();
 
         $startDateCarbon = Carbon::parse($request->input('startDate', old('startDate')));
