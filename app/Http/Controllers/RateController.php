@@ -46,7 +46,7 @@ class RateController extends Controller
 
     public function update($id, Request $request){
         $request->validate([
-            'title' => 'required|max:250',
+            'title' => 'required|max:250|unique:rates,title,' . $id,
             'description' => 'required|max:1000',
             'commodities' => 'array',
             'currentPrice' => 'required|numeric|min:0' 

@@ -54,7 +54,7 @@
         </div>
 
         <div class="row mb-3">
-            <label for="currentPrice" class="col-sm-3 col-form-label">Precio x persona x día</label>
+            <label for="currentPrice" class="col-sm-3 col-form-label">Precio por persona por día</label>
             <div class="col-sm-9">
                 <div class="input-group">
                     <div class="input-group-text">$</div>

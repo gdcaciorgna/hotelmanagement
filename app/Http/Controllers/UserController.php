@@ -168,7 +168,7 @@ class UserController extends Controller
 
         if ($hasBookings) {
             return redirect()->route('users.index')
-                ->withErrors("No se puede eliminar el usuario #{$user->id} ({$user->fullName}) porque hay reservas asociadas.");
+                ->withErrors("No se puede eliminar el usuario #{$user->id} ({$user->fullName}) porque tiene reservas asociadas.");
         }
         $user->delete();
         return to_route('users.index')->with('success', 'Usuario eliminado exitosamente.');
