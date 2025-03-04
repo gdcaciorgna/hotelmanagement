@@ -202,7 +202,7 @@
                         + {{'$' . number_format($breakdown['additionalCommodities'], 2)}} [PCA]) 
                         * {{$breakdown['numberOfPeople']}} [p] 
                         * {{$breakdown['stayDays']}} [d] 
-                        + {{'$' . number_format($breakdown['additionalServices'], 2)}} [PSA]) 
+                        + {{'$' . number_format($breakdown['additionalServices'], 2)}} [PSA] 
                         - {{ '$' . number_format($breakdown['returnDepositValue'], 2) }} [VDep]
                     </p>
                 </div>

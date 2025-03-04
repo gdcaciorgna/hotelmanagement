@@ -116,7 +116,7 @@ class CleaningController extends Controller
 
                 
         return redirect()->route('cleanercleanings.index')
-                         ->with('success', "Limpieza iniciada exitosamente para la habitación #{$cleaning->room->code}.");
+                         ->with('success', "Limpieza finalizada exitosamente para la habitación #{$cleaning->room->code}.");
     }
 
 }
