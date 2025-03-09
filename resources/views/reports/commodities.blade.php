@@ -14,7 +14,7 @@
                         class="form-control" 
                         id="start_date" 
                         value="{{ old('start_date', $start_date ?? '') }}"
-                        required>
+                        >
                 </div>
                 <div class="me-3">
                     <label for="end_date" class="form-label">Hasta:</label>
@@ -24,7 +24,7 @@
                         class="form-control" 
                         id="end_date" 
                         value="{{ old('end_date', $end_date ?? '') }}"
-                        required>
+                        >
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">Filtrar</button>
