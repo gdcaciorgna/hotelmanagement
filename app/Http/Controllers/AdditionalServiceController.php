@@ -16,7 +16,7 @@ class AdditionalServiceController extends Controller
             [
                 'title' => $request['title'],
                 'price' => $request['price'],
-                'dateTime' => $request['dateTime'],
+                'dateTime' => Carbon::now(),
                 'booking_id' => $request['booking_id']
             ]
         );

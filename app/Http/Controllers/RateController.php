@@ -33,7 +33,14 @@ class RateController extends Controller
         $rate = Rate::create($request->except('currentPrice'));
         $rate->updateCurrentPrice($request->input('currentPrice'));
         if ($request->has('commodities')) {
-            $rate->commodities()->sync($request->input('commodities'));
+            $commodities = $request->input('commodities', []);
+            $pivotData = [];
+
+            foreach ($commodities as $commodityId) {
+                $pivotData[$commodityId] = ['created_at' => now()];
+            }
+
+            $rate->commodities()->sync($pivotData);
         }    
         return redirect()->route('rates.index')->with('success', 'Tarifa creada exitosamente.');
     }
@@ -54,9 +61,33 @@ class RateController extends Controller
         ]);
 
         $rate = Rate::findOrFail($id);
+
+        // 1️⃣ Obtener el precio anterior
+        $previousPrice = $rate->currentPrice; 
+
+        // 2️⃣ Actualizar la tarifa (excepto el precio)
         $rate->update($request->except('currentPrice'));
-        $rate->updateCurrentPrice($request->input('currentPrice'));
-        $rate->commodities()->sync($request->input('commodities', [])); 
+
+        // 3️⃣ Actualizar el precio y registrar en el historial si es diferente
+        if ($request->input('currentPrice') != $previousPrice) {
+            $rate->updateCurrentPrice($request->input('currentPrice')); 
+        }
+
+        // 4️⃣ Obtener comodidades actuales con su created_at
+        $currentCommodities = $rate->commodities()->pluck('commodity_rate.created_at', 'commodities.id')->toArray();
+
+        // 5️⃣ Obtener nuevas comodidades del request
+        $newCommodities = $request->input('commodities', []);
+
+        // 6️⃣ Construir el array de sync manteniendo created_at original si existe
+        $pivotData = [];
+        foreach ($newCommodities as $commodityId) {
+            $pivotData[$commodityId] = ['created_at' => $currentCommodities[$commodityId] ?? now()];
+        }
+
+        // 7️⃣ Sincronizar comodidades sin modificar los created_at existentes
+        $rate->commodities()->sync($pivotData); 
+        
         return redirect()->route('rates.index')->with('success', 'Tarifa modificada exitosamente.');
     }
     

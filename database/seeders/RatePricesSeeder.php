@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Rate;
 use App\Models\RatePricesHistory;
-
+use Carbon\Carbon;
 
 class RatePricesSeeder extends Seeder
 {
@@ -22,8 +22,8 @@ class RatePricesSeeder extends Seeder
             RatePricesHistory::create([
                 'rate_id' => $rate->id,
                 'price' => $price,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => null,
             ]);
         }
     }

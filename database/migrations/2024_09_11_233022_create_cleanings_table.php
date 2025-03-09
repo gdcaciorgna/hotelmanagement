@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cleanings', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('requestedDateTime');
+            $table->timestamp('requestedDateTime')->nullable();
             $table->timestamp('startDateTime')->nullable();
             $table->timestamp('endDateTime')->nullable();
             $table->foreignId('room_id')->constrained()->onDelete('cascade');

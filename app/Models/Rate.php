@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Rate extends Model
 {
@@ -35,6 +36,7 @@ class Rate extends Model
     {
         $this->priceHistory()->create([
             'price' => $newPrice,
+            'created_at' => Carbon::now(),
         ]);
     }
 

@@ -14,4 +14,6 @@ class RatePricesHistory extends Model
         'price',
         'created_at'
     ];
+
+    public $timestamps = false;
 }

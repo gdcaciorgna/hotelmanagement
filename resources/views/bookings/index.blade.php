@@ -444,11 +444,10 @@
 
         const title = document.querySelector('input[name="title"]');
         const price = document.querySelector('input[name="price"]');
-        const dateTime = document.querySelector('input[name="dateTime"]');
         const confirmButton = document.getElementById('confirmButton');
 
         // Verificar que el servicio adicional y la fecha/hora no estén vacíos
-        if (!title.value.trim() || !dateTime.value.trim()) {
+        if (!title.value.trim()) {
             return false;
         }
 

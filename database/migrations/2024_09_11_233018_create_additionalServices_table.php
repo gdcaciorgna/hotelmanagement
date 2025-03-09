@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('additional_services', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('dateTime');
+            $table->timestamp('dateTime')->nullable();
             $table->string('title');
             $table->decimal('price', 10, 2)->nullable();
             $table->foreignId('booking_id')->constrained()->onDelete('cascade');

@@ -39,7 +39,7 @@ class CleaningSeeder extends Seeder
                 }
 
                 $hasEndDateTime = rand(1, 100) <= 30;
-                $endDateTime = $hasEndDateTime ? $startDateTime->copy()->addHours(rand(1, 48)) : null;
+                $endDateTime = $hasEndDateTime ? $startDateTime->copy()->addDays(1) : null;
 
                 if ($endDateTime) {
                     if ($endDateTime->lessThanOrEqualTo($startDateTime)) {

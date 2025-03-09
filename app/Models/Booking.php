@@ -84,7 +84,7 @@ class Booking extends Model
         $returnDepositValue = $this->getReturnDepositValue();
         
         
-        $additionalServices = $this->getAdditionalSercicesPrice();
+        $additionalServices = $this->getAdditionalServicesPrice();
         $additionalCommoditiesPricePerDay = $this->getAdditionalCommoditiesPrice();
         $totalPrice = ($basePricePerPersonPerDay + $basePricePerRatePerDay + $additionalCommoditiesPricePerDay) * $this->numberOfPeople * $this->getStayDays() + $additionalServices - $returnDepositValue;
         return $totalPrice;
@@ -110,7 +110,7 @@ class Booking extends Model
         return (isset($this->returnDeposit) && $this->returnDeposit == true) ? $currentReturnDepositAmount->value : 0;
     }
 
-    public function getAdditionalSercicesPrice(){
+    public function getAdditionalServicesPrice(){
         $additionalServices = $this->additionalServices()->get();
         $sum = 0;
         foreach($additionalServices as $addSer){

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Commodity;
 use App\Models\Rate;
-
+use Carbon\Carbon;
 
 class RateSeeder extends Seeder
 {
@@ -30,7 +30,9 @@ class RateSeeder extends Seeder
             for ($i = 0; $i < 3; $i++) {
                 // Asignar commodities aleatorias a cada rate
                 $randomCommodityIds = $this->getRandomCommodityIds($commodityIds);
-                $rate->commodities()->attach($randomCommodityIds);
+                $rate->commodities()->attach($randomCommodityIds, [
+                    'created_at' => Carbon::now(),
+                ]);
             }
         }
     }    

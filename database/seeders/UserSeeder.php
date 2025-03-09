@@ -70,15 +70,16 @@ class UserSeeder extends Seeder
             $disabledReason = $status ? null : $disabledReasons[array_rand($disabledReasons)];
             $bornDateTimestamp = mt_rand(strtotime('1950-01-01'), strtotime('2005-12-31'));
             $bornDate = date('Y-m-d', $bornDateTimestamp);    
-            
-            $startEmploymentTimestamp = mt_rand(strtotime('1990-01-01'), strtotime(now()));
-            $startEmploymentDate = date('Y-m-d', $startEmploymentTimestamp);   
 
             $weekdayStartWorkHours = null;
             $weekdayEndWorkHours = null;
+            $startEmploymentDate = null;
             if($userType != 'Guest'){
-                $weekdayStartWorkHours = '08:00';
-                $weekdayEndWorkHours = '16:00';
+                $weekdayStartWorkHours = '07:00';
+                $weekdayEndWorkHours = '15:00';
+
+                $startEmploymentTimestamp = mt_rand(strtotime('1990-01-01'), strtotime(now()));
+                $startEmploymentDate = date('Y-m-d', $startEmploymentTimestamp);
             }
 
             DB::table('users')->insert([
