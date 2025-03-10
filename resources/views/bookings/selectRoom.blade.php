@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Reservas')
+@section('title', 'Habitaciones Disponibles')
 @section('content')
 <div class="row g-12 mb-1">
     <div class="row mb-2">
@@ -34,7 +34,11 @@
                 <div class="container">
                     <div class="row g-4">
                             @if($rooms->isEmpty())
-                                <p>No hay habitaciones que cumplan con las condiciones buscadas.</p>
+                                <hr />
+                                <div class="d-flex justify-content-center" style="min-height: 45px;">
+                                    <span class="fs-5">No hay habitaciones que cumplan con las condiciones buscadas</span>
+                                </div>
+                                <hr />
                             @endif
                             @foreach ($rooms as $room)
                                 <div class="col-sm-12 col-xl-6 justify-content-between">

@@ -1,22 +1,25 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar tarifa')
 @section('content')
 
 @php
     if($action == 'edit'){
+        $title = 'Editar Tarifa';
         $headerText = "Editar tarifa: #{$rate->id}";
         $formAction = route('rates.update', ['id' => $rate->id]);
         $method = 'PUT';
         $saveButtonText = 'Actualizar';
     }
     else{
+        $title = 'Agregar Tarifa';
         $headerText = "Agregar nueva tarifa";
         $formAction = route('rates.store');
         $method = 'POST';
         $saveButtonText = 'Publicar';
-
+        
     }
 @endphp
+
+@section('title', $title)
 
 <div class="bg-light rounded h-100 p-4">
 

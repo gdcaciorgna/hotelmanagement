@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Informe de comodidades')
+@section('title', 'Informe de Comodidades')
 @section('content')
 <div class="bg-light rounded h-100 p-4">
     <h5 class="mb-4">Comodidades adicionales más demandadas</h5>
@@ -42,7 +42,7 @@
             @if($commodities->isEmpty())
                 <hr />
                 <div class="text-center">
-                    <span class="fs-5">No hay comodidades adicionales solicitadas en el rango de fechas indicado</td>
+                    <span class="fs-5">No hay comodidades adicionales solicitadas en el rango de fechas indicado</span>
                 </div>
                 <hr />
             @else

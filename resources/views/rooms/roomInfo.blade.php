@@ -1,22 +1,25 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar habitación')
 @section('content')
 
 @php
     if($action == 'edit'){
+        $title = 'Editar Habitacion';
         $headerText = "Editar Habitación: #{$room->id}";
         $formAction = route('rooms.update', ['id' => $room->id]);
         $method = 'PUT';
         $saveButtonText = 'Actualizar';
     }
     else{
+        $title = 'Agregar Habitacion';
         $headerText = "Agregar nueva habitación";
         $formAction = route('rooms.store');
         $method = 'POST';
         $saveButtonText = 'Publicar';
-
+        
     }
 @endphp
+    
+@section('title', $title)
 
 <div class="bg-light rounded h-100 p-4">
     

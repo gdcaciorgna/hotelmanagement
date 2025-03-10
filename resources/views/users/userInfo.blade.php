@@ -1,19 +1,22 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar usuario')
 @section('content')
 
 @php
     if($action == 'edit'){
+        $title = 'Editar Usuario';
         $headerText = "Editar Usuario: #{$user->id}";
         $formAction = route('users.update', ['id' => $user->id]);
         $method = 'PUT';
     }
     else{
+        $title = 'Agregar Usuario';
         $headerText = "Agregar nuevo usuario";
         $formAction = route('users.store');
         $method = 'POST';
     }
 @endphp
+
+@section('title', $title)
 
 <div class="bg-light rounded h-100 p-4">
     <div class="row mb-3">

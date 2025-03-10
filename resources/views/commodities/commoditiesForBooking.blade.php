@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Commodities for booking')
+@section('title', 'Comodidades para la Reserva')
 @section('content')
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">

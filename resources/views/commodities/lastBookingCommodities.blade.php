@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Comodidades')
+@section('title', 'Mis Comodidades')
 @section('content')
 <div class="container">
     @if(empty($booking))
@@ -38,7 +38,7 @@
         @endforeach
     </div>
     <div class="row mt-4">
-        <h3 class="mt-4">También podes reservar</h3>
+        <h3 class="my-4">También podes reservar</h3>
         @foreach ($otherCommodities as $commodity)
         <div class="col-sm-12 col-xl-4 justify-content-start">
             <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">
@@ -57,9 +57,17 @@
     @endforeach
     </div>
 
-    <div class="row mt-4">
-        <span style="font-size:20px; font-weight:bold">Contactate con el personal de recepción para llevar a cabo la reserva de alguna comodidad adicional. Llamar al <a href="#">+52 1 55 1234 5678</a> </span>
+    <div class="row mt-4 text-center">
+    <div class="col-12">
+        <p class="fs-5 fw-bold mb-2">
+            Contactate con el personal de recepción para llevar a cabo la reserva de alguna comodidad adicional.
+        </p>
+        <p class="fs-6">
+            <i class="fa fa-phone me-2"></i>
+            <a href="tel:+5215512345678" class="text-decoration-none">+52 1 55 1234 5678</a>
+        </p>
     </div>
+</div>
     @endif
 </div>
 

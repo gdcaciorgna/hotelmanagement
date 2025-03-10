@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Checkout - Reserva #' . $booking->id)
+@section('title', 'Checkout para la Reserva')
 @section('content')
 
 <div class="bg-light rounded h-100 p-4">

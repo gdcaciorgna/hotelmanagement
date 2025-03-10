@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', "Agregar comodidad a reserva # {{$booking->id}}")
+@section('title', "Comodidad para la Reserva")
 @section('content')
 
 <div class="bg-light rounded h-100 p-4">
@@ -8,15 +8,15 @@
             <h6 class="mb-4">Reservar comodidad extra</h6>
         </div>
         <div class="col-sm-8 text-end">
-            <a href="{{route('commodities.index')}}" class="btn btn-dark">Volver</a>
+            <a href="{{ route('bookings.viewExtraCommoditiesForBooking', ['id' => $booking->id]) }}" class="btn btn-dark">Volver</a>
         </div>
     </div>
    
     <form action="{{ route('bookings.addCommodity', ['id' => $booking->id]) }}" method="POST">
         @csrf
 
-        <input type="hidden" name="booking_id" id="booking_id_input" value="{{$booking->id}}">
-        <input type="hidden" name="commodity_id" id="commodity_id" value="{{$commodity->id}}">
+        <input type="hidden" name="booking_id" id="booking_id_input" value="{{ $booking->id }}">
+        <input type="hidden" name="commodity_id" id="commodity_id" value="{{ $commodity->id }}">
 
         <div class="row mb-3">
             <label for="title" class="col-sm-3 col-form-label">Título</label>

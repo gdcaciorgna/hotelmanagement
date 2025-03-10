@@ -1,15 +1,16 @@
 @extends('layouts.app')
-@section('title', 'Agregar o editar comodidad')
 @section('content')
 
 @php
     if($action == 'edit'){
+        $title = 'Editar Comodidad';
         $headerText = "Editar Comodidad: #{$commodity->id}";
         $formAction = route('commodities.update', ['id' => $commodity->id]);
         $method = 'PUT';
         $saveButtonText = 'Actualizar';
     }
-    else{
+    else {
+        $title = 'Agregar Comodidad';
         $headerText = "Agregar nueva comodidad";
         $formAction = route('commodities.store');
         $method = 'POST';
@@ -17,6 +18,8 @@
 
     }
 @endphp
+
+@section('title', $title)
 
 <div class="bg-light rounded h-100 p-4">
     <div class="row mb-3">

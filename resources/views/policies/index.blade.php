@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Políticas del hotel')
+@section('title', 'Politicas del Hotel')
 @section('content')
 <div class="container">
     <div class="row g-12 mb-4">
