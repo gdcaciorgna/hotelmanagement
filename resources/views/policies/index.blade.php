@@ -25,7 +25,7 @@
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                         </div>
                     </div>
-                    <p class="mt-4">Costo que debe abonar un huésped a la hora de reservar el hospedaje para cubrir posibles roturas o daños. El mismo será devuelto a en el momento de entregar la habitación en el checkout.</p>
+                    <p class="mt-4">Costo que debe abonar un huésped a la hora de reservar el hospedaje para cubrir posibles roturas o daños. El mismo será devuelto en el momento de entregar la habitación en el checkout, si corresponde.</p>
                 </form>
             </div>
         </div>
@@ -43,7 +43,7 @@
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                         </div>
                     </div>
-                    <p class="mt-4">Este valor será utilizado a la hora de calcular el precio a pagar por el huésped al contratar una estadía. El precio final dependerá de dicho valor, la cantidad de personas a hospedarse y la cantidad de días que se alojen en el hotel.</p>
+                    <p class="mt-4">Este valor será utilizado a la hora de calcular el precio a pagar por el huésped al contratar una estadía. El precio final dependerá, entre otras cosas, de dicho valor, de la cantidad de personas a hospedarse y de la cantidad de días que se alojen en el hotel.</p>
                 </form>
             </div>
         </div>
@@ -64,7 +64,7 @@
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                         </div>
                     </div>
-                    <p class="mt-4">Es el horario que estará disponible la posibilidad de solicitar personal de limpieza por parte de un huésped o un personal administrativo.</p>
+                    <p class="mt-4">Es el horario en el que estará disponible la posibilidad de solicitar personal de limpieza por parte del personal administrativo.</p>
                 </form>
                 @if ($errors->any())
                 <div class="alert alert-danger">
