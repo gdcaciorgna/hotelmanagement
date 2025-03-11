@@ -186,13 +186,13 @@
             </div>
         
             <ul class="list-group list-group-flush small mb-3">
-                <li class="list-group-item mb-1"><strong>p:</strong> cantidad de personas</li>
-                <li class="list-group-item mb-1"><strong>d:</strong> cantidad de días</li>
+                <li class="list-group-item mb-1"><strong>p:</strong> Cantidad de personas</li>
+                <li class="list-group-item mb-1"><strong>d:</strong> Cantidad de días</li>
                 <li class="list-group-item mb-1"><strong>PBPD:</strong> Precio base por persona por día</li>
                 <li class="list-group-item mb-1"><strong>PTPD:</strong> Precio tarifa por persona por día</li>
-                <li class="list-group-item mb-1"><strong>PCA:</strong> Precio de comodidad adicional no incluída en la tarifa inicial</li>
+                <li class="list-group-item mb-1"><strong>PCA:</strong> Precio total de las comodidades adicionales no incluídas en la tarifa inicial</li>
                 <li class="list-group-item mb-1"><strong>PSA:</strong> Precio total de los servicios adicionales contratados</li>
-                <li class="list-group-item mb-1"><strong>VDep:</strong> Valor de depósito a devolver (opcional en caso de no encontrar anomalías)</li>
+                <li class="list-group-item mb-1"><strong>VDep:</strong> Valor de depósito a devolver (opcional, en caso de no encontrar anomalías)</li>
             </ul>
         @endif
     

@@ -41,14 +41,13 @@ class BookingController extends Controller
             });
         }
 
-        //Filter by status
+        // Filter by status
         if ($request->filled('status')) {
             $currentDate = now();
             if ($request->status == 'actives') {
-                $query->whereDate('startDate', '<=', $currentDate)
-                    ->whereNull('actualEndDate');
+                $query->whereNull('actualEndDate');
             } elseif ($request->status == 'finished') {
-                $query->whereDate('actualEndDate', '<', $currentDate);
+                $query->whereNotNull('actualEndDate');
             }
         }        
         

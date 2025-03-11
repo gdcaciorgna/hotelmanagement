@@ -37,7 +37,7 @@
                     <h6>Estado</h6>
                     <select name="status" class="form-select" style="font-size: 0.8rem">
                         <option value="all" {{request('status') == 'all' ? 'selected' : ''}}>Todas las reservas</option>
-                        <option value="actives" {{request('status') == 'actives' ? 'selected' : ''}}>Sólo reservas activas</option>
+                        <option value="actives" {{request('status') == 'actives' ? 'selected' : ''}}>Reservas activas</option>
                         <option value="finished" {{request('status') == 'finished' ? 'selected' : ''}}>Reservas finalizadas</option>
                     </select>
                 </div>
