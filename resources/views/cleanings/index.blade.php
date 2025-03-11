@@ -57,16 +57,16 @@
         <hr />
     @else
         <div class="row g-4">
-            @foreach ($activeCleanings->sortBy('requestedDateTime') as $cleaning)
+            @foreach ($activeCleanings as $cleaning)
             @php 
-            $btnText = "Iniciar limpieza";
-            $btnStyle = "btn-primary";
-            $action = "cleanings.startCleaningAsCleaner";
-            if($cleaning->room->status == 'Cleaning in process'){
-            $btnText = "Finalizar limpieza";
-            $btnStyle = "btn-danger";   
-            $action = "cleanings.finishCleaningAsCleaner"; 
-            }
+                $btnText = "Iniciar limpieza";
+                $btnStyle = "btn-primary";
+                $action = "cleanings.startCleaningAsCleaner";
+                if($cleaning->room->status == 'Cleaning in process') {
+                    $btnText = "Finalizar limpieza";
+                    $btnStyle = "btn-danger";   
+                    $action = "cleanings.finishCleaningAsCleaner"; 
+                }
             @endphp
             <div class="col-6 justify-content-start">
             <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-start">

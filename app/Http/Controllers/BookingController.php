@@ -16,7 +16,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $rates = Rate::all();
-        $rooms = Room::orderBy('code')->get();
+        $rooms = Room::orderByRaw('CAST(code AS UNSIGNED)')->get();
         $users = User::where('userType', 'Guest')->orderBy('lastName')->orderBy('firstName')->get();
         $cleaners = User::where('userType', 'Cleaner')->orderBy('lastName')->orderBy('firstName')->get();
         $query = Booking::query();

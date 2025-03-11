@@ -224,7 +224,7 @@
             </div>
             <div class="modal-body">
                 @if($isWithinWorkingHours)
-                    <p>Se registrará un período de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</b></p>
+                    <p>Se registrará un pedido de limpieza para este momento: <b>{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</b></p>
                 @else
                     <p>No puede solicitar ni terminar una limpieza fuera del horario permitido: 
                         <b>({{ $cleaningWorkingHoursFrom }}</b> - <b>{{ $cleaningWorkingHoursTo }})</b>.

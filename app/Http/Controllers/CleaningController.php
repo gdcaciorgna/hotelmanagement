@@ -13,11 +13,12 @@ class CleaningController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $rooms = Room::orderBy('code')->get();
+        $rooms = Room::orderByRaw('CAST(code AS UNSIGNED)')->get();
         $query = Cleaning::query();
     
         $query->whereNull('endDateTime');
-        // Filter by booking ID
+        
+        // Filter by cleaning ID
         if ($request->filled('cleaning_id')) {
             $query->where('cleanings.id', $request->input('cleaning_id'));
         }
@@ -28,10 +29,6 @@ class CleaningController extends Controller
                 $q->where('code', 'like', '%' . $request->room_code . '%');
             });
         }         
-    
-        // Sort by room code
-        $query->join('rooms', 'cleanings.room_id', '=', 'rooms.id')
-            ->orderBy('rooms.code');
     
         $activeCleanings = $query->select('cleanings.*')->simplePaginate(10);
     
@@ -61,7 +58,7 @@ class CleaningController extends Controller
         ]);
         
         return redirect()->route('bookings.index')
-                         ->with('success', "Limpieza creada exitosamente para la habitación #{$room->code}.");
+                         ->with('success', "Limpieza solicitada exitosamente para la habitación #{$room->code}.");
     }
 
     public function finishCleaningAsAdmin(Request $request){
