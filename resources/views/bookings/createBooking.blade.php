@@ -83,7 +83,7 @@
         </div>
     
         <div class="row mb-3">
-            <legend class="col-form-label col-sm-3 pt-0">Abona depósito</legend>
+            <legend class="col-form-label col-sm-3 pt-0">Devolver depósito</legend>
             <div class="col-sm-9">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit"  @if($roomCode) readonly @endif
@@ -156,15 +156,11 @@
             <label for="selectRoom" class="col-sm-3 col-form-label">Habitación</label>
             <div class="col-sm-9 d-flex align-items-center">
                 @if($roomCode)
-                    <span class="me-3">N°:{{ $roomCode }}</span>
+                    <span class="me-3">N°: {{ $roomCode }}</span>
                 @endif
                 <button type="submit" id="selectRoom" id="selectRoomButton" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
                     {{ $selectRoomButtonText }}
                 </button>
-                @if($roomCode)
-                    <button type="button" id="clearButton" class="btn btn-secondary ms-2">Habilitar modificación</button>
-                @endif
-
             </div>
         </div>      
         @if(!empty($stayDays) && $stayDays > 0)

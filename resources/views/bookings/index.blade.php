@@ -7,6 +7,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
+
+@php
+    use Carbon\Carbon;
+@endphp
+
 <div class="container">
     <div class="row g-12 mb-1">
         <div class="row mb-3">
@@ -101,11 +106,15 @@
             <div class="container">
                 <div class="row g-4">
                     @if($bookings->isEmpty())
-                        <p>No hay reservas que cumplan con las condiciones buscadas.</p>
+                        <hr />
+                        <div class="d-flex justify-content-center" style="min-height: 45px;">
+                            <span class="fs-5">No hay reservas que cumplan con las condiciones buscadas</span>
+                        </div>
+                        <hr />
                     @endif
             
                     @foreach ($bookings as $booking)
-                        @php 
+                        @php
                             $disabled = false;
                             if($booking->room->status == 'Cleaning in process'){
                                 $requestCleaningButtonText = 'Terminar limpieza';
@@ -132,7 +141,7 @@
                                         <h6 class="mt-2">#{{$booking->id}}</h6>
                                     </div>
                                     <div class="col-10 text-end">   
-                                    @if(empty($booking->actualEndDate))          
+                                    @if(empty($booking->actualEndDate) && Carbon::now()->endOfDay()->greaterThanOrEqualTo(Carbon::parse($booking->startDate)))          
                                         <a href="#" type="submit" class="btn btn-{{$requestCleaningButtonColor}} btn-sm request-cleaning-btn @if($disabled == true) disabled @endif" 
                                         data-room-id="{{ $booking->room_id }}" 
                                         data-bs-toggle="modal" 
@@ -145,7 +154,7 @@
                                                 Ver
                                             @endif
                                         </a>
-                                    @if(empty($booking->actualEndDate))          
+                                    @if(empty($booking->actualEndDate) && Carbon::now()->endOfDay()->greaterThanOrEqualTo(Carbon::parse($booking->startDate)))          
                                         <a href="#" type="submit" class="btn btn-info btn-sm"
                                             data-booking-id="{{ $booking->id }}" 
                                             data-bs-toggle="modal" 

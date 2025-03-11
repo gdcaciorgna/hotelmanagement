@@ -6,7 +6,7 @@
         <div class="col-9">
             <h3>Habitaciones disponibles</h3>
             <p class="mb-1">Cantidad de huéspedes: <strong>{{$numberOfPeople}}</strong></p>
-            <p>Fecha solicitada: <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} al {{ \Carbon\Carbon::parse($agreedEndDate)->format('d/m/Y') }}</strong></p>
+            <p>Fecha solicitada: <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }}</strong> al <strong>{{ \Carbon\Carbon::parse($agreedEndDate)->format('d/m/Y') }}</strong></p>
         </div>
         @if($action == 'create')
             <div class="col-3 d-flex align-items-center justify-content-end">

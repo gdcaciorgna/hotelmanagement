@@ -60,7 +60,7 @@
 
         <div class="row mb-3">
             <label for="startDate" class="col-sm-3">Fecha reserva</label>
-            <div class="col-sm-9">{{Illuminate\Support\Carbon::parse($booking->bookingDate)->format('d-m-Y')}}</div>
+            <div class="col-sm-9">{{Illuminate\Support\Carbon::parse($booking->bookingDate)->format('d/m/Y')}}</div>
         </div>
 
         <div class="row mb-3">
@@ -94,7 +94,7 @@
         </div>
         
        <div class="row mb-3">
-            <legend class="col-form-label col-sm-3 pt-0">Abona depósito</legend>
+            <legend class="col-form-label col-sm-3 pt-0">Devolver depósito</legend>
             <div class="col-sm-9">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit"  
@@ -149,7 +149,7 @@
         <div class="row mb-3">
             <label for="numberOfPeople" class="col-sm-3 col-form-label">Cantidad de huéspedes</label>
             <div class="col-sm-9">
-                <select name="numberOfPeople_display" class="form-select @error('numberOfPeople') is-invalid @enderror" 
+                <select id="numberOfPeopleSelect" name="numberOfPeople_display" class="form-select @error('numberOfPeople') is-invalid @enderror" 
                         @if($roomCode) disabled @endif onchange="document.getElementById('numberOfPeople').value = this.value;">
                     <option value="">Seleccione una cantidad</option>
                     @for($i = 1; $i <= 6; $i++)
@@ -171,7 +171,7 @@
             <label for="selectRoom" class="col-sm-3 col-form-label">Habitación</label>
             <div class="col-sm-9 d-flex align-items-center">
                 @if($roomCode)
-                    <span class="me-3">N°:{{ $roomCode }}</span>
+                    <span class="me-3">N°: {{ $roomCode }}</span>
                 @endif
                 @if(empty($booking->finalPrice))           
                     <button type="submit" id="selectRoom" id="selectRoomButton" class="btn btn-{{$buttonStyle}}" onclick="document.getElementById('action_type').value='select_room';">
@@ -287,6 +287,19 @@
         const returnDepositButton = document.getElementById('returnDeposit');
         const formFields = document.querySelectorAll('form input:not([type="hidden"]), form select, form textarea');
 
+        const startDate = document.getElementById('startDate');
+        const agreedEndDate = document.getElementById('agreedEndDate');
+        const numberOfPeopleSelect = document.getElementById('numberOfPeopleSelect');
+        const saveBookingButton = document.getElementById('saveBookingButton');
+
+        function disableSaveBookingButton() {
+            saveBookingButton.disabled = true;
+        }
+
+        function enableSaveBookingButton() {
+            saveBookingButton.disabled = false;
+        }
+
         function blockFieldsExcept(exceptId) {
             formFields.forEach(field => {
                 if (field.id !== exceptId) {
@@ -302,7 +315,6 @@
                 if (field.id !== exceptId) {
                     field.removeAttribute('readonly');
                     field.removeAttribute('disabled');
-
                     removeHiddenInput(field);
                 }
             });
@@ -328,35 +340,27 @@
             }
         }
 
-        if (modifyRoomButton) {
-            modifyRoomButton.addEventListener('click', function () {
-                unblockFieldsExcept('id');
-            });
-        }
+        // Si se modifica la fecha de inicio, fecha de fin pactada o la cantidad de huéspedes, deshabilitar el botón de actualizar la reserva,
+        // para obligar al usuario a consultar nuevamente las habitaciones disponibles con los nuevos datos
+        [startDate, agreedEndDate, numberOfPeopleSelect].forEach(field => {
+            field.addEventListener('change', disableSaveBookingButton);
+        });
 
         if (clearButton) {
             clearButton.addEventListener('click', function () {
                 document.querySelectorAll('.stay-days-info, .booking-price-info').forEach(element => {
                     element.style.display = 'none';
                 });
-
-                formFields.forEach(field => {
-                    if (field.type !== 'hidden') {
-                    }
-                });
                 unblockFieldsExcept('id');
             });
-
         }
 
-        // Manejar el caso del botón returnDeposit
         if (returnDepositButton) {
             returnDepositButton.addEventListener('click', function () {
-                unblockFieldsExcept('id'); // Habilitar campos para permitir su edición
+                unblockFieldsExcept('id'); 
             });
         }
 
         blockFieldsExcept('id');
     });
 </script>
-

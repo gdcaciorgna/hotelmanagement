@@ -420,7 +420,7 @@ class BookingController extends Controller
     public function destroy(Request $request){
         $booking = Booking::findOrFail($request->id);
         $booking->delete();
-        return to_route('bookings.index');
+        return to_route('bookings.index')->with('success', 'Reserva eliminada exitosamente.');
     }
 
     public function addCommodity(Request $request){
