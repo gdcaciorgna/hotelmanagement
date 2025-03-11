@@ -185,7 +185,7 @@
             <hr />
             <p class="fs-5">
                 <span>Costo total de reserva = </span>  
-                <span class="fw-bold" style="color: #333;">{{'$' . number_format($actualFinalPrice)}}</span>     
+                <span class="fw-bold" style="color: #333;">{{'$' . number_format($actualFinalPrice, 2)}}</span>     
             </p>
             <hr />
             <div class="">

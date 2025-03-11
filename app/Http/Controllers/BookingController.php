@@ -211,7 +211,8 @@ class BookingController extends Controller
             $query->whereDoesntHave('bookings', function($query) use ($request) {
                 $query->where(function ($q) use ($request) {
                     $q->where('startDate', '<', $request->agreedEndDate)
-                    ->where('agreedEndDate', '>', $request->startDate);
+                        ->where('agreedEndDate', '>', $request->startDate)
+                        ->whereNull('actualEndDate');
                 });
             });
         }
