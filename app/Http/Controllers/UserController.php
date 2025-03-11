@@ -62,27 +62,29 @@ class UserController extends Controller
             ],        
             'disabledStartDate' => 'nullable|date|before_or_equal:today', 
         ];
-        $status = false;
 
-        $fieldsDisabled = [];
-        if(!$request->has('status')){
-            $status = true;
-            $fieldsDisabled = [
-                'disabledStartDate' => null,
-                'disabledReason' => null
-            ];
-        }
+        // Default status is true
+        $status = $request->has('status') && $request->status === 'on' ? 0 : 1;
 
-        //Delete disabled fields for usertype different to guest and delete 
-        if($request->userType == 'Guest'){
+        $fieldsDisabled = [
+            'disabledStartDate' => $status ? null : $request->disabledStartDate,
+            'disabledReason' => $status ? null : $request->disabledReason
+        ];
+
+        $request->merge([
+            'status' => $status,
+            'disabledStartDate' => $fieldsDisabled['disabledStartDate'],
+            'disabledReason' => $fieldsDisabled['disabledReason']
+        ]);
+
+        if($request->userType == 'Guest') {
             $fieldsDisabled = [
                 'weekdayStartWorkHours' => null,
                 'weekdayEndWorkHours' => null,
                 'startEmploymentDate' => null 
             ];
         }
-        //Receptionist or cleaner
-        else{
+        else {
             $fieldsDisabled = [
                 'status' => 1,
                 'disabledStartDate' => null,
@@ -92,7 +94,7 @@ class UserController extends Controller
 
         $request->validate($rules);
         
-        User::create(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
+        User::create(array_merge($request->all(), $fieldsDisabled));
         return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
     }
 
@@ -127,27 +129,29 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($id);
-        $status = false;
+        
+        // Default status is true
+        $status = $request->has('status') && $request->status === 'on' ? 0 : 1;
 
-        $fieldsDisabled = [];
-        if(!$request->has('status')){
-            $status = true;
-            $fieldsDisabled = [
-                'disabledStartDate' => null,
-                'disabledReason' => null
-            ];
-        }
+        $fieldsDisabled = [
+            'disabledStartDate' => $status ? null : $request->disabledStartDate,
+            'disabledReason' => $status ? null : $request->disabledReason
+        ];
 
-        //Delete disabled fields for usertype different to guest and delete 
-        if($request->userType == 'Guest'){
+        $request->merge([
+            'status' => $status,
+            'disabledStartDate' => $fieldsDisabled['disabledStartDate'],
+            'disabledReason' => $fieldsDisabled['disabledReason']
+        ]);
+
+        if($request->userType == 'Guest') {
             $fieldsDisabled = [
                 'weekdayStartWorkHours' => null,
                 'weekdayEndWorkHours' => null,
                 'startEmploymentDate' => null 
             ];
         }
-        //Receptionist or cleaner
-        else{
+        else {
             $fieldsDisabled = [
                 'status' => 1,
                 'disabledStartDate' => null,
@@ -155,7 +159,7 @@ class UserController extends Controller
             ];
         }
 
-        $user->update(array_merge($request->all(), ['status' => $status], $fieldsDisabled));
+        $user->update(array_merge($request->all(), $fieldsDisabled));
 
         return redirect()->route('users.index')->with('success', 'Usuario modificado exitosamente.');;
     }
