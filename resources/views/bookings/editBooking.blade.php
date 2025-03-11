@@ -130,7 +130,7 @@
         <div class="row mb-3">
             <label for="user_id" class="col-sm-3 col-form-label">Huésped principal</label>
             <div class="col-sm-9">
-                <select name="user_id_display" class="form-select @error('user_id') is-invalid @enderror" 
+                <select id="userSelect" name="user_id_display" class="form-select @error('user_id') is-invalid @enderror" 
                         @if($roomCode) disabled @endif onchange="document.getElementById('user_id').value = this.value;">
                     <option value="">Seleccione un huésped</option>
                     @foreach($users as $user)
@@ -308,9 +308,9 @@
             saveBookingButton.disabled = false;
         }
 
-        function blockFieldsExcept(exceptId) {
+        function blockFieldsExcept(exceptIds) {
             formFields.forEach(field => {
-                if (field.id !== exceptId) {
+                if (!exceptIds.includes(field.id)) {
                     field.setAttribute('readonly', true);
                     field.setAttribute('disabled', true);
                     addHiddenInput(field);
@@ -318,9 +318,9 @@
             });
         }
 
-        function unblockFieldsExcept(exceptId) {
+        function unblockFieldsExcept(exceptIds) {
             formFields.forEach(field => {
-                if (field.id !== exceptId) {
+                if (!exceptIds.includes(field.id)) {
                     field.removeAttribute('readonly');
                     field.removeAttribute('disabled');
                     removeHiddenInput(field);
@@ -359,16 +359,16 @@
                 document.querySelectorAll('.stay-days-info, .booking-price-info').forEach(element => {
                     element.style.display = 'none';
                 });
-                unblockFieldsExcept('id');
+                unblockFieldsExcept(['id', 'userSelect']);
             });
         }
 
         if (returnDepositButton) {
             returnDepositButton.addEventListener('click', function () {
-                unblockFieldsExcept('id'); 
+                unblockFieldsExcept(['id', 'userSelect']); 
             });
         }
 
-        blockFieldsExcept('id');
+        blockFieldsExcept(['id', 'userSelect']);
     });
 </script>

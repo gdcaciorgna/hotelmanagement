@@ -142,9 +142,7 @@ class BookingController extends Controller
         
         // Load related data
         $rates = Rate::all();
-        $users = User::where('userType', 'Guest')
-            ->where('status', 1)    
-            ->get();
+        $users = User::where('userType', 'Guest')->get();
     
         // Extract values from the existing booking
         $bookingId = $id;
