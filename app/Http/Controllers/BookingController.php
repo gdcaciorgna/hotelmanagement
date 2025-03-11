@@ -236,15 +236,14 @@ class BookingController extends Controller
             return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
         }
 
-        $returnDeposit = ($request->has('returnDeposit')) ? 1 : 0;
-        // if user click "Select room"
+        // If user click "Select room"
         if ($request->input('action_type') === 'select_room') {
             $queryParams = http_build_query([
                 'action' => 'create',
                 'startDate' => $request->input('startDate'),
                 'agreedEndDate' => $request->input('agreedEndDate'),
                 'numberOfPeople' => $request->input('numberOfPeople'),
-                'returnDeposit' => $returnDeposit,
+                'returnDeposit' => 1,
                 'rate_id' => $request->input('rate_id'),
                 'user_id' => $request->input('user_id')
             ]);
@@ -253,7 +252,7 @@ class BookingController extends Controller
             ->withInput($request->input());
         }
     
-        // If user click "Create" or "Update" booking
+        // If user click "Create" booking
         if ($request->input('action_type') === 'save_booking') {
             
             $validatedData = $request->validate([
@@ -266,7 +265,6 @@ class BookingController extends Controller
             ]);
 
             $room = Room::where('code',  $validatedData['room_code'])->first();
-            $returnDeposit = ($request->has('returnDeposit')) ? 1 : 0;
             
             $booking = Booking::create([
                 'startDate' => $validatedData['startDate'],
@@ -275,7 +273,7 @@ class BookingController extends Controller
                 'rate_id' => $validatedData['rate_id'],
                 'user_id' => $validatedData['user_id'],
                 'room_id' => $room->id,
-                'returnDeposit' => $returnDeposit,
+                'returnDeposit' => 1,
                 'bookingDate' => now()
             ]);
     
@@ -301,7 +299,8 @@ class BookingController extends Controller
         if ($agreedEndDate->lte($startDate)) {
             return redirect()->back()->withErrors(['agreedEndDate' => 'La fecha de fin debe ser posterior a la fecha de inicio.'])->withInput($request->input());
         }
-        // if user click "Select room"
+
+        // if user click "Modify room"
         if ($request->input('action_type') === 'select_room') {
             return redirect()->route('bookings.selectRoom', [
                 'action' => 'edit',
@@ -315,7 +314,7 @@ class BookingController extends Controller
             ]);
         }
     
-        // If user click "Create" or "Update" booking
+        // If user click "Update" booking
         if ($request->input('action_type') === 'save_booking') {
             
             $validatedData = $request->validate([

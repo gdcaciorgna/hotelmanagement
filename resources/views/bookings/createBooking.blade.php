@@ -86,8 +86,7 @@
             <legend class="col-form-label col-sm-3 pt-0">Devolver depósito</legend>
             <div class="col-sm-9">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit"  @if($roomCode) readonly @endif
-                    {{ isset($returnDeposit) && $returnDeposit ? 'checked' : '' }}>
+                    <input class="form-check-input" type="checkbox" name="returnDeposit" id="returnDeposit" checked disabled readonly>
                 </div>
             </div>
         </div> 
@@ -165,7 +164,7 @@
         </div>      
         @if(!empty($stayDays) && $stayDays > 0)
             <div class="row mb-3">
-                <p for="stayDays" class="col-sm-3">Días en estadía:</p>
+                <p for="stayDays" class="col-sm-3">Cantidad de días:</p>
                 <p class="col-sm-9">{{ $stayDays }}</p>
             </div>
         @endif
@@ -221,37 +220,3 @@
 </div>
 
 @endsection
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const modifyRoomButton = document.getElementById('selectRoom');
-    const clearButton = document.getElementById('clearButton');
-    const formFields = document.querySelectorAll('form input:not([type="hidden"]), form select, form textarea');
-
-    if (modifyRoomButton) {
-        modifyRoomButton.addEventListener('click', function (event) {
-            formFields.forEach(field => {
-                if (field.hasAttribute('readonly')) {
-                    field.removeAttribute('readonly');
-                }
-                if (field.hasAttribute('disabled')) {
-                    field.removeAttribute('disabled');
-                }
-            });
-        });
-    }
-
-    if (clearButton) {
-        clearButton.addEventListener('click', function () {
-            formFields.forEach(field => {
-                if (field.type !== 'hidden') {
-                    field.removeAttribute('readonly');
-                    field.removeAttribute('disabled');
-                }
-            });
-        });
-    }
-});
-
-
-</script>

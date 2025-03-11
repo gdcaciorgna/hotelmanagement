@@ -3,6 +3,8 @@
 @section('content')
 
 @php
+    use Carbon\Carbon;
+
     $roomCode = (request('roomCode')) ? request('roomCode') : $roomCode;
     $startDate = (request('startDate')) ? request('startDate') : $startDate;
     $agreedEndDate = (request('agreedEndDate')) ? request('agreedEndDate') : $agreedEndDate;
@@ -182,13 +184,19 @@
                     @endif
                 @endif
             </div>
-        </div>      
-        @if(!empty($stayDays) && $stayDays > 0)
-            <div class="row mb-3 stay-days-info">
-                <p for="stayDays" class="col-sm-3">Días en estadía:</p>
+        </div>
+        <div class="row mb-3 stay-days-info">
+            @if($booking->actualEndDate)
+                <p for="stayDays" class="col-sm-3">Cantidad final de días:</p>
+                <p class="col-sm-9">
+                    <strong>{{ Carbon::parse($booking->actualEndDate)->diffInDays(Carbon::parse($booking->startDate)) }}</strong> 
+                    (El huésped se retiró el {{ \Carbon\Carbon::parse($booking->actualEndDate)->format('d/m/Y') }})
+                </p>
+            @elseif(!empty($stayDays) && $stayDays > 0)
+                <p for="stayDays" class="col-sm-3">Cantidad de días:</p>
                 <p class="col-sm-9">{{ $stayDays }}</p>
-            </div>
-        @endif
+            @endif
+        </div>
             
         @if(empty($booking->finalPrice))           
             @if(!isset($cleanTotalBookingPrice) || (isset($cleanTotalBookingPrice) && $cleanTotalBookingPrice != true) && !empty($totalBookingPrice) && $totalBookingPrice > 0 && !$errors->any())
