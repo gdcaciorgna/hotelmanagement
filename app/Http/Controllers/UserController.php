@@ -208,14 +208,14 @@ class UserController extends Controller
             // Obtener commodities directamente relacionadas al booking
             $bookingCommodities = $booking->commodities;
         
-            // Combinar ambas colecciones
-            $activeCommodities = $rateCommodities->merge($bookingCommodities);
+            // Combinar ambas colecciones y ordenar por ID
+            $activeCommodities = $rateCommodities->merge($bookingCommodities)->sortBy('id');
         
             // Obtener los IDs de los commodities activos para excluirlos de la siguiente consulta
             $activeCommodityIds = $activeCommodities->pluck('id');
         
-            // Obtener otros commodities excluyendo los activos
-            $otherCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get();
+            // Obtener otros commodities excluyendo los activos y ordenar por ID
+            $otherCommodities = Commodity::whereNotIn('id', $activeCommodityIds)->get()->sortBy('id');
         
         }
         return view('commodities.lastBookingCommodities')->with([
@@ -228,10 +228,9 @@ class UserController extends Controller
     public function getLastActiveBooking(): mixed{
         $user = User::findOrFail(auth()->user()->id);
         $lastBooking = $user->bookings()
-        ->where('startDate', '<', Carbon::now())
-        ->whereNull('actualEndDate')
-        ->orderBy('startDate', 'desc') // Orden descendente
-        ->first(); // Obtener solo el primer resultado
+            ->whereNull('actualEndDate')
+            ->orderBy('startDate')
+            ->first();
         return $lastBooking;
     }    
 }
