@@ -17,6 +17,12 @@ class CleaningController extends Controller
         $query = Cleaning::query();
     
         $query->whereNull('endDateTime');
+
+        // Only show cleanings where user_id is null or matches the current user
+        $query->where(function($q) use ($user) {
+            $q->whereNull('user_id')
+                ->orWhere('user_id', $user->id);
+        });
         
         // Filter by cleaning ID
         if ($request->filled('cleaning_id')) {
@@ -30,7 +36,7 @@ class CleaningController extends Controller
             });
         }         
     
-        $activeCleanings = $query->select('cleanings.*')->simplePaginate(10);
+        $activeCleanings = $query->orderBy('requestedDateTime')->simplePaginate(10);
     
         return view('cleanings.index', compact('activeCleanings', 'rooms'));
     }

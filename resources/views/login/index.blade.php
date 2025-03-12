@@ -32,7 +32,7 @@
                       </div>
                   </div>
                   <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Iniciar sesión</button>
-                  <p class="text-center mb-0">¿No tenés una cuenta? <a href="tel:5493462634739">Contactate con recepción</a></p>
+                  <p class="text-center mb-0">¿No tenés una cuenta? <a href="tel:+5215512345678">Contactate con recepción</a></p>
               </div>
           </div>
       </div>

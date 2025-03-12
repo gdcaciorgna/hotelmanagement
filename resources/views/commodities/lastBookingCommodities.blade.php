@@ -3,9 +3,18 @@
 @section('content')
 <div class="container">
     @if(empty($booking))
-        <h2 class="mb-2 mt-4">Ups, no tienes asignada una reserva</h2>
-        <span class="mb-2" style="font-size:14px; font-weight:bold">Contactate con el personal de recepción para conocer las habitaciones disponibles y realizar una reserva. Llamar al <a href="#">+52 1 55 1234 5678</a> </span>
-
+        <h2 class="mt-2 mb-4">
+            Ups, no tenés asignada una reserva
+        </h2>
+        <div class="d-flex justify-content-between">
+            <p class="fs-6 fw-bold">
+                Contactate con el personal de recepción para conocer las habitaciones disponibles y realizar una reserva.
+            </p>
+            <div>
+                <i class="fa fa-phone me-2"></i>
+                <a href="tel:+5215512345678" class="text-decoration-none">+52 1 55 1234 5678</a>
+            </div>
+        </div>
     @else
     <div class="row g-12 mb-4">
         <div class="row mb-3">
