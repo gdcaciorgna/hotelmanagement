@@ -276,7 +276,7 @@
                     <div class="row mb-3">
                         <label for="cleaner_id">¿Quién llevó a cabo la limpieza?</label>
                         <div class="mt-2">
-                            <select name="cleaner_id" class="form-select mb-5">
+                            <select name="cleaner_id" class="form-select mb-5" required>
                                 <option value="">Seleccione un empleado de limpieza</option>
                                 @foreach($cleaners as $cleaner)
                                     <option value="{{ $cleaner->id }}" {{ request()->query('cleaner_id') == $cleaner->id ? 'selected' : '' }}>

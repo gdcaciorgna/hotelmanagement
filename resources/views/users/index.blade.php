@@ -113,7 +113,7 @@
                     @csrf
                     <input type="hidden" name="user_id" id="userId">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-danger">Guardar cambios</button>
+                    <button type="submit" class="btn btn-danger">Eliminar usuario</button>
                 </form>
             </div>            
         </div>
