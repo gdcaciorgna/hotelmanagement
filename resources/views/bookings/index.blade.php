@@ -168,7 +168,7 @@
                                     <p class="mt-1 mb-1">Huésped: <strong>{{$booking->user->fullName}}</strong></p>
                                     <p class="mt-1 mb-1">Fecha Inicio: <strong>{{ \Carbon\Carbon::parse($booking->startDate)->format('d/m/Y') }}</strong></p>
                                     <p class="mt-1 mb-1">Fecha Fin Pactada: <strong>{{ \Carbon\Carbon::parse($booking->agreedEndDate)->format('d/m/Y') }}</strong></p>
-                                    <p class="mt-1 mb-1">Fecha Fin real: 
+                                    <p class="mt-1 mb-1">Fecha Fin Real: 
                                         @if(!empty($booking->actualEndDate))
                                             <strong>{{ \Carbon\Carbon::parse($booking->actualEndDate)->format('d/m/Y') }}</strong>
                                         @else  
@@ -176,7 +176,7 @@
                                         @endif
                                     </p>
                                     <p class="mt-1 mb-1">Tarifa: <strong>{{$booking->rate->title}}</strong></p>
-                                    <p class="mt-1 mb-1">Nro Habitación: <strong>{{$booking->room->code}}</strong></p>
+                                    <p class="mt-1 mb-1">Nro. Habitación: <strong>{{$booking->room->code}}</strong></p>
                                     <p class="mt-1 mb-2">Cant. Personas: <strong>{{$booking->numberOfPeople}}</strong></p>
                                     <p class="mt-1 mb-2">Estado actual de habitación: <strong>{{$booking->room->getStatusFormatted()}}</strong></p>
 

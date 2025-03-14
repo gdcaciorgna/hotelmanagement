@@ -40,7 +40,7 @@ class Room extends Model
             case 'Available':
                 return 'Disponible';
             case 'Unavailable':
-                return 'Ocupado';
+                return 'Ocupada';
             case 'Cleaning in process':
                 return 'En proceso de limpieza';
             case 'Cleaning requested':

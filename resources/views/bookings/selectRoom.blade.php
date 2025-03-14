@@ -45,10 +45,11 @@
                                     <div class="bg-light rounded h-100 p-4 d-flex flex-column justify-content-between">
                                         <div class="row mb-2">
                                             <div class="col-7">
-                                            <p class="mt-1 mb-1 small">Número habitación: <strong>{{$room->code}}</strong></p>
-                                            <p class="mt-1 mb-1 small">Cantidad máx huéspedes: <strong>{{$room->maxOfGuests}}</strong></p>
+                                            <p class="mt-1 mb-1 small">Nro. habitación: <strong>{{$room->code}}</strong></p>
+                                            <p class="mt-1 mb-1 small">Cantidad de huéspedes: <strong>{{$room->maxOfGuests}}</strong></p>
                                             <br>
-                                            <p class="mt-1 mb-1" style="font-size: 12px">Descripción: {{$room->description}}</p>
+                                            <p class="mt-1 mb-1" style="font-size: 12px">Descripción:</p>
+                                            <p class="mt-1 mb-1" style="font-size: 12px">{{$room->description}}</p>
                                             </div>
                                             <div class="col-5 text-end">
                                                 @php

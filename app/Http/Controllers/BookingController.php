@@ -435,8 +435,8 @@ class BookingController extends Controller
             'created_at' => now(),
         ]);
         // Confirmación
-        return redirect()->route('bookings.viewExtraCommoditiesForBooking', ['id' => $request->booking_id])
-                        ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
+        return redirect()->route('bookings.index')
+                            ->with('success', "Se ha añadido la comodidad \"{$commodity->title}\" correctamente para la reserva #{$request->booking_id}.");
     }
 
     public function addCommodityToBookingView(Request $request){

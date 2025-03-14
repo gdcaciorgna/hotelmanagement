@@ -38,7 +38,7 @@
                         </div>
                         <p class="mt-2">{{ \Illuminate\Support\Str::limit($commodity->description, 150, '...') }}</p>
                         <div class="mt-auto">
-                            <div class="bg-secondary text-white text-center py-2 bottom-0 start-0 w-100">Incluído</div>
+                            <div class="bg-secondary text-white text-center py-2 bottom-0 start-0 w-100">Incluída</div>
                         </div>
                     </div>
                 </div>
