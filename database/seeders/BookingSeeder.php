@@ -121,9 +121,14 @@ class BookingSeeder extends Seeder
         // Filtrar commodities que no estén incluidas en la tarifa
         $availableCommodities = array_diff($commodityIds, $commoditiesInRate);
 
+        // Si no hay commodities extras disponibles, devolver un array vacío
+        if (empty($availableCommodities)) {
+            return [];
+        }
+
         // Mezclar y seleccionar commodities aleatorias
         shuffle($availableCommodities);
-        return array_slice($availableCommodities, 0, rand(1, $max));
+        return array_slice($availableCommodities, 0, min(rand(1, $max), count($availableCommodities)));
     }
        
 }
